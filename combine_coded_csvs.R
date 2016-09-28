@@ -1,83 +1,94 @@
-#this script combines the coded survey results and combines generated in excel and generates a combined R dataframe
+#this script combines the coded survey results and combines generated in excel 
+#and generates a combined R dataframe
 
 #load tidyverse library
 library(tidyverse)
 
-#read in coded excel sheets
-# skip the first line (use 2nd line as column name)
+#read in master sheet to generate headers
+master <- read.csv("./master.csv",header = FALSE, stringsAsFactors = FALSE)
+
+#get row 1 headers
+row_1_header <- as.vector(master[1,], mode = "character") 
+row_2_header <-as.vector(master[2,], mode = "character") 
+df0_header <- paste(row_1_header,row_2_header, sep="_")
+
+#read in master excel sheets as df0
+# skip the first 2 lines (use 2nd line as column name)
 # master.csv has some null values, replace this with NA
-df0 <- read_csv("./master.csv", skip = 1, na = "#NULL!")
-df1 <- read_csv("./01_preventing_you.csv", skip = 1, na = "#NULL!")
-df2 <- read_csv("./02_barriers_dev_imp.csv", skip = 1, na = "#NULL!")
-df3 <- read_csv("./03_technical_barriers.csv", skip = 1, na = "#NULL!")
-df4 <- read_csv("./04_important_challenges.csv", skip = 1, na = "#NULL!")
-df5 <- read_csv("./05_student_deficiencies.csv", skip = 1, na = "#NULL!")
+df0 <- read_csv("./master.csv", skip = 2, na = "#NULL!", col_names = df0_header)
 
+#read in master excel sheets
+# skip the first 2 lines (use 2nd line as column name)
+# master.csv has some null values, replace this with NA
 
-#create a dfs of the appropriate columns 
+df1 <- read_csv("./01_preventing_you.csv", skip = 1, na = c("#NULL!","") )      #Q38
+df2 <- read_csv("./02_barriers_dev_imp.csv", skip = 1, na = c("#NULL!",""))     #Q06
+df3 <- read_csv("./03_technical_barriers.csv", skip = 1, na = c("#NULL!",""))   #Q29-30
+df4 <- read_csv("./04_important_challenges.csv", skip = 1, na = c("#NULL!","")) #Q33
+df5 <- read_csv("./05_student_deficiencies.csv", skip = 1, na = c("#NULL!","")) #Q41
 
-#df of columns and identifiers and questions relevant to our barriers analysis from master dataframe
-df0cols1 <- data.frame(df0$ID,
-             df0$EmailAddress,
-             df0$IPAddress,
-             df0$Sex,
-             df0$Race,
-             df0$Ethnicity,
-             df0$City,
-             df0$State,
-             df0$Country,
-             df0$Region,
-             df0$Division,
-             df0$`Highest earned degree. If "other," please explain.`,
-             df0$`Year of highest earned degree.`,
-             df0$`Which of the following best describes your level of bioinformatics training?`,
-             df0$`What is the Carnegie classification of your institution?`,
-             df0$`Is your institution classified as minority-serving?`,
-             df0$`What is the total number of students (undergraduate and graduate) at your institution?`,
-             df0$`What is the total number of undergraduate students at your institution?`,
-             df0$`How many full-time faculty are in your department/unit? (Do not include part-time faculty or adju...`,
-             df0$`How many undergraduate students are in your department/unit (all majors)?`,
-             df0$`Please select the statement belOw that best describes yOu.`,
-             df0$`Please select the statement belOw that best describes yOur current teaching Of biOinfOrmatics cOn...`,
-             df0$`In yOur OpiniOn, are additiOnal undergraduate cOurses with biOinfOrmatics cOntent needed at yOur...`,
-             
-            stringsAsFactors = FALSE)
+#clean extranous rows from dfs
+df1 <- select(df1, 1:45)
+df3 <- select(df3, 1:40)
+df4 <- select(df4, 1:41)
+df5 <- select(df5, 1:38)
 
-#second dataframe composed of columms from the master dataframe; should be irrlevant to our analysis
-df0cols2 <- data.frame(df0$`As part of our work, we are building an online repository of bioinformatics content assessments a...`,df0$`Highest earned degree. If "other," please explain.-TEXT`,
-                       df0$`For each undergraduate course you teach that includes bioinformatics content, please provide the...`,
-                       df0$`Highest earned degree. If "other," please explain.-TEXT`,
-                       df0$`What is the name of your department/unit (e.g., Department of Biology, Biochemistry Department, S...`,
-                       df0$`Additional comments:`,
-                       df0$`Optional: Please give certificate or minor name, department/unit in which it's offered, and websi...`,
-                       df0$`Optional: Please give name, department/unit in which it's offered, and website URL (if available):`,
-                       df0$`Briefly describe the format of the bioinformatics training (e.g., boot camp, short course, etc.)...`,
-                       df0$`Briefly describe your audience for this training.`,
-                       df0$`In your opinion, what are the biggest bioinformatics needs of those taking your training?`,
-                       df0$`What reasons do your students provide as to why they are taking your training (e.g., professional...`,
-                       df0$`If there are bioinformatics competencies you feel are missing in the above, please describe them...`,
-                       stringsAsFactors = FALSE)
+#Improve column names for imported coded dataframes by adding question numbers
 
-df1cols1 <- data.frame(df1[11:45],
-                       stringsAsFactors = FALSE)
-df1cols2 <- data.frame(df2[11:39],
-                       stringsAsFactors = FALSE)
-df1cols3 <- data.frame(df3[11:40],
-                       stringsAsFactors = FALSE)
-df1cols4 <- data.frame(df4[11:41],
-                       stringsAsFactors = FALSE)
-df1cols5 <- data.frame(df5[11:38],
-                       stringsAsFactors = FALSE)
+#Q38
+Q38_header <- colnames(df1) 
+Q38_string <- replicate(45, "Q38", simplify = "vector")
+Q38_header_new <- paste(Q38_string,Q38_header, sep="_")
+colnames(df1) <- Q38_header_new
+
+#Q06
+Q06_header <- colnames(df2) 
+Q06_string <- replicate(39, "Q06", simplify = "vector")
+Q06_header_new <- paste(Q06_string,Q06_header, sep="_")
+colnames(df2) <- Q06_header_new
+
+#Q29-30
+Q29_header <- colnames(df3) 
+Q29_string <- replicate(40, "Q29-30", simplify = "vector")
+Q29_header_new <- paste(Q29_string,Q29_header, sep="_")
+colnames(df3) <- Q29_header_new
+
+#Q33
+Q33_header <- colnames(df4) 
+Q33_string <- replicate(41, "Q33", simplify = "vector")
+Q33_header_new <- paste(Q33_string,Q33_header, sep="_")
+colnames(df4) <- Q33_header_new
+
+#Q41
+Q41_header <- colnames(df5) 
+Q41_string <- replicate(38, "Q41", simplify = "vector")
+Q41_header_new <- paste(Q41_string,Q41_header, sep="_")
+colnames(df5) <- Q41_header_new
 
 #combine appropriate columms into new df
-combined_raw_df <- bind_cols(df0cols1,
-                     df1cols1,
-                     df1cols2,
-                     df1cols3,
-                     df1cols4,
-                     df1cols5,
-                     df0cols2)
-
+combined_raw_df <- bind_cols(data.frame(df0[,1:6], 
+                                        stringsAsFactors = FALSE),
+                             data.frame(df1[,11:45],
+                                        stringsAsFactors = FALSE), 
+                             data.frame(df0[,7:8],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df2[,12:39],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df0[,9:17],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df3[,13:40],
+                                        stringsAsFactors = FALSE), 
+                             data.frame(df0[,18:33],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df4[,12:41],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df0[,34:35],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df5[,12:38],
+                                        stringsAsFactors = FALSE),
+                             data.frame(df0[,36:41],
+                                        stringsAsFactors = FALSE)
+                             )
 
 #save combined df in csv format
 write_csv(combined_raw_df, "./combined_raw_df.csv")
