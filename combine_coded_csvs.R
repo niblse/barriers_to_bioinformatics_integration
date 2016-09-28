@@ -68,7 +68,7 @@ colnames(df5) <- Q41_header_new
 #combine appropriate columms into new df
 combined_raw_df <- bind_cols(data.frame(df0[,1:6], 
                                         stringsAsFactors = FALSE),
-                             data.frame(df1[,11:45],
+                             data.frame(df1[,12:45],
                                         stringsAsFactors = FALSE), 
                              data.frame(df0[,7:8],
                                         stringsAsFactors = FALSE),
