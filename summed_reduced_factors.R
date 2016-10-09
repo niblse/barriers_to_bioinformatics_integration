@@ -17,55 +17,55 @@ df <- read_csv("binary_scores.csv")
 
 #Q38_PREVENTING YOU
 #df[7:12] - Faculty Issues
-q31_1df <- df %>%
-  mutate(q31_Faculty_issues_sum = rowSums(df[7:12])) %>%
-  mutate(q31_Faculty_issues_reduced = ifelse(rowSums(df[7:12]) == 0,0,1))
+q38_1df <- df %>%
+  mutate(q38_Faculty_issues_sum = rowSums(df[7:12])) %>%
+  mutate(q38_Faculty_issues_reduced = ifelse(rowSums(df[7:12]) == 0,0,1))
 
 #df[13:22] - Curriculum Issues
-q31_2df <- df %>%
-  mutate(q31_Curriculum_issues_sum = rowSums(df[13:22])) %>%
-  mutate(q31_Curriculum_issues_reduced = ifelse(rowSums(df[13:22]) == 0,0,1))
+q38_2df <- df %>%
+  mutate(q38_Curriculum_issues_sum = rowSums(df[13:22])) %>%
+  mutate(q38_Curriculum_issues_reduced = ifelse(rowSums(df[13:22]) == 0,0,1))
 
 #df[23:31] - Resources Issues
-q31_3df <- df %>%
-  mutate(q31_Resources_issues_sum = rowSums(df[23:31])) %>%
-  mutate(q31_Resources_issues_reduced = ifelse(rowSums(df[23:31]) == 0,0,1))
+q38_3df <- df %>%
+  mutate(q38_Resources_issues_sum = rowSums(df[23:31])) %>%
+  mutate(q38_Resources_issues_reduced = ifelse(rowSums(df[23:31]) == 0,0,1))
 
 #df[32:34] - Student Issues
-q31_4df <- df %>%
-  mutate(q31_Student_issues_sum = rowSums(df[32:34])) %>%
-  mutate(q31_Student_issues_reduced = ifelse(rowSums(df[32:34]) == 0,0,1))
+q38_4df <- df %>%
+  mutate(q38_Student_issues_sum = rowSums(df[32:34])) %>%
+  mutate(q38_Student_issues_reduced = ifelse(rowSums(df[32:34]) == 0,0,1))
 
 #df[35:36] - Facilities Issues
-q31_5df <- df %>%
-  mutate(q31_Facilities_issues_sum = rowSums(df[35:36])) %>%
-  mutate(q31_Facilities_issues_reduced = ifelse(rowSums(df[35:36]) == 0,0,1))
+q38_5df <- df %>%
+  mutate(q38_Facilities_issues_sum = rowSums(df[35:36])) %>%
+  mutate(q38_Facilities_issues_reduced = ifelse(rowSums(df[35:36]) == 0,0,1))
 
 #df[37:38] - Institutional Support
-q31_6df <- df %>%
-  mutate(q31_Institutional_issues_sum = rowSums(df[37:38])) %>%
-  mutate(q31_Institutional_issues_reduced = ifelse(rowSums(df[37:38]) == 0,0,1))
+q38_6df <- df %>%
+  mutate(q38_Institutional_issues_sum = rowSums(df[37:38])) %>%
+  mutate(q38_Institutional_issues_reduced = ifelse(rowSums(df[37:38]) == 0,0,1))
 
 #df[39] - State Restrictions
-q31_7df <- df %>%
-  mutate(q31_State_issues_sum = rowSums(df[39])) %>%
+q38_7df <- df %>%
+  mutate(q38_State_issues_sum = rowSums(df[39])) %>%
   mutate(q31_State_issues_reduced = ifelse(rowSums(df[39]) == 0,0,1))
 
 #df[40] - Not Accredited
-q31_8df <- df %>%
-  mutate(q31_Accredited_issues_sum = rowSums(df[40])) %>%
-  mutate(q31_Accredited_issues_reduced = ifelse(rowSums(df[40]) == 0,0,1))
+q38_8df <- df %>%
+  mutate(q38_Accredited_issues_sum = rowSums(df[40])) %>%
+  mutate(q38_Accredited_issues_reduced = ifelse(rowSums(df[40]) == 0,0,1))
 
 
 
-q38_cols <- bind_cols( q31_1df[,189:190],
-                       q31_2df[,189:190],
-                       q31_3df[,189:190],
-                       q31_4df[,189:190],
-                       q31_5df[,189:190],
-                       q31_6df[,189:190],
-                       q31_7df[,189:190],
-                       q31_8df[,189:190]
+q38_cols <- bind_cols( q38_1df[,189:190],
+                       q38_2df[,189:190],
+                       q38_3df[,189:190],
+                       q38_4df[,189:190],
+                       q38_5df[,189:190],
+                       q38_6df[,189:190],
+                       q38_7df[,189:190],
+                       q38_8df[,189:190]
                        )
 
 #Q06_BARRIERS TO IMPLEMENTATION
