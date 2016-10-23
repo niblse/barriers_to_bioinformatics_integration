@@ -49,7 +49,7 @@ q38_6df <- df %>%
 #df[39] - State Restrictions
 q38_7df <- df %>%
   mutate(q38_State_issues_sum = rowSums(df[39])) %>%
-  mutate(q31_State_issues_reduced = ifelse(rowSums(df[39]) == 0,0,1))
+  mutate(q38_State_issues_reduced = ifelse(rowSums(df[39]) == 0,0,1))
 
 #df[40] - Not Accredited
 q38_8df <- df %>%

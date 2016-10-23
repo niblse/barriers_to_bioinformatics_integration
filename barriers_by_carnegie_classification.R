@@ -1,0 +1,408 @@
+#Plots and analysis of barriers (q38) by carnegie classification (q21)
+require(ggplot2)
+require(tidyverse)
+require(reshape2)
+
+#load dataframe
+df <- read_csv("decoded_df.csv")
+
+
+# remove any non-US respondants
+countries <- c("United States","Puerto Rico")
+df <- df%>%
+  filter(Country_Country %in% countries )
+
+
+#Carnegie Data Frame
+
+#Generate summary stats for raw scored sub-catagories
+
+scored_sub_catagories <- df%>%
+  select(Q38_Faculty.Issues...General, 
+         Q38_Faculty.Issue...No.Expertise..Training, 
+         Q38_Faculty.Issue...Time, 
+         Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum, 
+         Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution, 
+         Q38_Faculty.Issues...Faculty.is.new.to.current.Dept, 
+         Q38_Curriculum.Issues...General, 
+         Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content, 
+         Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure, 
+         Q38_Curriculum.Issue...Time.for.Curriculum.Development, 
+         Q38_Curric.Issues...Lack.of.Curric.Control.not.in.curent.Curric., 
+         Q38_Curric.Issues...Bioinf..Taught.in.other.courses.at.institution, 
+         Q38_Curric.Issue...Class.Size, 
+         Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available., 
+         Q38_Curric.Issue...Bioinfo.Conent.too.Massive, 
+         Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses,
+         Q38_Resource.Issues...General, 
+         Q38_Resources...Access.to.Quality.Exercises..Content, 
+         Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric,
+         Q38_Resources...Access.to.Approp.Introductory.Content, 
+         Q38_Resources...Unable.to.identify.access.best.current.Bioinf.material, 
+         Q38_Resource.Issues...Funding, 
+         Q38_Resource.Issues...Not.available.in.course.textbook, 
+         Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent, 
+         Q38_Resource.Issues..TA.s.lack.approp.skils,
+         Q38_Student.Issues...General, 
+         Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge, 
+         Q38_Student.Issues...Lack.of.interest.in.topic,
+         Q38_Facilities.Issues...General, 
+         Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment,
+         Q38_Inst.Dept..Support...General, 
+         Q38_Inst.Dept.Issues...Institutional.Inertia, 
+         Q38_State.restrictions, 
+         Q38_Not.accredited,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)
+
+scored_sub_Assoc <- scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+scored_sub_Bacca<- scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+scored_sub_Master<- scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+scored_sub_Doc<- scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+raw_scored_df <- data.frame(scored_sub_Assoc[1:34],
+                            scored_sub_Bacca[1:34], 
+                            scored_sub_Master[1:34], 
+                            scored_sub_Doc[1:34])
+
+#transpose the dataframe and restore its dataframeness
+transposed_raw_scored_df <- t(raw_scored_df)
+raw_scored_totals_df <- data.frame(transposed_raw_scored_df)
+
+# create a df containing the chi-squared values
+raw_scored_totals_chi <- rbind(raw_scored_totals_df,sapply(raw_scored_totals_df,chisq.test,simulate.p.value = TRUE)[3,])
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_raw_scored_totals_df <- melt(as.matrix(raw_scored_totals_df))
+
+#plot the raw score values
+melted_raw_scored_totals_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  scale_fill_discrete(name="Q38 Barriers by Carnegie Classification - sub-catagories")
+ggsave("./plots/q38_barriers_summed_by_carnegie_classification_sub_cats.png")
+
+
+#Generate a sum by carnegie catagory for each of the barrier summed super-catagories
+Assoc_var_summed <- df%>%
+  select(q38_Faculty_issues_sum, 
+         q38_Curriculum_issues_sum, 
+         q38_Resources_issues_sum, 
+         q38_Student_issues_sum, 
+         q38_Facilities_issues_sum, 
+         q38_Institutional_issues_sum, 
+         q38_State_issues_sum, 
+         q38_Accredited_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+
+Bacca_var_summed <- df%>%
+  select(q38_Faculty_issues_sum, 
+         q38_Curriculum_issues_sum, 
+         q38_Resources_issues_sum, 
+         q38_Student_issues_sum, 
+         q38_Facilities_issues_sum, 
+         q38_Institutional_issues_sum, 
+         q38_State_issues_sum, 
+         q38_Accredited_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Master_var_summed <- df%>%
+  select(q38_Faculty_issues_sum, 
+         q38_Curriculum_issues_sum, 
+         q38_Resources_issues_sum, 
+         q38_Student_issues_sum, 
+         q38_Facilities_issues_sum, 
+         q38_Institutional_issues_sum, 
+         q38_State_issues_sum, 
+         q38_Accredited_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Doc_var_summed<- df%>%
+  select(q38_Faculty_issues_sum, 
+         q38_Curriculum_issues_sum, 
+         q38_Resources_issues_sum, 
+         q38_Student_issues_sum, 
+         q38_Facilities_issues_sum, 
+         q38_Institutional_issues_sum, 
+         q38_State_issues_sum, 
+         q38_Accredited_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+#create a data frame from the sums
+q21_q38_summed_df <- data.frame(Assoc_var_summed[1:8],
+                       Bacca_var_summed[1:8],
+                       Doc_var_summed[1:8],
+                       Master_var_summed[1:8])
+
+#transpose the dataframe and restore its dataframeness
+q21_q38_summed_df <- t(q21_q38_summed_df)
+q21_q38_summed_df <- data.frame(q21_q38_summed_df)
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q38_summed_df <- melt(as.matrix(q21_q38_summed_df))
+
+melted_q21_q38_summed_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  scale_fill_discrete(name="Q38 Barrier")
+ggsave("./plots/q38_barriers_summed_by_carnegie_classification.png")
+
+#Generate a sum by carnegie catagory for each of the barrier reduced super-catagories
+Assoc_var_reduced <- df%>%
+  select(q38_Faculty_issues_reduced, 
+         q38_Curriculum_issues_reduced, 
+         q38_Resources_issues_reduced, 
+         q38_Student_issues_reduced, 
+         q38_Facilities_issues_reduced, 
+         q38_Institutional_issues_reduced, 
+         q38_State_issues_reduced, 
+         q38_Accredited_issues_reduced, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+
+Bacca_var_reduced <- df%>%
+  select(q38_Faculty_issues_reduced, 
+         q38_Curriculum_issues_reduced, 
+         q38_Resources_issues_reduced, 
+         q38_Student_issues_reduced, 
+         q38_Facilities_issues_reduced, 
+         q38_Institutional_issues_reduced, 
+         q38_State_issues_reduced, 
+         q38_Accredited_issues_reduced, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Master_var_reduced <- df%>%
+  select(q38_Faculty_issues_reduced, 
+         q38_Curriculum_issues_reduced, 
+         q38_Resources_issues_reduced, 
+         q38_Student_issues_reduced, 
+         q38_Facilities_issues_reduced, 
+         q38_Institutional_issues_reduced, 
+         q38_State_issues_reduced, 
+         q38_Accredited_issues_reduced, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Doc_var_reduced<- df%>%
+  select(q38_Faculty_issues_reduced, 
+         q38_Curriculum_issues_reduced, 
+         q38_Resources_issues_reduced, 
+         q38_Student_issues_reduced, 
+         q38_Facilities_issues_reduced, 
+         q38_Institutional_issues_reduced, 
+         q38_State_issues_reduced, 
+         q38_Accredited_issues_reduced, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+#create a data frame from the reduced columns
+q21_q38_reduced_df <- data.frame(Assoc_var_reduced[1:8],
+                       Bacca_var_reduced[1:8],
+                       Doc_var_reduced[1:8],
+                       Master_var_reduced[1:8])
+
+#transpose the dataframe and restore its dataframeness
+q21_q38_reduced_df <- t(q21_q38_reduced_df)
+q21_q38_reduced_df <- data.frame(q21_q38_reduced_df)
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q38_reduced_df <- melt(as.matrix(q21_q38_reduced_df))
+
+melted_q21_q38_reduced_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  scale_fill_discrete(name="Q38 Barrier")
+ggsave("./plots/q38_barriers_reduced_by_carnegie_classification.png")
+
+#calculate chi-squared values for each of the barriers
+
+#chi-squared for summed super-categories q38 
+
+#faculty
+faculty_table_summed <- df%>%
+  select(q38_Faculty_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+faculty_table_summed <- data.frame(faculty_table_summed)
+faculty_chi <- chisq.test(table(faculty_table_summed))
+
+#curriculumn
+curriculum_table_summed <- df%>%
+  select(q38_Curriculum_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+curriculum_table_summed <- data.frame(curriculum_table_summed)
+curriculum_chi <- chisq.test(table(curriculum_table_summed))
+
+#Resources
+resources_table_summed <- df%>%
+  select(q38_Resources_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+resources_table_summed <- data.frame(resources_table_summed)
+resources_chi <- chisq.test(table(resources_table_summed))
+
+#student_issues
+student_table_summed <- df%>%
+  select(q38_Student_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+student_table_summed <- data.frame(student_table_summed)
+student_chi <- chisq.test(table(student_table_summed))
+
+#Facilities
+facilities_table_summed <- df%>%
+  select(q38_Facilities_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+facilities_table_summed <- data.frame(facilities_table_summed)
+facilities_chi <- chisq.test(table(facilities_table_summed))
+
+#Institution
+institution_table_summed <- df%>%
+  select(q38_Institutional_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+institution_table_summed <- data.frame(institution_table_summed)
+institution_chi <- chisq.test(table(institution_table_summed))
+
+#State
+state_table_summed <- df%>%
+  select(q38_State_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+state_table_summed <- data.frame(state_table_summed)
+state_chi <- chisq.test(table(state_table_summed))
+
+#accreditation
+accred_table_summed <- df%>%
+  select(q38_Accredited_issues_sum, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  na.omit()
+
+accred_table_summed <- data.frame(accred_table_summed)
+accred_chi <- chisq.test(table(accred_table_summed))
+
+#Add chi values to table
+
+q21_q38_summed_df_chi <- rbind(q21_q38_summed_df, "chi-values" = c(faculty_chi$p.value, 
+                               curriculum_chi$p.value, 
+                               resources_chi$p.value, 
+                               student_chi$p.value, 
+                               facilities_chi$p.value, 
+                               institution_chi$p.value, 
+                               state_chi$p.value, 
+                               accred_chi$p.value
+                               ))
+
+#get chi table into plotting format
+
+#transpose the dataframe and restore its dataframeness
+q21_q38_summed_df_chi <- t(q21_q38_summed_df_chi)
+q21_q38_summed_df_chi <- data.frame(q21_q38_summed_df_chi)
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q38_summed_df_chi <- melt(as.matrix(q21_q38_summed_df_chi))
+
+#bar chart of faculty answers grouped by barrier
+melted_q21_q38_summed_df_chi%>%
+  filter(Var2 != "chi.values" )%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Barriers")+
+  ylab("number of issues scored")+
+  scale_fill_discrete(name="Q38 Barrier")
+
+#boxplot of response distributions
+
+melted_q21_q38_summed_df_chi_values <- melted_q21_q38_summed_df_chi%>%
+  filter(Var2 == "chi.values" )
+
+melted_q21_q38_summed_df%>%
+  ggplot()+
+  aes(x= Var2, y=value)+
+  geom_boxplot()+
+theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#testing....
+
+tmp <- melted_q21_q38_summed_df_chi%>%
+  filter(Var1 == "q38_Faculty_issues_sum")%>%
+  mutate(chivalues = melted_q21_q38_summed_df_chi_values[1,3])
+
+tmp %>%
+  filter(Var2 != "chi.values" )%>%
+  ggplot()+
+  aes(x= Var1, y=value )+
+  geom_boxplot()+
+  geom_text(aes(label="***"), size = 8)+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+q21_q38_summed_df_chi%>%
+  ggplot()+
+  aes(x= row.names(q21_q38_summed_df_chi), 
+      y= q21_q38_summed_df_chi$Assoc_var_summed.1.8.)+
+  geom_boxplot()
+
+
+
+
+
+
+
+

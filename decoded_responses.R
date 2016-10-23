@@ -1,7 +1,7 @@
 #This transforms the summed_reduced_factors.csv by translating survey responses (e.g. 1,2,3..)
 #Into their text choices
 
-library(tidyverse)
+require(tidyverse)
 
 df <- read_csv("./summed_reduced_factors.csv")
 
