@@ -3,15 +3,22 @@ require(ggplot2)
 require(tidyverse)
 require(reshape2)
 
+#Start a ReadMe for this analysis
+dir.create("./output_tables/analysis_of_barriers_q38_by_carnegie_q21")
+readme <- "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/ReadMe.md"
+write("#ReadMe",readme)
+write(R.version.string, readme, append = TRUE)
+
 #load dataframe
 df <- read_csv("decoded_df.csv")
-
+write("\n Input for script:decoded_df.csv", readme, append = TRUE )
 
 # remove any non-US respondants
+
 countries <- c("United States","Puerto Rico")
 df <- df%>%
   filter(Country_Country %in% countries )
-
+write("\n input dataframe was filtered to include only US and Puerto Rico", readme, append = TRUE )
 
 #Carnegie Data Frame
 
@@ -79,12 +86,39 @@ raw_scored_df <- data.frame(scored_sub_Assoc[1:34],
                             scored_sub_Master[1:34], 
                             scored_sub_Doc[1:34])
 
+write.csv(raw_scored_df, file = "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_q21_counts_by_sub_categories.csv" )
+write("\n## q38_by_q21_counts_by_sub_categories.csv \n contains the sum of responses 
+      for all scored sub-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
+
 #transpose the dataframe and restore its dataframeness
 transposed_raw_scored_df <- t(raw_scored_df)
 raw_scored_totals_df <- data.frame(transposed_raw_scored_df)
 
 # create a df containing the chi-squared values
 raw_scored_totals_chi <- rbind(raw_scored_totals_df,sapply(raw_scored_totals_df,chisq.test,simulate.p.value = TRUE)[3,])
+rownames(raw_scored_totals_chi)[5] <- "chiValues"
+
+#generate table of chivalues
+melted_raw_scored_totals_chi <- melt(as.matrix(raw_scored_totals_chi))
+write.csv(melted_raw_scored_totals_chi,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_counts_and_chi_barriers_by_sub_catagory.csv")
+write("\n## q38_by_21_counts_and_chi_barriers_by_sub_catagory.csv \n contains the sum of responses 
+      for all scored sub-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+#write a table that outputs sig chivalues for sub-catagories by Carnegie classification
+melted_raw_scored_totals_chi %>%
+  filter(Var1 == "chiValues")%>%
+  filter(value <= 0.05)%>%
+  write.csv(,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_signifigant_barriers_by_sub_catagory.csv")
+
+write("\n## q38_by_21_signifigant_barriers_by_sub_catagory.csv\n 
+      contains chisq.test values from **q38_by_21_signifigant_barriers_by_sub_catagory.csv** that were 
+      0.05 or less.", readme, append = TRUE )
 
 #melt the dataframe using reshape - do as matrix to preserve row names
 melted_raw_scored_totals_df <- melt(as.matrix(raw_scored_totals_df))
@@ -96,7 +130,8 @@ melted_raw_scored_totals_df%>%
   geom_bar(stat="identity", position = "dodge")+
   xlab("Carnegie Classification")+
   ylab("number of issues scored")+
-  scale_fill_discrete(name="Q38 Barriers by Carnegie Classification - sub-catagories")
+  scale_fill_discrete(name="Q38 Barriers by Carnegie Classification - sub-catagories")+
+  ggtitle("Q21- Barriers (summed sub-catagories) by Carnegie Classification")
 ggsave("./plots/q38_barriers_summed_by_carnegie_classification_sub_cats.png")
 
 
@@ -163,22 +198,53 @@ q21_q38_summed_df <- data.frame(Assoc_var_summed[1:8],
                        Bacca_var_summed[1:8],
                        Doc_var_summed[1:8],
                        Master_var_summed[1:8])
+write.csv(q21_q38_summed_df, file = "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_q21_counts_by_summed_super_categories.csv" )
+write("\n## q38_by_q21_counts_by_summed_super_categories.csv\n contains the sum of responses 
+      for all scored super-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
 
 #transpose the dataframe and restore its dataframeness
 q21_q38_summed_df <- t(q21_q38_summed_df)
 q21_q38_summed_df <- data.frame(q21_q38_summed_df)
 
+# create a df containing the chi-squared values
+q21_q38_summed_df_chi <- rbind(q21_q38_summed_df,sapply(q21_q38_summed_df,chisq.test,simulate.p.value = TRUE)[3,])
+rownames(q21_q38_summed_df_chi)[5] <- "chiValues"
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q38_summed_df_chi <- melt(as.matrix(q21_q38_summed_df_chi))
+write.csv(melted_q21_q38_summed_df_chi,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_counts_and_chi_barriers_by_super_catagory.csv")
+write("\n## q38_by_21_counts_and_chi_barriers_by_super_catagory.csv \n contains the sum of responses 
+      for all scored super-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+
+
+
 #melt the dataframe using reshape - do as matrix to preserve row names
 melted_q21_q38_summed_df <- melt(as.matrix(q21_q38_summed_df))
 
+# Plot the barrier totals by summed super catagories
 melted_q21_q38_summed_df%>%
   ggplot()+
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
   xlab("Carnegie Classification")+
   ylab("number of issues scored")+
-  scale_fill_discrete(name="Q38 Barrier")
+  scale_fill_discrete(name="Q38 Barrier")+
+  ggtitle("Q21- Barriers (summed super-catagories) by Carnegie Classification")
 ggsave("./plots/q38_barriers_summed_by_carnegie_classification.png")
+
+
+
+
+
+
+
 
 #Generate a sum by carnegie catagory for each of the barrier reduced super-catagories
 Assoc_var_reduced <- df%>%
