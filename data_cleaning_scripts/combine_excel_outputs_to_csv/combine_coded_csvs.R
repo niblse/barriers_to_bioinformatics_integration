@@ -1,5 +1,6 @@
-#this script combines the coded survey results and combines generated in excel 
-#and generates a combined R dataframe
+#this script combines the coded survey results from the various excel sheets (which were
+#already themselves exported to separate csv files e.g. 01_preventing_you.csv)
+#and generates a csv
 
 #load tidyverse library
 library(tidyverse)
