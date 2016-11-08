@@ -2,6 +2,7 @@
 require(ggplot2)
 require(tidyverse)
 require(reshape2)
+require(corrplot)
 
 #Create folder and start a ReadMe for this analysis
 dir.create("./output_tables/analysis_of_barriers_q38_by_carnegie_q21/", recursive = TRUE)
@@ -26,7 +27,7 @@ write("\n input dataframe was filtered to include only US and Puerto Rico", read
 question_responses = c("1_Associate's College",
                        "2_Baccalaureate College",
                        "3_Master's (Small, Medium, Large)",
-                       "4_Doctoral University (High, Higher, Higohest Research Activity)")
+                       "4_Doctoral University (High, Higher, Highest Research Activity)")
 
 overall_n = df%>%
   filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. %in% question_responses)%>%
@@ -153,7 +154,35 @@ legend_labels = c("Faculty Issues: General",
                   "Faculty Issues: Time",
                   "Faculty Issues: Curriculumn design/integration",
                   "Faculty Issues: Lack of interest",
-                  "Faculty Issues: New Faculty",)
+                  "Faculty Issues: New Faculty",
+                  "Curriculumn Issues: General",
+                  "Curriculumn Issues: No space",
+                  "Curriculumn Issues: Incompatible",
+                  "Curriculumn Issues: Time needed to develop",
+                  "Curriculumn Issues: No control",
+                  "Curriculumn Issues: Covered elsewhere",
+                  "Curriculumn Issues: Class size",
+                  "Curriculumn Issues: Plan for future coverage",
+                  "Curriculumn Issues: Too much content",
+                  "Curriculumn Issues: Content requires several courses",
+                  "Resource Issues: General",
+                  "Resource Issues: Access to exercises",
+                  "Resource Issues: Access to lesson plans",
+                  "Resource Issues: Acess to intro content",
+                  "Resource Issues: Unable to vet content",
+                  "Resource Issues: Funding",
+                  "Resource Issues: No appropriate text",
+                  "Resource Issues: No access to online exercieses",
+                  "Resource Issues: No qualified TAs",
+                  "Student Issues: General",
+                  "Student Issues: Background knowledge",
+                  "Student Issues: Interest in topic",
+                  "Facilities: General",
+                  "Facilities: Access to equipment",
+                  "Institutional: General",
+                  "Institutional: Inertia",
+                  "State Restrictions", 
+                  "Accredidation")
 
 melted_raw_scored_totals_df%>%
   ggplot()+
@@ -162,11 +191,11 @@ melted_raw_scored_totals_df%>%
   xlab("Carnegie Classification")+
   ylab("number of issues scored")+
   scale_x_discrete(limits = positions, labels = categories )+
-  scale_fill_discrete(name="Q38 Barriers by Carnegie Classification - sub-catagories")+
-  ggtitle("Q21- Barriers (summed sub-catagories) by Carnegie Classification")+
+  scale_fill_discrete(name= "Q38 Barriers by Carnegie Classification", labels = legend_labels)+
+  ggtitle(paste("Q21- Barriers (summed sub-catagories) by Carnegie Classification \n n=",overall_n))+
   theme(legend.position="bottom")+
   theme(legend.key=element_blank(), legend.key.size=unit(1,"point"))+
-  guides(fill=guide_legend(nrow=40,byrow=TRUE))
+  guides(fill=guide_legend(nrow=25,byrow=TRUE))
  
 
 ggsave("./output_plots/analysis_of_barriers_q38_by_carnegie_q21/q38_barriers_summed_by_carnegie_classification_sub_cats.png")
@@ -436,9 +465,13 @@ melted_q21_q38_reduced_df%>%
 ggsave("./output_plots/analysis_of_barriers_q38_by_carnegie_q21/q38_barriers_reduced_by_carnegie_classification.png")
 
 
+#calculate correlation plots
 
-
-
-
-
+#correlation summed
+cor_summed <- cor(q21_q38_summed_df)
+png(height=1200, width=1200, pointsize=25, file="./output_plots/analysis_of_barriers_q38_by_carnegie_q21/test_corr_plot.png")
+corrplot(cor_summed, 
+         order = "hclust", 
+         tl.srt=45)
+dev.off()
 
