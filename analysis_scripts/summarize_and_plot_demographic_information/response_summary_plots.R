@@ -2,8 +2,9 @@
 require(ggplot2)
 require(tidyverse)
 
-#load dataframe
-df <- read_csv("decoded_df.csv")
+#load dataframe and create directories
+dir.create("./output_plots", recursive = TRUE)
+df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
 
 # remove any non-US respondants
@@ -26,10 +27,11 @@ df %>%
   xlab("gender")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
 
-ggsave("./plots/q14_survey_responses_by_gender.png")
+ggsave("./output_plots/q14_survey_responses_by_gender.png")
+
+
 
 #question 57 - Institution
-
 df %>%
   ggplot()+
   aes(x= reorder(df$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.,
@@ -40,7 +42,7 @@ df %>%
   ggtitle("Q57 - Survey Responses by Institution Type")+
   xlab("institution type")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q57_survey_responses_by_institution_type.png")
+ggsave("./output_plots/q57_survey_responses_by_institution_type.png")
 
 #question 1 - Current teaching
 df %>%
@@ -57,7 +59,7 @@ df %>%
   xlab("teaching category")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-ggsave("./plots/q1_survey_responses_by_teaching_category.png")
+ggsave("./output_plots/q1_survey_responses_by_teaching_category.png")
 
 #question State 
 state_df <- df%>%
@@ -73,7 +75,7 @@ state_df %>%
   xlab("state (including Washington DC; excluding Puerto Rico)")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-ggsave("./plots/qstate_survey_responses_by_state.png")
+ggsave("./output_plots/qstate_survey_responses_by_state.png")
 
 
 #question 21, carnegie classification 
@@ -88,7 +90,7 @@ df %>%
   ggtitle("Q21 - Survey Responses by Carnegie Classification")+
   xlab("carnegie classification")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q21_survey_responses_by_carnegie_classification.png")
+ggsave("./output_plots/q21_survey_responses_by_carnegie_classification.png")
 
 #question 18, year of degree
 
@@ -102,7 +104,7 @@ df %>%
   xlab("year of degree")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-ggsave("./plots/q18_survey_responses_by_year_of_degree.png")
+ggsave("./output_plots/q18_survey_responses_by_year_of_degree.png")
 
 #question 3, level of training
 
@@ -125,7 +127,7 @@ df %>%
   xlab("training level")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")+
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
-ggsave("./plots/q3_survey_responses_by_level_of_training.png")
+ggsave("./output_plots/q3_survey_responses_by_level_of_training.png")
 
 
 #question 22, MSI
@@ -142,7 +144,7 @@ df %>%
   ggtitle("Q22 - Minority Serving Institution")+
   xlab("institution type")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q22_survey_responses_by_MSI.png")
+ggsave("./output_plots/q22_survey_responses_by_MSI.png")
 
 
 #question 23, number of students (grad+undergrad)
@@ -161,7 +163,7 @@ df %>%
   xlab("student enrollment")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
 
-ggsave("./plots/q23_survey_responses_by_undegraduate_and_graduate_enrollment.png")
+ggsave("./output_plots/q23_survey_responses_by_undegraduate_and_graduate_enrollment.png")
 
 #question 24, number of undergraduate students 
 
@@ -178,7 +180,7 @@ df %>%
   ggtitle("Q24 - Number of undegraduate students")+
   xlab("student enrollment")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q24_survey_responses_by_undegraduate_enrollment.png")
+ggsave("./output_plots/q24_survey_responses_by_undegraduate_enrollment.png")
 
 
 #question 26, number of full-time faculty 
@@ -199,7 +201,7 @@ df %>%
   ggtitle("Q26 - Number of full-time faculty")+
   xlab("faculty size")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q26_survey_responses_by_faculty_size.png")
+ggsave("./output_plots/q26_survey_responses_by_faculty_size.png")
 
 
 #question 27, undergrads in department
@@ -219,7 +221,7 @@ df %>%
   ggtitle("Q27 - Number of undegraduates in department")+
   xlab("student enrollment")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/q27_survey_responses_by_undergrads_in_dept.png")
+ggsave("./output_plots/q27_survey_responses_by_undergrads_in_dept.png")
 
 #question Region, respondants by region
 
@@ -236,7 +238,7 @@ df %>%
   ggtitle("QRegion - Number of respondants by region")+
   xlab("region")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
-ggsave("./plots/qRegion_survey_responses_by_region.png")
+ggsave("./output_plots/qRegion_survey_responses_by_region.png")
   
 
 

@@ -1,11 +1,11 @@
-#This script accepts the binary_scored.csv and collapses 
+#This script accepts the binary_scores.csv and collapses 
 # coding of several subfactors (barriers) into the a summed barrier for analysis
 
 #load tidyverse library
 library(tidyverse)
 
 #read in coded csv sheets
-df <- read_csv("binary_scores.csv")
+df <- read_csv("../02_transform_coding_to_binary/output/binary_scores.csv")
 
 
 
@@ -218,4 +218,5 @@ summed_reduced_df <- bind_cols(df[1:6],
                                )
 
 #write to file
-write_csv(summed_reduced_df, "./summed_reduced_factors.csv")
+dir.create("./output/", recursive = TRUE)
+write_csv(summed_reduced_df, "./output/summed_reduced_factors.csv")

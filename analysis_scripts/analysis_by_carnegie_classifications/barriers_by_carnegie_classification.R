@@ -12,7 +12,7 @@ write("#ReadMe",readme)
 write(R.version.string, readme, append = TRUE)
 
 #load dataframe
-df <- read_csv("decoded_df.csv")
+df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 write("\n Input for script:decoded_df.csv", readme, append = TRUE )
 
 # remove any non-US respondants
@@ -41,13 +41,11 @@ write(paste("### Value of n for this analysis is the number of respondants who
 #Generate summary stats for raw scored sub-catagories
 
 scored_sub_catagories <- df%>%
-  select(Q38_Faculty.Issues...General, 
-         Q38_Faculty.Issue...No.Expertise..Training, 
+  select(Q38_Faculty.Issue...No.Expertise..Training, 
          Q38_Faculty.Issue...Time, 
          Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum, 
          Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution, 
          Q38_Faculty.Issues...Faculty.is.new.to.current.Dept, 
-         Q38_Curriculum.Issues...General, 
          Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content, 
          Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure, 
          Q38_Curriculum.Issue...Time.for.Curriculum.Development, 
@@ -57,7 +55,6 @@ scored_sub_catagories <- df%>%
          Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available., 
          Q38_Curric.Issue...Bioinfo.Conent.too.Massive, 
          Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses,
-         Q38_Resource.Issues...General, 
          Q38_Resources...Access.to.Quality.Exercises..Content, 
          Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric,
          Q38_Resources...Access.to.Approp.Introductory.Content, 
@@ -66,12 +63,9 @@ scored_sub_catagories <- df%>%
          Q38_Resource.Issues...Not.available.in.course.textbook, 
          Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent, 
          Q38_Resource.Issues..TA.s.lack.approp.skils,
-         Q38_Student.Issues...General, 
          Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge, 
          Q38_Student.Issues...Lack.of.interest.in.topic,
-         Q38_Facilities.Issues...General, 
          Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment,
-         Q38_Inst.Dept..Support...General, 
          Q38_Inst.Dept.Issues...Institutional.Inertia, 
          Q38_State.restrictions, 
          Q38_Not.accredited,
@@ -97,10 +91,10 @@ scored_sub_Doc<- scored_sub_catagories%>%
   mutate_if(is.character,as.numeric)%>%
   colSums()
 
-raw_scored_df <- data.frame(scored_sub_Assoc[1:34],
-                            scored_sub_Bacca[1:34], 
-                            scored_sub_Master[1:34], 
-                            scored_sub_Doc[1:34])
+raw_scored_df <- data.frame(scored_sub_Assoc[1:28],
+                            scored_sub_Bacca[1:28], 
+                            scored_sub_Master[1:28], 
+                            scored_sub_Doc[1:28])
 
 write.csv(raw_scored_df, file = "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_q21_counts_by_sub_categories.csv" )
 write("\n## q38_by_q21_counts_by_sub_categories.csv \n contains the sum of responses 
@@ -141,21 +135,19 @@ melted_raw_scored_totals_df <- melt(as.matrix(raw_scored_totals_df))
 
 #plot the raw score values
 
-positions = c("scored_sub_Assoc.1.34.",
-              "scored_sub_Bacca.1.34.",
-              "scored_sub_Master.1.34.",
-              "scored_sub_Doc.1.34.")
+positions = c("scored_sub_Assoc.1.28.",
+              "scored_sub_Bacca.1.28.",
+              "scored_sub_Master.1.28.",
+              "scored_sub_Doc.1.28.")
 categories = c ("Associates", 
                 "Baccalaureate",
                 "Masters",
                 "Doctoral")
-legend_labels = c("Faculty Issues: General",
-                  "Faculty Issues: Expertise/training", 
+legend_labels = c("Faculty Issues: Expertise/training", 
                   "Faculty Issues: Time",
                   "Faculty Issues: Curriculumn design/integration",
                   "Faculty Issues: Lack of interest",
                   "Faculty Issues: New Faculty",
-                  "Curriculumn Issues: General",
                   "Curriculumn Issues: No space",
                   "Curriculumn Issues: Incompatible",
                   "Curriculumn Issues: Time needed to develop",
@@ -165,7 +157,6 @@ legend_labels = c("Faculty Issues: General",
                   "Curriculumn Issues: Plan for future coverage",
                   "Curriculumn Issues: Too much content",
                   "Curriculumn Issues: Content requires several courses",
-                  "Resource Issues: General",
                   "Resource Issues: Access to exercises",
                   "Resource Issues: Access to lesson plans",
                   "Resource Issues: Acess to intro content",
@@ -174,12 +165,9 @@ legend_labels = c("Faculty Issues: General",
                   "Resource Issues: No appropriate text",
                   "Resource Issues: No access to online exercieses",
                   "Resource Issues: No qualified TAs",
-                  "Student Issues: General",
                   "Student Issues: Background knowledge",
                   "Student Issues: Interest in topic",
-                  "Facilities: General",
                   "Facilities: Access to equipment",
-                  "Institutional: General",
                   "Institutional: Inertia",
                   "State Restrictions", 
                   "Accredidation")
@@ -195,9 +183,8 @@ melted_raw_scored_totals_df%>%
   ggtitle(paste("Q21- Barriers (summed sub-catagories) by Carnegie Classification \n n=",overall_n))+
   theme(legend.position="bottom")+
   theme(legend.key=element_blank(), legend.key.size=unit(1,"point"))+
-  guides(fill=guide_legend(nrow=25,byrow=TRUE))
+  guides(fill=guide_legend(nrow=10,byrow=TRUE))
  
-
 ggsave("./output_plots/analysis_of_barriers_q38_by_carnegie_q21/q38_barriers_summed_by_carnegie_classification_sub_cats.png")
 
 

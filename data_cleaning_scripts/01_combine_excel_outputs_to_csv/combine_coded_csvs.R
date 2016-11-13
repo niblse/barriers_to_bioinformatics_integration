@@ -92,5 +92,6 @@ combined_raw_df <- bind_cols(data.frame(df0[,1:6],
                              )
 
 #save combined df in csv format
-write_csv(combined_raw_df, "./combined_raw_df.csv")
+dir.create("./output/", recursive = TRUE)
+write_csv(combined_raw_df, "./output/combined_raw_df.csv")
 

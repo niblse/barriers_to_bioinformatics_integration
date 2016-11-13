@@ -3,7 +3,7 @@
 
 require(tidyverse)
 
-df <- read_csv("./summed_reduced_factors.csv")
+df <- read_csv("../03_sum_and_reduce_barrier_coding/output/summed_reduced_factors.csv")
 
 #Transform question 57
 df$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[df$Q57_Please.select.the.statement.belOw.that.best.describes.yOu. == "1"] <- "1_Teach at 4-year institution"
@@ -172,4 +172,5 @@ df$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..
 df$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[df$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "6"] <- "6_Don't know"
 
 #save decoded df in csv format
-write_csv(df, "./decoded_df.csv")
+dir.create("./output/",recursive = TRUE)
+write_csv(df, "./output/decoded_df.csv")
