@@ -28,14 +28,65 @@ R version 3.3.0 (2016-05-03)
       contains chisq.test values from **q38_by_21_signifigant_barriers_by_sub_catagory.csv** that were 
       0.05 or less.
 
-## q38_by_q21_counts_by_summed_super_categories.csv
+## q30_by_21_counts_and_chi_barriers_by_sub_category.csv 
+ contains the sum of responses 
+      for all scored sub-categories where respondents indicated their Carnegie classification. 
+ 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. Sparse values (any barriers with 0 respondants) were removed 
+ 
+      chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n
+
+## q30_by_21_signifigant_barriers_by_sub_category.csv
+ 
+      contains chisq.test values from **q30_by_21_signifigant_barriers_by_sub_category.csv** that were 
+      0.05 or less.
+
+## q30_by_q21_counts_by_sub_categories.csv 
+ contains the sum of responses 
+      for all scored sub-categories where respondants indicated their Carnegie classification.
+ 
+      Users who gave an answer to q30 but did not indicate a Carnegie categories or who were 
+      unsure are removed
+
+## q30_by_21_counts_and_chi_barriers_by_sub_category.csv 
+ contains the sum of responses 
+      for all scored sub-categories where respondents indicated their Carnegie classification. 
+ 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. Sparse values (any barriers with 0 respondants) were removed 
+ 
+      chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n
+
+## q30_by_21_signifigant_barriers_by_sub_category.csv
+ 
+      contains chisq.test values from **q30_by_21_signifigant_barriers_by_sub_category.csv** that were 
+      0.05 or less.
+
+## q29-30_by_q21_counts_by_summed_super_categories.csv
  contains the sum of responses 
       for all scored super-categories where respondants indicated their Carnegie classification.
  
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
       unsure are removed
 
-## q38_by_21_counts_and_chi_barriers_by_super_catagory.csv 
+## q29-30_by_q21_counts_by_summed_super_categories.csv
+ contains the sum of responses 
+      for all scored super-categories where respondants indicated their Carnegie classification.
+ 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
+      unsure are removed
+
+## q29-30_by_q21_counts_by_summed_super_categories.csv
+ contains the sum of responses 
+      for all scored super-categories where respondants indicated their Carnegie classification.
+ 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
+      unsure are removed
+
+## q29.30_by_21_counts_and_chi_barriers_by_super_category.csv 
  contains the sum of responses 
       for all scored super-categories where respondents indicated their Carnegie classification. 
  
@@ -44,28 +95,28 @@ R version 3.3.0 (2016-05-03)
  chisq.test from the R stats package; simulate.p.value = TRUE to account for small
       values of n
 
-## q38_by_21_signifigant_barriers_by_summed_super_catagory.csv
+## q29.30_by_21_signifigant_barriers_by_summed_super_category.csv
  
-      contains chisq.test values from **q38_by_21_counts_and_chi_barriers_by_super_catagory.csv** that were 
+      contains chisq.test values from **q29.30_by_21_counts_and_chi_barriers_by_super_category.csv** that were 
       0.05 or less.
 
-## q38_by_q21_counts_by_reduced_super_categories.csv
+## q29-30_by_q21_counts_by_reduced_super_categories.csv
  contains the sum of responses 
       for all scored super-categories where respondants indicated their Carnegie classification.
  
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were 
       unsure are removed
 
-## q38_by_21_counts_and_chi_barriers_by_reduced_super_catagory.csv 
+## q29.30_by_21_counts_and_chi_barriers_by_super_category.csv 
  contains the sum of responses 
-      for all scored-and-reduced super-categories where respondents indicated their Carnegie classification. 
+      for all scored super-categories where respondents indicated their Carnegie classification. 
  
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
       are removed. 
  chisq.test from the R stats package; simulate.p.value = TRUE to account for small
       values of n
 
-## q38_by_21_signifigant_barriers_by_reduced_super_catagory.csv
+## q29.30_by_21_signifigant_barriers_by_reduced_super_category.csv
  
-      contains chisq.test values from **q38_by_21_counts_and_chi_barriers_by_reduced_super_catagory.csv** that were 
+      contains chisq.test values from **q29.30_by_21_counts_and_chi_barriers_by_super_category.csv** that were 
       0.05 or less.
