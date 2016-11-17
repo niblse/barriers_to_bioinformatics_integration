@@ -1292,24 +1292,328 @@ write(R.version.string, readme, append = TRUE)
 
 Q29_Q21_associates_responses <- df%>%
   filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College" &
-           !is.na(df$Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation.))%>%
+           !is.na(df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))%>%
   count()
 Q29_Q21_associates_responses <- Q29_Q21_associates_responses$n
 
 Q29_Q21_baccalaureate_responses <- df%>%
   filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" &
-           !is.na(df$Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation.))%>%
+           !is.na(df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))%>%
   count()
 Q29_Q21_baccalaureate_responses  <- Q29_Q21_baccalaureate_responses $n
 
 Q29_Q21_masters_responses <- df%>%
   filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" &
-           !is.na(df$Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation.))%>%
+           !is.na(df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))%>%
   count()
 Q29_Q21_masters_responses <- Q29_Q21_masters_responses$n
 
 Q29_Q21_doctoral_responses <- df%>%
   filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)" &
-           !is.na(df$Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation.))%>%
+           !is.na(df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))%>%
   count()
 Q29_Q21_doctoral_responses <- Q29_Q21_doctoral_responses$n
+
+
+
+#analyze Q29 yes/no responses - gather into df by carnegie classification
+
+Q29_Assoc_techbarrier_y_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes")%>%
+  count()
+Q29_Assoc_techbarrier_n_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No")%>%
+  count()
+
+Q29_Bacca_techbarrier_y_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes")%>%
+  count()
+Q29_Bacca_techbarrier_n_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No")%>%
+  count()
+
+  
+Q29_Master_techbarrier_y_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes")%>%
+  count()
+Q29_Master_techbarrier_n_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No")%>%
+  count()
+  
+  
+Q29_Doc_techbarrier_y_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes")%>%
+  count()
+Q29_Doc_techbarrier_n_df <- df%>%
+  select(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  filter(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No")%>%
+  count()
+
+#create a data frame from the yes/no counts
+
+Q29_yes_responses <- c(as.numeric(Q29_Assoc_techbarrier_y_df),
+                  as.numeric(Q29_Bacca_techbarrier_y_df),
+                  as.numeric(Q29_Master_techbarrier_y_df),
+                  as.numeric(Q29_Doc_techbarrier_y_df) )
+Q29_no_responses <- c(as.numeric(Q29_Assoc_techbarrier_n_df),
+                  as.numeric(Q29_Bacca_techbarrier_n_df),
+                  as.numeric(Q29_Master_techbarrier_n_df),
+                  as.numeric(Q29_Doc_techbarrier_n_df))
+tally_rows <- c("Associates", 
+                "Baccalaureate", 
+                "Masters", 
+                "Doctoral")
+
+Q29_ynresponses_df <- data.frame(Q29_yes_responses, Q29_no_responses, row.names = tally_rows)
+
+
+#calculate percentages of respondants
+#add columns for percentages
+#manually (!) calculate percentages for by rows/columns
+
+Q29_ynresponses_df$Q29_percent_yes_responses <- NA
+Q29_ynresponses_df$Q29_percent_no_responses <- NA
+Q29_ynresponses_df[1,3] <- Q29_ynresponses_df[1,1]/Q29_Q21_associates_responses
+Q29_ynresponses_df[1,4] <- Q29_ynresponses_df[1,2]/Q29_Q21_associates_responses
+Q29_ynresponses_df[2,3] <- Q29_ynresponses_df[2,1]/Q29_Q21_baccalaureate_responses
+Q29_ynresponses_df[2,4] <- Q29_ynresponses_df[2,2]/Q29_Q21_baccalaureate_responses
+Q29_ynresponses_df[3,3] <- Q29_ynresponses_df[3,1]/Q29_Q21_masters_responses
+Q29_ynresponses_df[3,4] <- Q29_ynresponses_df[3,2]/Q29_Q21_masters_responses
+Q29_ynresponses_df[4,3] <- Q29_ynresponses_df[4,1]/Q29_Q21_doctoral_responses
+Q29_ynresponses_df[4,4] <- Q29_ynresponses_df[4,2]/Q29_Q21_doctoral_responses
+
+write.csv(Q29_ynresponses_df, file="./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/Q29_response_table.csv")
+
+#plot Q29 responses
+positions <- c("Associates", 
+                "Baccalaureate", 
+                "Masters", 
+                "Doctoral")
+categories = c (paste("Associates, Q29 n(+r)=",sum(Q29_ynresponses_df[1,1:2])), 
+                paste("Baccalaureate, Q29 n(+r)=",sum(Q29_ynresponses_df[2,1:2])),
+                paste("Masters, Q29 n(+r)=",sum(Q29_ynresponses_df[3,1:2])),
+                paste("Doctoral, Q29 n(+r)=", sum(Q29_ynresponses_df[4,1:2])))
+legend_labels = c ("Yes",
+                   "No")
+melt(as.matrix(Q29_ynresponses_df))%>%
+  filter(Var2 == "Q29_percent_yes_responses" | Var2 == "Q29_percent_no_responses")%>%
+  ggplot()+
+  aes(x=Var1, y=value, fill=Var2)+
+  scale_x_discrete(limits = positions, labels = categories )+
+  xlab("Carnegie classification")+
+  ylab("percentages of responses in institutional category")+
+  scale_fill_discrete(name="Response", labels = legend_labels)+
+  geom_bar(stat="identity", position = "dodge")+
+  ggtitle(paste("At your current institution, do you face any technical barriers in teaching bioinformatics? \n",
+subtitle="Q29- Technical Barriers by Carnegie Classification n=",overall_n))
+ggsave("./output_plots/analysis_of_barriers_q29-30_by_carnegie_q21/q21_facing_technical_barriers_by_carnegie_classification.png")
+
+
+
+
+#question 30
+
+#calculate number of responses by catagory
+
+Q30_Q21_associates_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College" &
+           !is.na(df$Q30_Optional..Please.describe.))%>%
+  count()
+Q30_Q21_associates_responses <- Q30_Q21_associates_responses$n
+
+Q30_Q21_baccalaureate_responses  <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" &
+           !is.na(df$Q30_Optional..Please.describe.))%>%
+  count()
+Q30_Q21_baccalaureate_responses  <- Q30_Q21_baccalaureate_responses $n
+
+Q30_Q21_masters_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" &
+           !is.na(df$Q30_Optional..Please.describe.))%>%
+  count()
+Q30_Q21_masters_responses <- Q30_Q21_masters_responses$n
+
+Q30_Q21_doctoral_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)" &
+           !is.na(df$Q30_Optional..Please.describe.))%>%
+  count()
+Q30_Q21_doctoral_responses <- Q30_Q21_doctoral_responses$n
+
+#Carnegie Data Frame
+
+#Generate summary stats for raw scored sub-catagories
+
+Q30_scored_sub_catagories <- df%>%
+  select(Q29.30_Faculty...No.Expertise.Training, 
+         Q29.30_Faculty...Time, 
+         Q29.30_Faculty...not.interested.in.topic, 
+         Q29.30_Faculty...no.computer.sci.Faculty, 
+         Q29.30_Facilities...Computer.Labs.limited.or.not.available, 
+         Q29.30_Facilities...Computers.are.too.old..inadequate, 
+         Q29.30_Facilities...Servers, 
+         Q29.30_Facilities...Internet.Access.Limited, 
+         Q29.30_Resources...Operating.System.Availability.Issues, 
+         Q29.30_Resources...Approp..Software, 
+         Q29.30_Resources...no.high.performance.systems.available, 
+         Q29.30_Resources...Funding, 
+         Q29.30_Inst.Dept.Support...No.IT.support, 
+         Q29.30_Inst.Dept.Support...No.Sub.to.Pay.site.Databases, 
+         Q29.30_Inst.Dept.Support...Comp.Sci.Dept.Will.not.support.Bioinf, 
+         Q29.30_Student.Issues...Access.to.Approp.Software.off.campus, 
+         Q29.30_Student.Issues...Basic.Computing.Knowledge, 
+         Q29.30_Student.Issues...No.access.to.computers.at.home, 
+         Q29.30_Student.Issues...No.interest.in.Bioinf, 
+         Q29.30_Curriculum...Need.to.Develop.new.program,
+         Q29.30_Curriculum.Class.Size.too.large,
+         Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric, 
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)
+
+Q30_scored_sub_Assoc <- Q30_scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q30_scored_sub_Bacca<- Q30_scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q30_scored_sub_Master<- Q30_scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q30_scored_sub_Doc<- Q30_scored_sub_catagories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q30_raw_scored_df <- data.frame(Q30_scored_sub_Assoc[1:22],
+                                Q30_scored_sub_Bacca[1:22], 
+                                Q30_scored_sub_Master[1:22], 
+                                Q30_scored_sub_Doc[1:22])
+
+write.csv(Q30_raw_scored_df, file = "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q30_by_q21_counts_by_sub_categories.csv" )
+write("\n## q30_by_q21_counts_by_sub_categories.csv \n contains the sum of responses 
+      for all scored sub-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q30 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
+
+#Remove overly sparse data (can't be tested by ChiSquared)
+
+## Move rownames into columns to keep
+
+Q30_raw_scored_df_rownames <- rownames_to_column(Q30_raw_scored_df)%>%
+  rename(barrier = rowname)
+
+Q30_raw_scored_df_filtersparse <- Q30_raw_scored_df_rownames%>%
+  filter(Q30_scored_sub_Assoc.1.22.>0 &
+           Q30_scored_sub_Bacca.1.22. >0 &
+           Q30_scored_sub_Master.1.22. >0 &
+           Q30_scored_sub_Doc.1.22. >0)
+
+#Restore barriers to rowname
+row.names(Q30_raw_scored_df_filtersparse) <- Q30_raw_scored_df_filtersparse[,1]
+Q30_raw_scored_df_filtersparse <- Q30_raw_scored_df_filtersparse%>%
+  select(-barrier)
+
+#transpose the dataframe and restore its dataframeness
+Q30_transposed_raw_scored_df <- t(Q30_raw_scored_df_filtersparse)
+Q30_raw_scored_totals_df <- data.frame(Q30_transposed_raw_scored_df)
+
+# create a df containing the chi-squared values
+Q30_raw_scored_totals_chi <- rbind(Q30_raw_scored_totals_df,sapply(Q30_raw_scored_totals_df,
+                                                                   chisq.test,
+                                                                   simulate.p.value = TRUE)[3,])
+rownames(Q30_raw_scored_totals_chi)[5] <- "chiValues"
+
+#generate table of chivalues
+Q30_melted_raw_scored_totals_chi <- melt(as.matrix(Q30_raw_scored_totals_chi))
+write.csv(Q30_melted_raw_scored_totals_chi,file= "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q30_by_21_counts_and_chi_barriers_by_sub_catagory.csv")
+write("\n## q30_by_21_counts_and_chi_barriers_by_sub_catagory.csv \n contains the sum of responses 
+      for all scored sub-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. Sparse values (any barriers with 0 respondants) were removed \n 
+      chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+#write a table that outputs sig chivalues for sub-catagories by Carnegie classification
+Q30_melted_raw_scored_totals_chi %>%
+  filter(Var1 == "chiValues")%>%
+  filter(value <= 0.05)%>%
+  write.csv(,file= "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q30_by_21_signifigant_barriers_by_sub_catagory.csv")
+
+write("\n## q30_by_21_signifigant_barriers_by_sub_catagory.csv\n 
+      contains chisq.test values from **q30_by_21_signifigant_barriers_by_sub_catagory.csv** that were 
+      0.05 or less.", readme, append = TRUE )
+
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+Q30_melted_raw_scored_totals_df <- melt(as.matrix(Q30_raw_scored_totals_df))
+
+#plot the raw score values
+
+positions = c("Q30_scored_sub_Assoc.1.22.",
+              "Q30_scored_sub_Bacca.1.22.",
+              "Q30_scored_sub_Master.1.22.",
+              "Q30_scored_sub_Doc.1.22.")
+categories = c (paste("Associates, Q30 n(+r)=",Q30_Q21_associates_responses), 
+                paste("Baccalaureate, Q30 n(+r)=",Q30_Q21_baccalaureate_responses),
+                paste("Masters, Q30 n(+r)=",Q30_Q21_masters_responses),
+                paste("Doctoral, Q30 n(+r)=", Q30_Q21_doctoral_responses))
+legend_labels = c("Faculty Issues: Expertise/training", 
+                  "Faculty Issues: Time",
+                  "Facilities Issues: Access to Computer Labs",
+                  "Facilities Issues: Inadaquate Computers",
+                  "Faculty Issues: Lack of interest",
+                  "Facilities Issues: Access to Servers",
+                  "Facilities Issues: Access to Internet",
+                  "Resource Issues: Access to Operating Systems",
+                  "Resource Issues: Apropriate Software", 
+                  "Resource Issues: Access to High-performance Computing", 
+                  "Resource Issues: Funding", 
+                  "Institutional Issues: Access to IT Support", 
+                  "Student Issues: Access to Software Off-campus", 
+                  "Student Issues: Access to Computers Off-campus")
+
+Q30_melted_raw_scored_totals_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  scale_x_discrete(limits = positions, labels = categories )+
+  scale_fill_discrete(name= "Q30 Technical Barriers by Carnegie Classification
+                      \n
+                      n(r+) = number of individuals commenting", labels = legend_labels)+
+  ggtitle(paste("Q21- Barriers (summed sub-catagories) by Carnegie Classification \n n=",overall_n))+
+  theme(legend.position="bottom")+
+  theme(legend.key=element_blank(), legend.key.size=unit(1,"point"))+
+  guides(fill=guide_legend(nrow=7,byrow=TRUE))
+
+ggsave("./output_plots/analysis_of_barriers_q29-30_by_carnegie_q21/q30_barriers_summed_by_carnegie_classification_sub_cats.png")
+
