@@ -270,11 +270,18 @@ Q38_barriers_counts_df <- Q38_biggest_barriers_df %>%
   distinct(Var2, .keep_all = TRUE)
 
 #plot barriers 
+
 Q38_barriers_counts_df %>%
-  arrange(summed_score, Var2)%>%
   ggplot()+
-  aes(x= Var2, y=summed_score)+
-  geom_bar(stat="identity")
+  aes(x= reorder(Var2,summed_score), y= summed_score)+
+  #scale_x_discrete(limits = positions)+
+  coord_flip()+
+  ylab("number of issues scored")+
+  xlab("percived barriers as scored")+
+  ggtitle(paste("Q38- Largest percived barriers\n n=",overall_n))+
+  geom_bar(stat = "identity")
+ggsave("./output_plots/analysis_of_barriers_q38_by_carnegie_q21/Largest_barriers_q38_ordered.png")
+
 
 
 
@@ -450,8 +457,8 @@ rownames(q21_q38_summed_df_chi)[5] <- "chiValues"
 
 #melt the dataframe using reshape - do as matrix to preserve row names
 melted_q21_q38_summed_df_chi <- melt(as.matrix(q21_q38_summed_df_chi))
-write.csv(melted_q21_q38_summed_df_chi,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_counts_and_chi_barriers_by_super_category.csv")
-write("\n## q38_by_21_counts_and_chi_barriers_by_super_category.csv \n contains the sum of responses 
+write.csv(melted_q21_q38_summed_df_chi,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_counts_and_chi_barriers_by_summed_super_category.csv")
+write("\n## q38_by_21_counts_and_chi_barriers_by_summed_super_category.csv \n contains the sum of responses 
       for all scored super-categories where respondents indicated their Carnegie classification. \n 
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
       are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
@@ -464,7 +471,7 @@ melted_q21_q38_summed_df_chi %>%
   write.csv(,file= "./output_tables/analysis_of_barriers_q38_by_carnegie_q21/q38_by_21_signifigant_barriers_by_summed_super_category.csv")
 
 write("\n## q38_by_21_signifigant_barriers_by_summed_super_category.csv\n 
-      contains chisq.test values from **q38_by_21_counts_and_chi_barriers_by_super_category.csv** that were 
+      contains chisq.test values from **q38_by_21_counts_and_chi_barriers_by_summed_super_category.csv** that were 
       0.05 or less.", readme, append = TRUE )
 
 
@@ -846,10 +853,15 @@ Q06_barriers_counts_df <- Q06_biggest_barriers_df %>%
 
 #plot barriers 
 Q06_barriers_counts_df %>%
-  arrange(summed_score, Var2)%>%
   ggplot()+
-  aes(x= Var2, y=summed_score)+
-  geom_bar(stat="identity")
+  aes(x= reorder(Var2,summed_score), y= summed_score)+
+  #scale_x_discrete(limits = positions)+
+  coord_flip()+
+  ylab("number of issues scored")+
+  xlab("percived barriers as scored")+
+  ggtitle(paste("Q06- Largest percived barriers\n n=",overall_n))+
+  geom_bar(stat = "identity")
+ggsave("./output_plots/analysis_of_barriers_q06_by_carnegie_q21/Largest_barriers_q06_ordered.png")
 
 
 
@@ -868,14 +880,13 @@ categories = c (paste("Associates, Q06 n(+r)=",Q06_Q21_associates_responses),
                 paste("Baccalaureate, Q06 n(+r)=",Q06_Q21_baccalaureate_responses),
                 paste("Masters, Q06 n(+r)=",Q06_Q21_masters_responses),
                 paste("Doctoral, Q06 n(+r)=", Q06_Q21_doctoral_responses))
-legend_labels = c("Faculty Training", 
-                  "Faculty Time", 
-                  "Full Course Load", 
-                  "Integration into Curriculum", 
+legend_labels = c("Faculty training", 
+                  "Faculty time", 
+                  "Too few faculty", 
+                  "Full course load", 
                   "Student Preperation")
 Q06_biggest_barriers_df %>%
   filter(summed_score >=35)%>%
-  arrange(Var1)%>%
   ggplot()+
   aes(x=Var2, y=percentage, fill=Var1 )+
   scale_fill_discrete(name="Institution Types", labels = categories)+
@@ -883,8 +894,8 @@ Q06_biggest_barriers_df %>%
   xlab("barrier")+
   ylab("percentage of issues reported in barrier category")+
   ggtitle(paste("Top 5 Reported Barriers (Q6) by Carnegie Classification\n n=",overall_n))+
-  geom_bar(stat="identity")+
-  ggsave("./output_plots/analysis_of_barriers_q06_by_carnegie_q21/top5__barrier_distribution_by_carnegie_classification.png")
+  geom_bar(stat="identity")
+ggsave("./output_plots/analysis_of_barriers_q06_by_carnegie_q21/top5__barrier_distribution_by_carnegie_classification.png")
 
 
 
@@ -901,12 +912,11 @@ categories = c (paste("Associates, Q06 n(+r)=",Q06_Q21_associates_responses),
                 paste("Doctoral, Q06 n(+r)=", Q06_Q21_doctoral_responses))
 legend_labels = c("Faculty Training", 
                   "Faculty Time", 
-                  "Full Course Load", 
-                  "Integration into Curriculum", 
+                  "Too few Faculty members", 
+                  "Course load", 
                   "Student Preperation")
 Q06_biggest_barriers_df_w_prop %>%
   filter(summed_score >=35)%>%
-  arrange(Var1)%>%
   ggplot()+
   aes(x=Var2, y=proportion, fill=Var1 )+
   scale_fill_discrete(name="Institution Types", labels = categories)+
@@ -914,7 +924,7 @@ Q06_biggest_barriers_df_w_prop %>%
   xlab("barrier")+
   ylab("Proportion of inividuals reporting issue in Q38 vs. classification in Q21")+
   ggtitle(paste("Top 5 Reported Barriers (Q6) by Proprotion Carnegie Classification\n n=",overall_n))+
-  geom_bar(stat="identity", position = "dodge")+
+  geom_bar(stat="identity", position = "dodge")
   ggsave("./output_plots/analysis_of_barriers_q06_by_carnegie_q21/proportional_top5__barrier_distribution_by_carnegie_classification.png")
 
 
@@ -942,7 +952,6 @@ Q06_biggest_barriers_df %>%
   filter(Var2 == "Q06_Faculty.Issue...No.Expertise..Training"| 
            Var2 == "Q06_Faculty.Issue...Time"| 
            Var2 == "Q06_Faculty.Issue...Not.enough.Faculty.members")%>%
-  arrange(Var1)%>%
   ggplot()+
   aes(x=Var2, y=percentage, fill=Var1 )+
   scale_fill_discrete(name="Institution Types", labels = categories)+
@@ -950,7 +959,7 @@ Q06_biggest_barriers_df %>%
   xlab("barrier")+
   ylab("percentage of issues reported in barrier category")+
   ggtitle(paste("Signifigantly Different Barriers (Q06) by Carnegie Classification\n n=",overall_n))+
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
 ggsave("./output_plots/analysis_of_barriers_q06_by_carnegie_q21/sig_different_barrier_distribution_by_carnegie_classification.png")
 
 
@@ -1098,8 +1107,8 @@ rownames(q21_q06_summed_df_chi)[5] <- "chiValues"
 
 #melt the dataframe using reshape - do as matrix to preserve row names
 melted_q21_q06_summed_df_chi <- melt(as.matrix(q21_q06_summed_df_chi))
-write.csv(melted_q21_q06_summed_df_chi,file= "./output_tables/analysis_of_barriers_q06_by_carnegie_q21/q06_by_21_counts_and_chi_barriers_by_super_category.csv")
-write("\n## q06_by_21_counts_and_chi_barriers_by_super_category.csv \n contains the sum of responses 
+write.csv(melted_q21_q06_summed_df_chi,file= "./output_tables/analysis_of_barriers_q06_by_carnegie_q21/q06_by_21_counts_and_chi_barriers_by_summed_super_category.csv")
+write("\n## q06_by_21_counts_and_chi_barriers_by_summed_super_category.csv \n contains the sum of responses 
       for all scored super-categories where respondents indicated their Carnegie classification. \n 
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
       are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
@@ -1657,12 +1666,16 @@ write.csv(Q30_biggest_barriers_df_w_prop,file= "./output_tables/analysis_of_barr
 Q30_barriers_counts_df <- Q30_biggest_barriers_df %>%
   distinct(Var2, .keep_all = TRUE)
 
-#plot barriers 
 Q30_barriers_counts_df %>%
-  arrange(summed_score, Var2)%>%
   ggplot()+
-  aes(x= Var2, y=summed_score)+
-  geom_bar(stat="identity")
+  aes(x= reorder(Var2,summed_score), y= summed_score)+
+  #scale_x_discrete(limits = positions)+
+  coord_flip()+
+  ylab("number of issues scored")+
+  xlab("percived barriers as scored")+
+  ggtitle(paste("Q30- Largest percived barriers\n n=",overall_n))+
+  geom_bar(stat = "identity")
+ggsave("./output_plots/analysis_of_barriers_q29-30_by_carnegie_q21/Largest_barriers_q29-30_ordered.png")
 
 
 
@@ -1682,7 +1695,6 @@ legend_labels = c("Access to Computer Labs",
                   "Lack of IT Support")
 Q30_biggest_barriers_df %>%
   filter(summed_score >=41)%>%
-  arrange(Var1)%>%
   ggplot()+
   aes(x=Var2, y=percentage, fill=Var1 )+
   scale_fill_discrete(name="Institution Types", labels = categories)+
@@ -1690,7 +1702,8 @@ Q30_biggest_barriers_df %>%
   xlab("barrier")+
   ylab("percentage of issues reported in barrier category")+
   ggtitle(paste("Top 5 Reported Technical Barriers (Q29,30) by Carnegie Classification\n n=",overall_n))+
-  geom_bar(stat="identity")
+  geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
 ggsave("./output_plots/analysis_of_barriers_q29-30_by_carnegie_q21/q30_top5__barrier_distribution_by_carnegie_classification.png")
 
 
@@ -1828,8 +1841,8 @@ rownames(q21_q29.30_summed_df_chi)[5] <- "chiValues"
 
 #melt the dataframe using reshape - do as matrix to preserve row names
 melted_q21_q29.30_summed_df_chi <- melt(as.matrix(q21_q29.30_summed_df_chi))
-write.csv(melted_q21_q29.30_summed_df_chi,file= "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q29.30_by_21_counts_and_chi_barriers_by_super_category.csv")
-write("\n## q29.30_by_21_counts_and_chi_barriers_by_super_category.csv \n contains the sum of responses 
+write.csv(melted_q21_q29.30_summed_df_chi,file= "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q29.30_by_21_counts_and_chi_barriers_by_summed_super_category.csv")
+write("\n## q29.30_by_21_counts_and_chi_barriers_by_summed_super_category.csv \n contains the sum of responses 
       for all scored super-categories where respondents indicated their Carnegie classification. \n 
       Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
       are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
@@ -1973,7 +1986,7 @@ melted_q21_q29.30_reduced_df_chi %>%
   write.csv(,file= "./output_tables/analysis_of_barriers_q29-30_by_carnegie_q21/q29.30_by_21_signifigant_barriers_by_reduced_super_category.csv")
 
 write("\n## q29.30_by_21_signifigant_barriers_by_reduced_super_category.csv\n 
-      contains chisq.test values from **q29.30_by_21_counts_and_chi_barriers_by_super_category.csv** that were 
+      contains chisq.test values from **q29.30_by_21_counts_and_chi_barriers_by_reduced_super_category.csv** that were 
       0.05 or less.", readme, append = TRUE )
 
 
@@ -2007,3 +2020,618 @@ melted_q21_q29.30_reduced_df%>%
   ggtitle(paste("Q29,Q30- Barriers (reduced super-categories) by Carnegie Classification (Q21)\n n=",overall_n))
 
 ggsave("./output_plots/analysis_of_barriers_q29-30_by_carnegie_q21/q29-30_barriers_reduced_by_carnegie_classification.png")
+
+
+
+
+
+
+
+#question 33
+
+#Create folders and start a ReadMe for this analysis
+dir.create("./output_tables/analysis_of_barriers_q33_by_carnegie_q21/", recursive = TRUE)
+dir.create("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/", recursive = TRUE)
+readme <- "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/ReadMe.md"
+write("#ReadMe",readme)
+write(R.version.string, readme, append = TRUE)
+
+#calculate number of responses by category
+
+Q33_Q21_associates_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College" &
+           !is.na(df$Q33_In.your.opinion..what.do.you.think.are.the.most.important.challenges.currently.facing.those.educa...))%>%
+  count()
+Q33_Q21_associates_responses <- Q33_Q21_associates_responses$n
+
+Q33_Q21_baccalaureate_responses  <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" &
+           !is.na(df$Q33_In.your.opinion..what.do.you.think.are.the.most.important.challenges.currently.facing.those.educa...))%>%
+  count()
+Q33_Q21_baccalaureate_responses  <- Q33_Q21_baccalaureate_responses $n
+
+Q33_Q21_masters_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" &
+           !is.na(df$Q33_In.your.opinion..what.do.you.think.are.the.most.important.challenges.currently.facing.those.educa...))%>%
+  count()
+Q33_Q21_masters_responses <- Q33_Q21_masters_responses$n
+
+Q33_Q21_doctoral_responses <- df%>%
+  filter(df$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)" &
+           !is.na(df$Q33_In.your.opinion..what.do.you.think.are.the.most.important.challenges.currently.facing.those.educa...))%>%
+  count()
+Q33_Q21_doctoral_responses <- Q33_Q21_doctoral_responses$n
+
+
+#Carnegie Data Frame
+
+#Generate summary stats for raw scored sub-categories
+
+Q33_scored_sub_categories <- df%>%
+  select(Q33_Faculty...No.Expertise.Training, 
+         Q33_Facutly...Time,
+         Q33_Faculty...Differences.of.opinion, 
+         Q33_Faculty...Content.Development, 
+         Q33_Faculty...Not.enough.Faculty, 
+         Q33_Facilities...Computer.Labs.limited.or.not.available, 
+         Q33_Facilities...Computers.are.too.old..inadequate,
+         Q33_Resources...Acces.to.Approp..Software, 
+         Q33_Resources...Funding..general.,
+         Q33_Resources...Funding..software.License.fees., 
+         Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills, 
+         Q33_Student.Issues...No.interest.in.Bioinf, 
+         Q33_Student.issues...Intimidated.by.topic, 
+         Q33_Student.Isses...Multitude.of.varying.student.backgrounds, 
+         Q33_Student.Issues...Lack.Basic.Computing.Knowledge, 
+         Q33_Student.Issues...Career.prospects, 
+         Q33_Curric.Issues...Lack.of.integration.of.maerial, 
+         Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric, 
+         Q33_Curric.Issues...How.quickly.the.material.tech.changes,
+         Q33_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric, 
+         Q33_Curric.Issues...Making.Comp.Sci.courses.consistently.relevant, 
+         Q33_Curric.Issues...To.much.curric.influence.from.Professional.schools, 
+         Q33_Inst.Dept.Support...Inter.Departmental.Cooperation, 
+         Q33_Inst.Dept.Support...No.IT.support,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)
+
+Q33_scored_sub_Assoc <- Q33_scored_sub_categories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q33_scored_sub_Bacca<- Q33_scored_sub_categories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q33_scored_sub_Master<- Q33_scored_sub_categories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q33_scored_sub_Doc<- Q33_scored_sub_categories%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+Q33_raw_scored_df <- data.frame(Q33_scored_sub_Assoc[1:24],
+                                Q33_scored_sub_Bacca[1:24], 
+                                Q33_scored_sub_Master[1:24], 
+                                Q33_scored_sub_Doc[1:24])
+
+write.csv(Q33_raw_scored_df, file = "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_q21_counts_by_sub_categories.csv" )
+write("\n## q33_by_q21_counts_by_sub_categories.csv \n contains the sum of responses 
+      for all scored sub-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q33 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
+
+
+#transpose the dataframe and restore its dataframeness
+Q33_transposed_raw_scored_df <- t(Q33_raw_scored_df)
+Q33_raw_scored_totals_df <- data.frame(Q33_transposed_raw_scored_df)
+
+# create a df containing the chi-squared values
+Q33_raw_scored_totals_chi <- rbind(Q33_raw_scored_totals_df,sapply(Q33_raw_scored_totals_df,
+                                                                   chisq.test,
+                                                                   simulate.p.value = TRUE)[3,])
+rownames(Q33_raw_scored_totals_chi)[5] <- "chiValues"
+
+#generate table of chivalues
+Q33_melted_raw_scored_totals_chi <- melt(as.matrix(Q33_raw_scored_totals_chi))
+write.csv(Q33_melted_raw_scored_totals_chi,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_counts_and_chi_barriers_by_sub_category.csv")
+write("\n## q33_by_21_counts_and_chi_barriers_by_sub_category.csv \n contains the sum of responses 
+      for all scored sub-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q33 but did not indicate a Carnegie categories or who were unsure 
+      are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+#write a table that outputs sig chivalues for sub-categories by Carnegie classification
+Q33_melted_raw_scored_totals_chi %>%
+  filter(Var1 == "chiValues")%>%
+  filter(value <= 0.05)%>%
+  write.csv(,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_signifigant_barriers_by_sub_category.csv")
+
+write("\n## q33_by_21_signifigant_barriers_by_sub_category.csv\n 
+      contains chisq.test values from **q33_by_21_signifigant_barriers_by_sub_category.csv** that were 
+      0.05 or less.", readme, append = TRUE )
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+Q33_melted_raw_scored_totals_df <- melt(as.matrix(Q33_raw_scored_totals_df))
+
+#plot the raw score values
+
+positions = c("Q33_scored_sub_Assoc.1.24.",
+              "Q33_scored_sub_Bacca.1.24.",
+              "Q33_scored_sub_Master.1.24.",
+              "Q33_scored_sub_Doc.1.24.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c("Faculty Issues: Expertise/Training", 
+                  "Faculty Issues: Time",
+                  "Faculty Issues: Differences of opinion",
+                  "Faculty Issues: Content development",
+                  "Faculty Issues: Too few faculty",
+                  "Faculities Issues: Access to computer labs",
+                  "Faculities Issues: Inadaquate computers",
+                  "Resource Issues: Access to software",
+                  "Resource Issues: Funding",
+                  "Resource Issues: Software/license fees",
+                  "Student Issues: Lack of background skills/knowledge",
+                  "Student Issues: Lack of interest",
+                  "Student Issues: Intimidated by topic",
+                  "Student Issues: Varying student backrounds",
+                  "Student Issues: Lack of basic computing skills",
+                  "Student Issues: Career prospects",
+                  "Curriculum Issues: Lack of integration", 
+                  "Curriculum Issues: Too much content", 
+                  "Curriculum Issues: Quickly changing technologies", 
+                  "Curriculum Issues: Access to bioinformatics lesson plans/curriculum", 
+                  "Curriculum Issues: Difficulty establishing relevance", 
+                  "Curriculum Issues: Influence from professional schools",
+                  "Institutional Issues: Lack of inter-departmental cooperation",
+                  "Institutional Issues: Lack of IT support")
+Q33_melted_raw_scored_totals_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  scale_x_discrete(limits = positions, labels = categories )+
+  scale_fill_discrete(name= "Q33 Barriers by Carnegie Classification
+                     \n
+                    n(r+) = number of individuals commenting", labels = legend_labels)+
+  ggtitle(paste("Q21- Barriers (summed sub-categories) by Carnegie Classification \n n=",overall_n))+
+  theme(legend.position="bottom")+
+  theme(legend.key=element_blank(), legend.key.size=unit(1,"point"))+
+  guides(fill=guide_legend(nrow=12,byrow=TRUE))
+
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_barriers_summed_by_carnegie_classification_sub_cats.png")
+
+
+#plot the biggest barriers
+
+#Caculate percentages biggest barriers and sort
+Q33_biggest_barriers_df <- Q33_melted_raw_scored_totals_df %>%
+  group_by(Var2)%>%
+  mutate(summed_score = sum(value))%>%
+  mutate(percentage = (value / summed_score) * 100) 
+
+#Sort the biggest barriers 
+Q33_biggest_barriers_df <- Q33_biggest_barriers_df %>%
+  arrange(summed_score, Var2, Var1)
+
+write.csv(Q33_biggest_barriers_df,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_scored_barriers_andpercentages_by_sub_category.csv")
+
+
+#add proportion calculation to barriers table where porpotion is out of total respondants
+# in a category. e.g. if 100 answered 'Associates' to Q21 but 50 left a + comment in Q33
+# then 50% of respondants at an Associates institution encountered a barrier
+
+Q33_biggest_barriers_df_w_prop <- Q33_biggest_barriers_df %>%
+  mutate(proportion = ifelse(Var1 == "Q33_scored_sub_Assoc.1.24.", value/Q21_associates_responses,
+                             ifelse(Q33_biggest_barriers_df$Var1 == "Q33_scored_sub_Bacca.1.24.", value/Q21_baccalaureate_responses,
+                                    ifelse(Q33_biggest_barriers_df$Var1 == "Q33_scored_sub_Master.1.24.", value/Q21_masters_responses, 
+                                           ifelse(Q33_biggest_barriers_df$Var1 == "Q33_scored_sub_Doc.1.24.", value/Q21_doctoral_responses, NA)))))
+
+write.csv(Q33_biggest_barriers_df_w_prop,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_scored_barriers_percentages_andporportons_by_sub_category.csv")
+
+
+
+# Create a new df only containing unique barriers and their total values
+
+Q33_barriers_counts_df <- Q33_biggest_barriers_df %>%
+  distinct(Var2, .keep_all = TRUE)%>%
+  arrange(desc(summed_score))
+
+
+#plot barriers
+
+
+Q33_barriers_counts_df %>%
+  ggplot()+
+  aes(x= reorder(Var2,summed_score), y= summed_score)+
+  #scale_x_discrete(limits = positions)+
+  coord_flip()+
+  ylab("number of issues scored")+
+  xlab("percived barriers as scored")+
+  ggtitle(paste("Q33- Largest percived barriers\n n=",overall_n))+
+  geom_bar(stat = "identity")
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/Largest_barriers_q33_ordered.png")
+
+
+
+#create plot showing the top five barriers and percentage of institution types reporting
+positions = c("Q33_scored_sub_Assoc.1.24.",
+              "Q33_scored_sub_Bacca.1.24.",
+              "Q33_scored_sub_Master.1.24.",
+              "Q33_scored_sub_Doc.1.24.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c("Faculty Expertise/training",
+                  "Faculty time",
+                  "Student background", 
+                  "Student interest in Bioinformatics", 
+                  "Lack of integration into curriculum")
+Q33_biggest_barriers_df %>%
+  filter(summed_score >=82)%>%
+  ggplot()+
+  aes(x=Var2, y=percentage, fill=Var1 )+
+  scale_fill_discrete(name="Institution Types", labels = categories)+
+  scale_x_discrete(labels = legend_labels)+
+  xlab("barrier (unordered)")+
+  ylab("percentage of issues reported in barrier category")+
+  ggtitle(paste("Top 5 Reported Technical Barriers Q33 by Carnegie Classification\n n=",overall_n))+
+  geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = 20, hjust = 1))
+
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_top5__barrier_distribution_by_carnegie_classification.png")
+
+
+
+
+
+
+#plot signifigant (by Chi test) distibutions of barriers by carnegie classification
+#create plot showing the top five barriers and percentage of institution types reporting
+positions = c("Q33_scored_sub_Assoc.1.24.",
+              "Q33_scored_sub_Bacca.1.24.",
+              "Q33_scored_sub_Master.1.24.",
+              "Q33_scored_sub_Doc.1.24.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c("Faculty time", 
+                  "Too few faculty", 
+                  "Lack of student background",
+                  "Lack of student interest in bioinformatics", 
+                  "Student intimidation", 
+                  "Varying student backgrounds", 
+                  "Difficulty integrating material", 
+                  "Too much content in curriculum", 
+                  "Pace of technology change")
+Q33_biggest_barriers_df %>%
+  filter(Var2 == "Q33_Facutly...Time"| 
+           Var2 == "Q33_Faculty...Not.enough.Faculty"| 
+           Var2 == "Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills"|
+           Var2 == "Q33_Student.Issues...No.interest.in.Bioinf"|
+           Var2 == "Q33_Student.issues...Intimidated.by.topic"|
+           Var2 == "Q33_Student.Isses...Multitude.of.varying.student.backgrounds"|
+           Var2 == "Q33_Curric.Issues...Lack.of.integration.of.maerial"|
+           Var2 == "Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric"|
+           Var2 == "Q33_Curric.Issues...How.quickly.the.material.tech.changes"
+           )%>%
+  arrange(Var1)%>%
+  ggplot()+
+  aes(x=Var2, y=percentage, fill=Var1 )+
+  scale_fill_discrete(name="Institution Types", labels = categories)+
+  scale_x_discrete(labels = legend_labels)+
+  xlab("barrier")+
+  ylab("percentage of issues reported in barrier category")+
+  ggtitle(paste("Signifigantly Different Technical Barriers Q33 by Carnegie Classification\n n=",overall_n))+
+  geom_bar(stat="identity")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_sig_different_barrier_distribution_by_carnegie_classification.png")
+
+
+#Plot as absolute proportional value of respondants
+positions = c("Q33_scored_sub_Assoc.1.24.",
+              "Q33_scored_sub_Bacca.1.24.",
+              "Q33_scored_sub_Master.1.24.",
+              "Q33_scored_sub_Doc.1.24.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c("Faculty time", 
+                  "Too few faculty", 
+                  "Lack of student background",
+                  "Lack of student interest in bioinformatics", 
+                  "Student intimidation", 
+                  "Varying student backgrounds", 
+                  "Difficulty integrating material", 
+                  "Too much content in curriculum", 
+                  "Pace of technology change")
+Q33_biggest_barriers_df_w_prop %>%
+  filter(Var2 == "Q33_Facutly...Time"| 
+           Var2 == "Q33_Faculty...Not.enough.Faculty"| 
+           Var2 == "Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills"|
+           Var2 == "Q33_Student.Issues...No.interest.in.Bioinf"|
+           Var2 == "Q33_Student.issues...Intimidated.by.topic"|
+           Var2 == "Q33_Student.Isses...Multitude.of.varying.student.backgrounds"|
+           Var2 == "Q33_Curric.Issues...Lack.of.integration.of.maerial"|
+           Var2 == "Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric"|
+           Var2 == "Q33_Curric.Issues...How.quickly.the.material.tech.changes"
+  )%>%
+  arrange(Var1)%>%
+  ggplot()+
+  aes(x=Var2, y=proportion, fill=Var1 )+
+  scale_fill_discrete(name="Institution Types", labels = categories)+
+  scale_x_discrete(labels = legend_labels)+
+  xlab("barrier")+
+  ylab("Proportion of inividuals reporting issue in Q29,Q30 vs. classification in Q21")+
+  ggtitle(paste("Proportional Makeup of Signifigantly Different Barriers (Q33) by Carnegie Classification\n n=",overall_n))+
+  geom_bar(stat="identity", position = "dodge")+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_proportional_top5_barrier_distribution_by_carnegie_classification.png")
+
+
+
+
+#Generate a sum by carnegie category for each of the barrier summed super-categories
+q33_Assoc_var_summed <- df%>%
+  select(q33_Faculty_issues_sum,
+         q33_Facility_issues_sum,
+         q33_Resources_issues_sum,
+         q33_Student_issues_sum,
+         q33_Curriculum_issues_sum, 
+         q33_Institutional_issues_sum,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+
+q33_Bacca_var_summed <- df%>%
+  select(q33_Faculty_issues_sum,
+         q33_Facility_issues_sum,
+         q33_Resources_issues_sum,
+         q33_Student_issues_sum,
+         q33_Curriculum_issues_sum, 
+         q33_Institutional_issues_sum,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+q33_Master_var_summed <- df%>%
+  select(q33_Faculty_issues_sum,
+         q33_Facility_issues_sum,
+         q33_Resources_issues_sum,
+         q33_Student_issues_sum,
+         q33_Curriculum_issues_sum, 
+         q33_Institutional_issues_sum,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+q33_Doc_var_summed <- df%>%
+  select(q33_Faculty_issues_sum,
+         q33_Facility_issues_sum,
+         q33_Resources_issues_sum,
+         q33_Student_issues_sum,
+         q33_Curriculum_issues_sum, 
+         q33_Institutional_issues_sum,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+#create a data frame from the sums
+q33_q21_summed_df <- data.frame(q33_Assoc_var_summed[1:6],
+                                q33_Bacca_var_summed[1:6],
+                                q33_Doc_var_summed[1:6],
+                                q33_Master_var_summed[1:6])
+
+
+write.csv(q33_q21_summed_df, file = "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_q21_counts_by_summed_super_categories.csv" )
+write("\n## q33_by_q21_counts_by_summed_super_categories.csv\n contains the sum of responses 
+      for all scored super-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q33 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
+
+
+#transpose the dataframe and restore its dataframeness
+q33_q21_summed_df <- t(q33_q21_summed_df)
+q33_q21_summed_df <- data.frame(q33_q21_summed_df)
+
+# create a df containing the chi-squared values
+q21_q33_summed_df_chi <- rbind(q33_q21_summed_df,sapply(q33_q21_summed_df,
+                                                        chisq.test,
+                                                        simulate.p.value = TRUE)[3,])
+rownames(q21_q33_summed_df_chi)[5] <- "chiValues"
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q33_summed_df_chi <- melt(as.matrix(q21_q33_summed_df_chi))
+write.csv(melted_q21_q33_summed_df_chi,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_counts_and_chi_barriers_by_super_category.csv")
+write("\n## q33_by_21_counts_and_chi_barriers_by_super_category.csv \n contains the sum of responses 
+      for all scored super-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+#write a table that outputs sig chivalues for super categories by Carnegie classification
+melted_q21_q33_summed_df_chi %>%
+  filter(Var1 == "chiValues")%>%
+  filter(value <= 0.05)%>%
+  write.csv(,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_signifigant_barriers_by_summed_super_category.csv")
+
+write("\n## q33_by_21_signifigant_barriers_by_summed_super_category.csv\n 
+      contains chisq.test values from **q33_by_21_counts_and_chi_barriers_by_super_category.csv** that were 
+      0.05 or less.", readme, append = TRUE )
+
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q33_summed_df <- melt(as.matrix(q33_q21_summed_df))
+
+# Plot the barrier totals by summed super categories
+
+positions = c("q33_Assoc_var_summed.1.6.",
+              "q33_Bacca_var_summed.1.6.",
+              "q33_Master_var_summed.1.6.",
+              "q33_Doc_var_summed.1.6.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c ("Faculty Issues (summed)",
+                   "Facilty Issues (summed)",
+                   "Resources Issues (summed)",
+                   "Student Issues (summed)",
+                   "Curriculum Issues (summed)",
+                   "Institutional Issues (summed)")
+melted_q21_q33_summed_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  scale_x_discrete(limits = positions, labels = categories )+
+  scale_fill_discrete(name="Q33 Barrier Classifications", labels = legend_labels)+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  ggtitle(paste("Q33- Barriers (summed super-categories) by Carnegie Classification (Q21)\n n=",overall_n))
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_barriers_summed_by_carnegie_classification.png")
+
+
+#Generate a sum by carnegie category for each of the barrier reduced super-categories
+
+q33_Assoc_var_reduced <- df%>%
+  select(q33_Faculty_issues_reduced,
+         q33_Facility_issues_reduced,
+         q33_Resources_issues_reduced,
+         q33_Student_issues_reduced,
+         q33_Curriculum_issues_reduced, 
+         q33_Institutional_issues_reduced,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+
+q33_Bacca_var_reduced <- df%>%
+  select(q33_Faculty_issues_reduced,
+         q33_Facility_issues_reduced,
+         q33_Resources_issues_reduced,
+         q33_Student_issues_reduced,
+         q33_Curriculum_issues_reduced, 
+         q33_Institutional_issues_reduced,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+q33_Master_var_reduced <- df%>%
+  select(q33_Faculty_issues_reduced,
+         q33_Facility_issues_reduced,
+         q33_Resources_issues_reduced,
+         q33_Student_issues_reduced,
+         q33_Curriculum_issues_reduced, 
+         q33_Institutional_issues_reduced,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+q33_Doc_var_reduced <- df%>%
+  select(q33_Faculty_issues_reduced,
+         q33_Facility_issues_reduced,
+         q33_Resources_issues_reduced,
+         q33_Student_issues_reduced,
+         q33_Curriculum_issues_reduced, 
+         q33_Institutional_issues_reduced,
+         Q21_What.is.the.Carnegie.classification.of.your.institution.)%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  mutate_if(is.character,as.numeric)%>%
+  colSums()
+
+#create a data frame from the sums
+q33_q21_reduced_df <- data.frame(q33_Assoc_var_reduced[1:6],
+                                q33_Bacca_var_reduced[1:6],
+                                q33_Doc_var_reduced[1:6],
+                                q33_Master_var_reduced[1:6])
+
+
+write.csv(q33_q21_reduced_df, file = "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_q21_counts_by_reduced_super_categories.csv" )
+write("\n## q33_by_q21_counts_by_reduced_super_categories.csv\n contains the sum of responses 
+      for all scored super-categories where respondants indicated their Carnegie classification.\n 
+      Users who gave an answer to q33 but did not indicate a Carnegie categories or who were 
+      unsure are removed", readme, append = TRUE )
+
+
+
+#transpose the dataframe and restore its dataframeness
+q33_q21_reduced_df <- t(q33_q21_reduced_df)
+q33_q21_reduced_df <- data.frame(q33_q21_reduced_df)
+
+# create a df containing the chi-squared values
+q21_q33_reduced_df_chi <- rbind(q33_q21_reduced_df,sapply(q33_q21_reduced_df,
+                                                        chisq.test,
+                                                        simulate.p.value = TRUE)[3,])
+rownames(q21_q33_reduced_df_chi)[5] <- "chiValues"
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q33_reduced_df_chi <- melt(as.matrix(q21_q33_reduced_df_chi))
+write.csv(melted_q21_q33_reduced_df_chi,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_counts_and_chi_barriers_by_reduced_super_category.csv")
+write("\n## q33_by_21_counts_and_chi_barriers_by_reduced_super_category.csv \n contains the sum of responses 
+      for all scored super-categories where respondents indicated their Carnegie classification. \n 
+      Users who gave an answer to q38 but did not indicate a Carnegie categories or who were unsure 
+      are removed. \n chisq.test from the R stats package; simulate.p.value = TRUE to account for small
+      values of n", readme, append = TRUE )
+
+#write a table that outputs sig chivalues for super categories by Carnegie classification
+melted_q21_q33_reduced_df_chi %>%
+  filter(Var1 == "chiValues")%>%
+  filter(value <= 0.05)%>%
+  write.csv(,file= "./output_tables/analysis_of_barriers_q33_by_carnegie_q21/q33_by_21_signifigant_barriers_by_reduced_super_category.csv")
+
+write("\n## q33_by_21_signifigant_barriers_by_reduced_super_category.csv\n 
+      contains chisq.test values from **q33_by_21_signifigant_barriers_by_reduced_super_category.csv** that were 
+      0.05 or less.", readme, append = TRUE )
+
+
+#melt the dataframe using reshape - do as matrix to preserve row names
+melted_q21_q33_reduced_df <- melt(as.matrix(q33_q21_reduced_df))
+
+# Plot the barrier totals by reduced super categories
+
+positions = c("q33_Assoc_var_reduced.1.6.",
+              "q33_Bacca_var_reduced.1.6.",
+              "q33_Master_var_reduced.1.6.",
+              "q33_Doc_var_reduced.1.6.")
+categories = c (paste("Associates, Q33 n(+r)=",Q33_Q21_associates_responses), 
+                paste("Baccalaureate, Q33 n(+r)=",Q33_Q21_baccalaureate_responses),
+                paste("Masters, Q33 n(+r)=",Q33_Q21_masters_responses),
+                paste("Doctoral, Q33 n(+r)=", Q33_Q21_doctoral_responses))
+legend_labels = c ("Faculty Issues (reduced)",
+                   "Facilty Issues (reduced)",
+                   "Resources Issues (reduced)",
+                   "Student Issues (reduced)",
+                   "Curriculum Issues (reduced)",
+                   "Institutional Issues (reduced)")
+melted_q21_q33_reduced_df%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  scale_x_discrete(limits = positions, labels = categories )+
+  scale_fill_discrete(name="Q33 Barrier Classifications", labels = legend_labels)+
+  xlab("Carnegie Classification")+
+  ylab("number of issues scored")+
+  ggtitle(paste("Q33- Barriers (reduced super-categories) by Carnegie Classification (Q21)\n n=",overall_n))
+ggsave("./output_plots/analysis_of_barriers_q33_by_carnegie_q21/q33_barriers_reduced_by_carnegie_classification.png")
