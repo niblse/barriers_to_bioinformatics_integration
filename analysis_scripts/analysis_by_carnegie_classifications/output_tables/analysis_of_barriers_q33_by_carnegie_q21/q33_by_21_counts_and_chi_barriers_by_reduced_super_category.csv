@@ -3,17 +3,17 @@
 "2","q33_Bacca_var_reduced.1.6.","q33_Faculty_issues_reduced",98
 "3","q33_Doc_var_reduced.1.6.","q33_Faculty_issues_reduced",94
 "4","q33_Master_var_reduced.1.6.","q33_Faculty_issues_reduced",72
-"5","chiValues","q33_Faculty_issues_reduced",0.024487756121939
+"5","chiValues","q33_Faculty_issues_reduced",0.0174912543728136
 "6","q33_Assoc_var_reduced.1.6.","q33_Facility_issues_reduced",8
 "7","q33_Bacca_var_reduced.1.6.","q33_Facility_issues_reduced",15
 "8","q33_Doc_var_reduced.1.6.","q33_Facility_issues_reduced",18
 "9","q33_Master_var_reduced.1.6.","q33_Facility_issues_reduced",8
-"10","chiValues","q33_Facility_issues_reduced",0.102948525737131
+"10","chiValues","q33_Facility_issues_reduced",0.0979510244877561
 "11","q33_Assoc_var_reduced.1.6.","q33_Resources_issues_reduced",18
 "12","q33_Bacca_var_reduced.1.6.","q33_Resources_issues_reduced",17
 "13","q33_Doc_var_reduced.1.6.","q33_Resources_issues_reduced",18
 "14","q33_Master_var_reduced.1.6.","q33_Resources_issues_reduced",20
-"15","chiValues","q33_Resources_issues_reduced",0.978010994502749
+"15","chiValues","q33_Resources_issues_reduced",0.970514742628686
 "16","q33_Assoc_var_reduced.1.6.","q33_Student_issues_reduced",38
 "17","q33_Bacca_var_reduced.1.6.","q33_Student_issues_reduced",54
 "18","q33_Doc_var_reduced.1.6.","q33_Student_issues_reduced",118
@@ -28,4 +28,4 @@
 "27","q33_Bacca_var_reduced.1.6.","q33_Institutional_issues_reduced",10
 "28","q33_Doc_var_reduced.1.6.","q33_Institutional_issues_reduced",1
 "29","q33_Master_var_reduced.1.6.","q33_Institutional_issues_reduced",9
-"30","chiValues","q33_Institutional_issues_reduced",0.0144927536231884
+"30","chiValues","q33_Institutional_issues_reduced",0.0129935032483758
