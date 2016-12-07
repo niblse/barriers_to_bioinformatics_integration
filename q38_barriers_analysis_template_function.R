@@ -145,10 +145,10 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
                                             "Curriculum Issues: Content requires several courses",
                                             "Resource Issues: Access to exercises",
                                             "Resource Issues: Access to lesson plans",
-                                            "Resource Issues: Access  to intro content",
+                                            "Resource Issues: Access to intro content",
                                             "Resource Issues: Unable to vet content",
                                             "Resource Issues: Funding",
-                                            "Resource Issues: No appropriate text",
+                                            "Resource Issues: No appropriate textbook",
                                             "Resource Issues: No access to online exercises",
                                             "Resource Issues: No qualified TAs",
                                             "Student Issues: Background knowledge",
@@ -276,7 +276,7 @@ summary.response.plotname <- paste("count_of_respondants",
 ggsave(paste(plot.dir.path,summary.response.plotname, sep= ""))
 
 
-######### RAW SCORE ANALYSIS ############################
+######### RAW SCORE ANALYSIS #############################################################################
 
 #Generate summary stats for raw scored sub-categories
 
@@ -304,13 +304,13 @@ for (category in category.levels){
 #remove extraneous rows, tranpose, restore dataframeness, remove extraneous last row, add nice names
 raw.scored.analysis.df <- tail(as.matrix(raw.scored.analysis.df), length(category.levels))
 raw.scored.analysis.df <- t(raw.scored.analysis.df)
-raw.scored.analysis.df <- data.frame(raw.scored.analysis.df)
+raw.scored.analysis.df <- data.frame(raw.scored.analysis.df, stringsAsFactors = FALSE)
 raw.scored.analysis.df <- head(raw.scored.analysis.df, nrow(raw.scored.analysis.df) -1)
 colnames(raw.scored.analysis.df) <- colnames(category.df)
 rownames(raw.scored.analysis.df) <- category.raw.scored.columns.nice.names
 
+
 #write the summary table
-      
 raw.score.counts.by.category.filename <- paste(table.dir.path,
                                               "tally_of_raw_score_of_", 
                                               question.column.name.safe,
@@ -320,4 +320,80 @@ raw.score.counts.by.category.filename <- paste(table.dir.path,
                                               sep = "")
 write.csv(raw.scored.analysis.df, file = raw.score.counts.by.category.filename)
 
+
+# calculate raw score totals and preserve row names
+raw.scored.analysis.tallied.df <- raw.scored.analysis.df%>%
+  mutate_if(is.character,as.numeric)%>%
+  mutate("Totals_in_all_categories" = Reduce("+",.[1:(length(category.levels))]))
+rownames(raw.scored.analysis.tallied.df) <-category.raw.scored.columns.nice.names
+raw.scored.analysis.tallied.df$Barrier <- rownames(raw.scored.analysis.tallied.df)
+
+#plot absolute number of issues scorred across all categories
+
+raw.scored.analysis.tallied.df.plot.title <- paste(" Absolute number of issues scored across all categories\n",
+                                                   question.column.name.nice,
+                                                   "\n",
+                                                   "n=",
+                                                   n.respondants
+                                                   )
+
+raw.scored.analysis.tallied.df%>%
+ggplot()+
+  aes(x= reorder(Barrier,Totals_in_all_categories), y= Totals_in_all_categories)+
+  #scale_x_discrete(limits = positions)+
+  coord_flip()+
+  ylab("number of issues scored")+
+  xlab("percived barriers as scored")+
+  ggtitle(raw.scored.analysis.tallied.df.plot.title)+
+  geom_bar(stat = "identity")+
+  theme_minimal()
+
+raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_cateroies",
+                                   question.column.name.safe,
+                                   "by",
+                                   category.column.name.safe,
+                                   ".png",
+                                   sep = "_")
+
+ggsave(paste(plot.dir.path,raw.scored.analysis.tallied.df.plot.filename, sep= ""))
+
+## Calculate responses to question as percentage of respondants in stratafying category
+
+#crate new df from raw.scored.analysis.df and change column names to category key names (safe)
+raw.scored.analysis.wkey.df <- raw.scored.analysis.df
+colnames(raw.scored.analysis.wkey.df) <- category.levels
+
+#melt and transpose and make "value" column numeric, preserving column name
+raw.scored.analysis.wkey.df <- t(raw.scored.analysis.wkey.df)
+raw.scored.analysis.wkey.df <- melt(as.matrix(raw.scored.analysis.wkey.df))
+raw.scored.analysis.wkey.df$value <- as.numeric(as.character(raw.scored.analysis.wkey.df$value))
+
+
+#Caculate percentages of responses in barrier category attribitable to stratification category
+# add summed_score column with this value
+responses.summed.by.barriers <- raw.scored.analysis.wkey.df %>%
+  group_by(Var2)%>%
+  mutate(summed_score = sum(value))%>%
+  mutate(percentage = (value / summed_score) * 100) 
+
+#add proportion calculation to barriers table where porpotion is out of total respondants
+# in a category. e.g. if 100 answered 'Associates' to Q21 but 50 left a + comment in Q38
+# then 50% of respondants at an Associates institution encountered a barrier
+
+#modify response.counts.by.category df for this analysis
+response.counts.df <- data.frame(response.counts.by.category["response_count",], stringsAsFactors = FALSE)
+colnames(response.counts.df) <- response.counts.by.category["category_key",]
+
+#create response column as factor
+responses.summed.by.barriers$responses <- responses.summed.by.barriers$Var1
+responses.summed.by.barriers$responses <- as.character(responses.summed.by.barriers$responses)
+# replace responses with the number of responses in that category
+  for (category in category.levels) {
+  responses.summed.by.barriers$responses[responses.summed.by.barriers$responses == category] <- response.counts.df[,category]
   
+  }
+responses.summed.by.barriers$responses <- as.numeric(as.character(responses.summed.by.barriers$responses))
+# calculate the proportional response
+proportional.responses.summed.by.barriers<- responses.summed.by.barriers %>%
+  mutate(proportion = value/responses)
+

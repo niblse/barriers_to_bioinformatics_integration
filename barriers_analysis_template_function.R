@@ -40,6 +40,7 @@ remove.non.repondants <- function(df){
 question.column.name <- "Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatics.cOntent.in.these.cOurses."
 question.column.name.nice <- "Barriers to Including Bioinformatics (Q38)"
 question.column.name.safe <- "Q38_barriers_to_inclusion"
+question.column.subset <- df$Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatics.cOntent.in.these.cOurses.
 
 # Category to stratify by
 
@@ -50,6 +51,7 @@ question.column.name.safe <- "Q38_barriers_to_inclusion"
 category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
 category.column.name.nice <- "Carnegie Classification (Q21)"
 category.column.name.safe <- "Q21_carnegie_classification"
+category.column.subset <-  df$Q21_What.is.the.Carnegie.classification.of.your.institution.
 
 
 #Get the levels (possible answers) within that catagories
