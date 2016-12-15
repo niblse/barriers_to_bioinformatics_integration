@@ -84,7 +84,7 @@ category.df <- data.frame ("Associates"= category.levels[1],
 
 nice.names.df <- data.frame(t(category.df))
 nice.names.df$rownames <- rownames(nice.names.df)
-rownames(nice.names.df) <- nice.names.df$category_key
+rownames(nice.names.df) <- nice.names.df$t.category.df.
 nice.names.df$rownames <- as.character(nice.names.df$rownames)
 
 # The first row of category.df contains the original value of the category level, rename row
@@ -403,7 +403,9 @@ proportional.responses.summed.by.barriers<- responses.summed.by.barriers %>%
   mutate(proportion = value/responses)
 
 #Add nice names to dataframe
-proportional.responses.summed.by.barriers$nice_names <- proportional.responses.summed.by.barriers$Var1
+
+proportional.responses.summed.by.barriers <- proportional.responses.summed.by.barriers%>%
+  mutate(nice_names = Var1)
 proportional.responses.summed.by.barriers$nice_names <- as.character(proportional.responses.summed.by.barriers$nice_names)
 # replace responses with the number of responses in that category
 for (category in category.levels) {
@@ -418,7 +420,8 @@ for (category in category.levels) {
 top.rows <- proportional.responses.summed.by.barriers%>%
   arrange(desc(summed_score))%>%
   distinct(Var2)%>%
-  head(n=5)%>%
+  head(n=5)
+  
 top.rows <- top.rows$Var2
 
 proportional.responses.summed.by.barriers.top5 <- proportional.responses.summed.by.barriers%>%
@@ -492,12 +495,10 @@ proportional.sig.responses.summed.by.barriers.plot$Var2 <-
   factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
            proportional.sig.responses.summed.by.barriers.plot$Var2[order(desc(proportional.sig.responses.summed.by.barriers.plot$summed_score))])
 
-sig.barriers$Var2 <- factor(sig.barriers$Var2, 
-                            levels = proportional.sig.responses.summed.by.barriers.plot$Var2[order(desc(proportional.sig.responses.summed.by.barriers.plot$summed_score))])
-
 proportional.sig.responses.summed.by.barriers.plot$nice_names <- 
   factor(proportional.sig.responses.summed.by.barriers.plot$nice_names, levels = 
            colnames(category.df))
+
 
 #plot
 
@@ -505,7 +506,7 @@ proportional.sig.responses.summed.by.barriers.plot%>%
   ggplot()+
   aes(x=Var2, y=proportion, fill=nice_names)+
   geom_bar(stat = "identity", position = "dodge")+
-  labs(x = paste(question.column.name.nice)
+  labs(x = question.column.name.nice,
        y = "proportion of respondants", 
        title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
        subtitle = paste("Shown as proportion of users within each",
@@ -516,3 +517,11 @@ proportional.sig.responses.summed.by.barriers.plot%>%
   scale_fill_discrete(name= category.nice.name.caps)
 
 
+proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_signifigantly_by_category_proprotional_by_category",
+                                                                      question.column.name.safe,
+                                                                      "by",
+                                                                      category.column.name.safe,
+                                                                      ".png",
+                                                                      sep = "_")
+
+ggsave(paste(plot.dir.path,proportional.sig.responses.summed.by.barriers.plot.filename, sep= ""))
