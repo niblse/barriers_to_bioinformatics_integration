@@ -168,6 +168,17 @@ category.summed.columns <- c("q38_Faculty_issues_sum",
 category.summed.df<- relavant.respondants.df%>%
   select(one_of(category.summed.columns))
 
+# create a set of nice names
+
+category.summed.columns.nice.names <- c("Faculty Issues (summed)",
+                                        "Curriculum Issues (summed)", 
+                                        "Resource Issues (summed)", 
+                                        "Student Issues (summed)",
+                                        "Facilities Issues (summed)", 
+                                        "Institutional Issues (summed)",
+                                        "State Issues (summed)", 
+                                        "Accredidation Issues (summed)")
+
 category.reduced.columns <- c("q38_Faculty_issues_reduced", 
                               "q38_Curriculum_issues_reduced", 
                               "q38_Resources_issues_reduced", 
@@ -180,6 +191,17 @@ category.reduced.columns <- c("q38_Faculty_issues_reduced",
 
 category.reduced.df<- relavant.respondants.df%>%
   select(one_of(category.reduced.columns))
+
+# create a set of nice names
+
+category.reduced.columns.nice.names <- c("Faculty Issues (reduced)",
+                                        "Curriculum Issues (reduced)", 
+                                        "Resource Issues (reduced)", 
+                                        "Student Issues (reduced)",
+                                        "Facilities Issues (reduced)", 
+                                        "Institutional Issues (reduced)",
+                                        "State Issues (reduced)", 
+                                        "Accredidation Issues (reduced)")
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -289,8 +311,6 @@ n.respondants <- as.numeric(n.respondants.object[1])
 response.counts.by.category <-as.data.frame(n.respondants.object[2])
 
 
-
-
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
 
 
@@ -342,6 +362,7 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.nice,
                         question.column.name.safe,
                         category.column.name.safe)
+
 
 
 ######### RAW SCORE ANALYSIS #############################################################################
@@ -623,13 +644,17 @@ sig.diff.chi.analysis <- function(df){
                                                                   "_chi_squared_results",
                                                                   ".csv", 
                                                                   sep = "")
-  #write.csv(as.data.frame(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
+  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
   
   return(proportional.responses.summed.by.barriers.grouped.chi)
 }
 
 #calculate chi values
 proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportional.responses.summed.by.barriers)
+
+
+
+
 
 ############ Plot signifigantly different barriers ####################################
 
@@ -699,9 +724,8 @@ plot.sig.barriers <- function(df,
          units = "in")
 }
 
-# plot signifigantly different barriers
-plot.sig.barriers(proportional.sig.responses.summed.by.barriers,
-                  proportional.responses.summed.by.barriers,
+plot.sig.barriers(proportional.sig.responses.summed.by.barriers, 
+                  proportional.responses.summed.by.barriers, 
                   category.df,
                   category.nice.name.caps,
                   category.nice.name.lower,

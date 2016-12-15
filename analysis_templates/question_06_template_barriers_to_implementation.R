@@ -10,22 +10,28 @@ master.df <- read_csv("./data_cleaning_scripts/04_decode_survey_responses/output
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-# Category to stratify by
 
-# Set the variable (Question) that will be analyzed ("COLUMN_NAME)
-# Set the subsetting variable for this column (e.g df$COLUMN_NAME)
-# Set a 'nice name' to describe this category
-# Set a 'safe name' for naming variables
-category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
-category.column.name.nice <- "Carnegie Classification (Q21)"
-category.column.name.safe <- "Q21_carnegie_classification"
-category.column.subset <-  master.df[[category.column.name]]
-category.nice.name.caps <- "Institution Type"
-category.nice.name.lower <- "institution type"
+# set the variable (Question) that will be analyzed: "COLUMN_NAME"
+category.column.name <- ""
+
+# set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
+category.column.name.nice <- ""
+
+# set a 'safe name' for naming variables: "Q#_category_category"
+category.column.name.safe <- ""
+
+
+#set a nice name in upper and lower case that describes the category kinds 
+#(e.g. gender, institution type): ""
+
+category.nice.name.caps <- ""
+category.nice.name.lower <- ""
+
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
-#Since the possible categories are highly specific there are more manual parameters to set
 
+#subset the category column
+category.column.subset <-  master.df[[category.column.name]]
 #Get the levels (possible answers) within that catagories
 category.levels <- levels(as.factor(category.column.subset))
 
@@ -33,7 +39,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[1:4]
+category.levels <- category.levels[]
 
 #######################################################################################
 
@@ -49,14 +55,13 @@ question.column.subset <- master.df[[question.column.name]]
 
 #Names
 # variable (Question) that will be analyzed ("COLUMN_NAME)
-question.column.name <- "Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatics.cOntent.in.these.cOurses."
+question.column.name <- "Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation."
 # subsetting variable for this column (e.g master.df$COLUMN_NAME)
-question.column.name.nice <- "Barriers to Including Bioinformatics (Q38)"
+question.column.name.nice <- "Barriers to Implementation (Q06)"
 # 'nice name' to describe this question
-question.column.name.safe <- "Q38_barriers_to_inclusion"
+question.column.name.safe <- "Q06_barriers_to_implementation"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
-
 
 ########## Cleaning Steps ###################################################
 
@@ -91,34 +96,28 @@ question.column.subset <- relavant.respondants.df[[question.column.name]]
 ############# column selection #################################################
 
 
-category.raw.scored.columns <- c("Q38_Faculty.Issue...No.Expertise..Training", 
-                                 "Q38_Faculty.Issue...Time", 
-                                 "Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum", 
-                                 "Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution", 
-                                 "Q38_Faculty.Issues...Faculty.is.new.to.current.Dept", 
-                                 "Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content", 
-                                 "Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure", 
-                                 "Q38_Curriculum.Issue...Time.for.Curriculum.Development", 
-                                 "Q38_Curric.Issues...Lack.of.Curric.Control.not.in.curent.Curric.", 
-                                 "Q38_Curric.Issues...Bioinf..Taught.in.other.courses.at.institution", 
-                                 "Q38_Curric.Issue...Class.Size", 
-                                 "Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available.", 
-                                 "Q38_Curric.Issue...Bioinfo.Conent.too.Massive", 
-                                 "Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses",
-                                 "Q38_Resources...Access.to.Quality.Exercises..Content", 
-                                 "Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric",
-                                 "Q38_Resources...Access.to.Approp.Introductory.Content", 
-                                 "Q38_Resources...Unable.to.identify.access.best.current.Bioinf.material", 
-                                 "Q38_Resource.Issues...Funding", 
-                                 "Q38_Resource.Issues...Not.available.in.course.textbook", 
-                                 "Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent", 
-                                 "Q38_Resource.Issues..TA.s.lack.approp.skils",
-                                 "Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge", 
-                                 "Q38_Student.Issues...Lack.of.interest.in.topic",
-                                 "Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment",
-                                 "Q38_Inst.Dept.Issues...Institutional.Inertia",  
-                                 "Q38_State.restrictions", 
-                                 "Q38_Not.accredited", 
+category.raw.scored.columns <- c("Q06_Faculty.Issue...No.Expertise..Training",
+                                 "Q06_Faculty.Issue...Time", 
+                                 "Q06_Faculty.Issue...Not.enough.Faculty.members", 
+                                 "Q06_Faculty.Issues...Interest.in.Topic", 
+                                 "Q06_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content", 
+                                 "Q06_Curric.Isues..Curric.Revision.needed", 
+                                 "Q06_Curric.Isues...Bioinf.approaches.need.to.be.taugh.at.every.level.integrate.current.classes", 
+                                 "Q06_Curic.Issues...Bioinf.Program.Courses.under.develop", 
+                                 "Q06_Curric.Isues...Not.a.req.for.Life.Sci.Majors..Pre.Med", 
+                                 "Q06_Curric.Issue...Class.Size.too.large", 
+                                 "Q06_Curric.Issues...Not.enough.classes.seats.available", 
+                                 "Q06_Student.issue...Lack.of.Student.interest.in.quant.skills.and.related.courses", 
+                                 "Q06_Student.Issues...Student.Background.is.insufficient", 
+                                 "Q06_Inst.Dept.Support...Institutional.Inertia", 
+                                 "Q06_Inst.Dept.Support...Inter.Departmental.Cooperation", 
+                                 "Q06_Inst.Dept.Support...IT.Supprt", 
+                                 "Q06_Inst.Dept.Support...State.Regulation",
+                                 "Q06_Resource.Issue...Funding", 
+                                 "Q06_Resource.Issues...Access.to.Approp.Software..Op.sys", 
+                                 "Q06_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
+                                 "Q06_Facilities...Computer.Labs..Laq.Equip.limited.or.not.available", 
+                                 "Q06_Facilities...Servers", 
                                  category.column.name)
 
 category.raw.scored.df <- relavant.respondants.df%>%
@@ -128,58 +127,27 @@ category.raw.scored.df <- relavant.respondants.df%>%
 
 category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
-                                            "Faculty Issues: Curriculum design/integration",
+                                            "Faculty Issues: Too few faculty",
                                             "Faculty Issues: Lack of interest",
-                                            "Faculty Issues: New Faculty",
                                             "Curriculum Issues: No space",
                                             "Curriculum Issues: Incompatible with current curriculum",
-                                            "Curriculum Issues: Time needed to develop",
-                                            "Curriculum Issues: No control",
-                                            "Curriculum Issues: Covered elsewhere",
+                                            "Curriculum Issues: Integration needed at every level",
+                                            "Curriculum Issues: Bioinformatics curriculum is under development",
+                                            "Curriculum Issues: Not required for life sci/pre-med majors",
                                             "Curriculum Issues: Class size",
-                                            "Curriculum Issues: Plan for future coverage",
-                                            "Curriculum Issues: Too much content",
-                                            "Curriculum Issues: Content requires several courses",
-                                            "Resource Issues: Access to exercises",
-                                            "Resource Issues: Access to lesson plans",
-                                            "Resource Issues: Access to intro content",
-                                            "Resource Issues: Unable to vet content",
-                                            "Resource Issues: Funding",
-                                            "Resource Issues: No appropriate textbook",
-                                            "Resource Issues: No access to online exercises",
-                                            "Resource Issues: No qualified TAs",
+                                            "Curriculum Issues: Too few seats",
+                                            "Student Issues: Lack of interest",
                                             "Student Issues: Background knowledge",
-                                            "Student Issues: Interest in topic",
-                                            "Facilities: Access to equipment",
-                                            "Institutional: Inertia",
-                                            "State Restrictions", 
-                                            "Accreditation")
+                                            "Institutional: Institutional inertia", 
+                                            "Institutional: Inter-departmental cooperation", 
+                                            "Institutional: IT support", 
+                                            "Institutional: State regulation", 
+                                            "Resource Issues: Funding", 
+                                            "Resource Issues: Access to software",
+                                            "Resource Issues: Access to bioinformatics lesson plans/curricula",
+                                            "Facilities: Access to computer(s)/labs",
+                                            "Facilities: Servers")
 
-category.summed.columns <- c("q38_Faculty_issues_sum", 
-                             "q38_Curriculum_issues_sum", 
-                             "q38_Resources_issues_sum", 
-                             "q38_Student_issues_sum", 
-                             "q38_Facilities_issues_sum", 
-                             "q38_Institutional_issues_sum", 
-                             "q38_State_issues_sum", 
-                             "q38_Accredited_issues_sum",
-                             category.column.name)
-
-category.summed.df<- relavant.respondants.df%>%
-  select(one_of(category.summed.columns))
-
-category.reduced.columns <- c("q38_Faculty_issues_reduced", 
-                              "q38_Curriculum_issues_reduced", 
-                              "q38_Resources_issues_reduced", 
-                              "q38_Student_issues_reduced", 
-                              "q38_Facilities_issues_reduced", 
-                              "q38_Institutional_issues_reduced", 
-                              "q38_State_issues_reduced", 
-                              "q38_Accredited_issues_reduced",
-                              category.column.name)
-
-category.reduced.df<- relavant.respondants.df%>%
-  select(one_of(category.reduced.columns))
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -289,8 +257,6 @@ n.respondants <- as.numeric(n.respondants.object[1])
 response.counts.by.category <-as.data.frame(n.respondants.object[2])
 
 
-
-
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
 
 
@@ -342,6 +308,7 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.nice,
                         question.column.name.safe,
                         category.column.name.safe)
+
 
 
 ######### RAW SCORE ANALYSIS #############################################################################
@@ -623,13 +590,14 @@ sig.diff.chi.analysis <- function(df){
                                                                   "_chi_squared_results",
                                                                   ".csv", 
                                                                   sep = "")
-  #write.csv(as.data.frame(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
+  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
   
   return(proportional.responses.summed.by.barriers.grouped.chi)
 }
 
 #calculate chi values
 proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportional.responses.summed.by.barriers)
+
 
 ############ Plot signifigantly different barriers ####################################
 
@@ -699,9 +667,8 @@ plot.sig.barriers <- function(df,
          units = "in")
 }
 
-# plot signifigantly different barriers
-plot.sig.barriers(proportional.sig.responses.summed.by.barriers,
-                  proportional.responses.summed.by.barriers,
+plot.sig.barriers(proportional.sig.responses.summed.by.barriers, 
+                  proportional.responses.summed.by.barriers, 
                   category.df,
                   category.nice.name.caps,
                   category.nice.name.lower,

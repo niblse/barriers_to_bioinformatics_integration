@@ -10,22 +10,28 @@ master.df <- read_csv("./data_cleaning_scripts/04_decode_survey_responses/output
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-# Category to stratify by
 
-# Set the variable (Question) that will be analyzed ("COLUMN_NAME)
-# Set the subsetting variable for this column (e.g df$COLUMN_NAME)
-# Set a 'nice name' to describe this category
-# Set a 'safe name' for naming variables
-category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
-category.column.name.nice <- "Carnegie Classification (Q21)"
-category.column.name.safe <- "Q21_carnegie_classification"
-category.column.subset <-  master.df[[category.column.name]]
-category.nice.name.caps <- "Institution Type"
-category.nice.name.lower <- "institution type"
+# set the variable (Question) that will be analyzed: "COLUMN_NAME"
+category.column.name <- ""
+
+# set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
+category.column.name.nice <- ""
+
+# set a 'safe name' for naming variables: "Q#_category_category"
+category.column.name.safe <- ""
+
+
+#set a nice name in upper and lower case that describes the category kinds 
+#(e.g. gender, institution type): ""
+
+category.nice.name.caps <- ""
+category.nice.name.lower <- ""
+
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
-#Since the possible categories are highly specific there are more manual parameters to set
 
+#subset the category column
+category.column.subset <-  master.df[[category.column.name]]
 #Get the levels (possible answers) within that catagories
 category.levels <- levels(as.factor(category.column.subset))
 
@@ -33,7 +39,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[1:4]
+category.levels <- category.levels[]
 
 #######################################################################################
 
@@ -168,6 +174,17 @@ category.summed.columns <- c("q38_Faculty_issues_sum",
 category.summed.df<- relavant.respondants.df%>%
   select(one_of(category.summed.columns))
 
+# create a set of nice names
+
+category.summed.columns.nice.names <- c("Faculty Issues (summed)",
+                                        "Curriculum Issues (summed)", 
+                                        "Resource Issues (summed)", 
+                                        "Student Issues (summed)",
+                                        "Facilities Issues (summed)", 
+                                        "Institutional Issues (summed)",
+                                        "State Issues (summed)", 
+                                        "Accredidation Issues (summed)")
+
 category.reduced.columns <- c("q38_Faculty_issues_reduced", 
                               "q38_Curriculum_issues_reduced", 
                               "q38_Resources_issues_reduced", 
@@ -180,6 +197,17 @@ category.reduced.columns <- c("q38_Faculty_issues_reduced",
 
 category.reduced.df<- relavant.respondants.df%>%
   select(one_of(category.reduced.columns))
+
+# create a set of nice names
+
+category.reduced.columns.nice.names <- c("Faculty Issues (reduced)",
+                                        "Curriculum Issues (reduced)", 
+                                        "Resource Issues (reduced)", 
+                                        "Student Issues (reduced)",
+                                        "Facilities Issues (reduced)", 
+                                        "Institutional Issues (reduced)",
+                                        "State Issues (reduced)", 
+                                        "Accredidation Issues (reduced)")
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -289,8 +317,6 @@ n.respondants <- as.numeric(n.respondants.object[1])
 response.counts.by.category <-as.data.frame(n.respondants.object[2])
 
 
-
-
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
 
 
@@ -342,6 +368,7 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.nice,
                         question.column.name.safe,
                         category.column.name.safe)
+
 
 
 ######### RAW SCORE ANALYSIS #############################################################################
@@ -623,7 +650,7 @@ sig.diff.chi.analysis <- function(df){
                                                                   "_chi_squared_results",
                                                                   ".csv", 
                                                                   sep = "")
-  #write.csv(as.data.frame(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
+  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.chi), file = proportional.sig.responses.summed.by.barriers.filename)
   
   return(proportional.responses.summed.by.barriers.grouped.chi)
 }
@@ -699,9 +726,8 @@ plot.sig.barriers <- function(df,
          units = "in")
 }
 
-# plot signifigantly different barriers
-plot.sig.barriers(proportional.sig.responses.summed.by.barriers,
-                  proportional.responses.summed.by.barriers,
+plot.sig.barriers(proportional.sig.responses.summed.by.barriers, 
+                  proportional.responses.summed.by.barriers, 
                   category.df,
                   category.nice.name.caps,
                   category.nice.name.lower,
