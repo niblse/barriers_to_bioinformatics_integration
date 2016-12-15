@@ -6,7 +6,7 @@ require(corrplot)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
-master.df <- read_csv("./data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
+master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
@@ -45,8 +45,7 @@ category.levels <- category.levels[]
 
 # Reset the category subset
 category.column.subset <-  master.df[[category.column.name]]
-# This line does not need to be changed
-question.column.subset <- master.df[[question.column.name]]
+
 
 
 ############ TEMPLATE VARIABLES    ############################
@@ -179,11 +178,15 @@ dir.create(plot.dir.path, recursive = TRUE)
 
 #Nice names data frame - create a datframe of nice names for your categories, you must
 #complete the df for all of the categories
+#example:
+#category.df <- data.frame ("Associates"= category.levels[1], 
+#                           "Baccalaureate" = category.levels[2] , 
+#                           "Masters" = category.levels[3] , 
+#                           "Doctoral" = category.levels[4], 
+#                           stringsAsFactors = FALSE)
 
-category.df <- data.frame ("Associates"= category.levels[1], 
-                           "Baccalaureate" = category.levels[2] , 
-                           "Masters" = category.levels[3] , 
-                           "Doctoral" = category.levels[4], 
+
+category.df <- data.frame ("NAME"= category.levels[1],  
                            stringsAsFactors = FALSE)
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
@@ -297,7 +300,10 @@ plot.summary.statistics <- function(df,
                                      ".png",
                                      sep = "_")
   
-  ggsave(paste(plot.dir.path,summary.response.plotname, sep= ""))
+  ggsave(paste(plot.dir.path,summary.response.plotname, sep= ""), 
+         width = 13.8, 
+         height = 8.81, 
+         units = "in")
   
 }
 
@@ -411,7 +417,10 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
                                                         ".png",
                                                         sep = "_")
   
-  ggsave(paste(plot.dir.path,raw.scored.analysis.tallied.df.plot.filename, sep= ""))
+  ggsave(paste(plot.dir.path,raw.scored.analysis.tallied.df.plot.filename, sep= ""), 
+         width = 13.8, 
+         height = 8.81, 
+         units = "in")
 }
 
 #plot number of respondants by barriers (all categories)
@@ -564,7 +573,10 @@ plot.of.top5.barriers <- function(df,
                                                                         ".png",
                                                                         sep = "_")
   
-  ggsave(paste(plot.dir.path,proportional.responses.summed.by.barriers.top5.plot.filename, sep= ""))
+  ggsave(paste(plot.dir.path,proportional.responses.summed.by.barriers.top5.plot.filename, sep= ""), 
+         width = 13.8, 
+         height = 8.81, 
+         units = "in")
 }
 plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
                       question.column.name.nice,
@@ -596,6 +608,9 @@ sig.diff.chi.analysis <- function(df){
 }
 
 #calculate chi values
+# remove NaN Values
+proportional.responses.summed.by.barriers <- proportional.responses.summed.by.barriers%>%
+  filter(summed_score != 0)
 proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportional.responses.summed.by.barriers)
 
 
