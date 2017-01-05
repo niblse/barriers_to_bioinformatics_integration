@@ -525,3 +525,17 @@ proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_d
                                                                       sep = "_")
 
 ggsave(paste(plot.dir.path,proportional.sig.responses.summed.by.barriers.plot.filename, sep= ""))
+
+
+
+###### TESTING PWR ANALYSIS ##################################################
+
+install.packages("pwr")
+library(pwr)
+
+
+power_ob <- pwr.chisq.test(w = 0.3, 
+               N = n.respondants, 
+               df = 3 )
+
+

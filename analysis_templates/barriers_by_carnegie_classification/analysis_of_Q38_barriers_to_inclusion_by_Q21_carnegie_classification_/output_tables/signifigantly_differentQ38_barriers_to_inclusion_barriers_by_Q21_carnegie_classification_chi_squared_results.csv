@@ -1,29 +1,29 @@
 "","Var2","chi_test"
-"1",Faculty Issues: Expertise/training,0.132433783108446
-"2",Faculty Issues: Time,0.612693653173413
-"3",Faculty Issues: Curriculum design/integration,0.651674162918541
-"4",Faculty Issues: Lack of interest,0.0974512743628186
+"1",Faculty Issues: Expertise/training,0.121939030484758
+"2",Faculty Issues: Time,0.592703648175912
+"3",Faculty Issues: Curriculum design/integration,0.656671664167916
+"4",Faculty Issues: Lack of interest,0.0964517741129435
 "5",Faculty Issues: New Faculty,1
-"6",Curriculum Issues: No space,0.326336831584208
-"7",Curriculum Issues: Incompatible with current curriculum,0.0229885057471264
-"8",Curriculum Issues: Time needed to develop,0.457271364317841
+"6",Curriculum Issues: No space,0.339330334832584
+"7",Curriculum Issues: Incompatible with current curriculum,0.0189905047476262
+"8",Curriculum Issues: Time needed to develop,0.451774112943528
 "9",Curriculum Issues: No control,0.015992003998001
-"10",Curriculum Issues: Covered elsewhere,0.4047976011994
-"11",Curriculum Issues: Class size,0.102448775612194
-"12",Curriculum Issues: Plan for future coverage,0.96351824087956
-"13",Curriculum Issues: Too much content,0.896551724137931
+"10",Curriculum Issues: Covered elsewhere,0.403298350824588
+"11",Curriculum Issues: Class size,0.106446776611694
+"12",Curriculum Issues: Plan for future coverage,0.965017491254373
+"13",Curriculum Issues: Too much content,0.899050474762619
 "14",Curriculum Issues: Content requires several courses,1
 "15",Resource Issues: Access to exercises,1
-"16",Resource Issues: Access to lesson plans,0.792603698150925
-"17",Resource Issues: Access to intro content,0.024487756121939
-"18",Resource Issues: Unable to vet content,0.800599700149925
-"19",Resource Issues: Funding,0.654172913543228
-"20",Resource Issues: No appropriate textbook,0.479260369815092
-"21",Resource Issues: No access to online exercises,0.39880059970015
+"16",Resource Issues: Access to lesson plans,0.782108945527236
+"17",Resource Issues: Access to intro content,0.0279860069965017
+"18",Resource Issues: Unable to vet content,0.770614692653673
+"19",Resource Issues: Funding,0.64567716141929
+"20",Resource Issues: No appropriate textbook,0.478260869565217
+"21",Resource Issues: No access to online exercises,0.424287856071964
 "22",Resource Issues: No qualified TAs,1
-"23",Student Issues: Background knowledge,0.0294852573713143
-"24",Student Issues: Interest in topic,0.418790604697651
-"25",Facilities: Access to equipment,0.920539730134933
+"23",Student Issues: Background knowledge,0.024487756121939
+"24",Student Issues: Interest in topic,0.429785107446277
+"25",Facilities: Access to equipment,0.929535232383808
 "26",Institutional: Inertia,1
 "27",State Restrictions,1
 "28",Accreditation,1
