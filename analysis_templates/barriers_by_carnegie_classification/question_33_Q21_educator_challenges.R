@@ -58,7 +58,7 @@ question.column.name <- "Q33_In.your.opinion..what.do.you.think.are.the.most.imp
 # subsetting variable for this column (e.g master.df$COLUMN_NAME)
 question.column.name.nice <- "Educator Challenges to Including Bioinformatics (Q33)"
 # 'nice name' to describe this question
-question.column.name.safe <- "Q32_educator_challenges"
+question.column.name.safe <- "Q33_educator_challenges"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
