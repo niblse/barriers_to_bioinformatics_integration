@@ -3,6 +3,7 @@ require(ggplot2)
 require(tidyverse)
 require(reshape2)
 require(corrplot)
+require(pwr)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -53,7 +54,7 @@ category.column.subset <-  master.df[[category.column.name]]
 
 ############ TEMPLATE VARIABLES    ############################
 # These variables should not change and are specific to a template that analyzes a particular question
-# Q38 Variables
+# Q30 Variables
 
 #Names
 # variable (Question) that will be analyzed ("COLUMN_NAME)
@@ -106,30 +107,28 @@ question29.column.subset <- relavant.respondants.df[[question.29.column.name]]
 ############# column selection #################################################
 
 
-category.raw.scored.columns <- c("Q33_Faculty...No.Expertise.Training", 
-                                 "Q33_Facutly...Time",
-                                 "Q33_Faculty...Differences.of.opinion", 
-                                 "Q33_Faculty...Content.Development", 
-                                 "Q33_Faculty...Not.enough.Faculty", 
-                                 "Q33_Facilities...Computer.Labs.limited.or.not.available", 
-                                 "Q33_Facilities...Computers.are.too.old..inadequate",
-                                 "Q33_Resources...Acces.to.Approp..Software", 
-                                 "Q33_Resources...Funding..general.",
-                                 "Q33_Resources...Funding..software.License.fees.", 
-                                 "Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills", 
-                                 "Q33_Student.Issues...No.interest.in.Bioinf", 
-                                 "Q33_Student.issues...Intimidated.by.topic", 
-                                 "Q33_Student.Isses...Multitude.of.varying.student.backgrounds", 
-                                 "Q33_Student.Issues...Lack.Basic.Computing.Knowledge", 
-                                 "Q33_Student.Issues...Career.prospects", 
-                                 "Q33_Curric.Issues...Lack.of.integration.of.maerial", 
-                                 "Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric", 
-                                 "Q33_Curric.Issues...How.quickly.the.material.tech.changes",
-                                 "Q33_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
-                                 "Q33_Curric.Issues...Making.Comp.Sci.courses.consistently.relevant", 
-                                 "Q33_Curric.Issues...To.much.curric.influence.from.Professional.schools", 
-                                 "Q33_Inst.Dept.Support...Inter.Departmental.Cooperation", 
-                                 "Q33_Inst.Dept.Support...No.IT.support", 
+category.raw.scored.columns <- c("Q29.30_Faculty...No.Expertise.Training", 
+                                 "Q29.30_Faculty...Time", 
+                                 "Q29.30_Faculty...not.interested.in.topic", 
+                                 "Q29.30_Faculty...no.computer.sci.Faculty", 
+                                 "Q29.30_Facilities...Computer.Labs.limited.or.not.available", 
+                                 "Q29.30_Facilities...Computers.are.too.old..inadequate", 
+                                 "Q29.30_Facilities...Servers", 
+                                 "Q29.30_Facilities...Internet.Access.Limited", 
+                                 "Q29.30_Resources...Operating.System.Availability.Issues", 
+                                 "Q29.30_Resources...Approp..Software", 
+                                 "Q29.30_Resources...no.high.performance.systems.available", 
+                                 "Q29.30_Resources...Funding", 
+                                 "Q29.30_Inst.Dept.Support...No.IT.support", 
+                                 "Q29.30_Inst.Dept.Support...No.Sub.to.Pay.site.Databases", 
+                                 "Q29.30_Inst.Dept.Support...Comp.Sci.Dept.Will.not.support.Bioinf", 
+                                 "Q29.30_Student.Issues...Access.to.Approp.Software.off.campus", 
+                                 "Q29.30_Student.Issues...Basic.Computing.Knowledge", 
+                                 "Q29.30_Student.Issues...No.access.to.computers.at.home", 
+                                 "Q29.30_Student.Issues...No.interest.in.Bioinf", 
+                                 "Q29.30_Curriculum...Need.to.Develop.new.program",
+                                 "Q29.30_Curriculum.Class.Size.too.large",
+                                 "Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
                                  category.column.name)
 
 category.raw.scored.df <- relavant.respondants.df%>%
@@ -137,30 +136,28 @@ category.raw.scored.df <- relavant.respondants.df%>%
 
 # Create a set of nice names for these columns
 
-category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/Training", 
+category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
-                                            "Faculty Issues: Differences of opinion",
-                                            "Faculty Issues: Content development",
-                                            "Faculty Issues: Too few faculty",
-                                            "Faculities Issues: Access to computer labs",
-                                            "Faculities Issues: Inadaquate computers",
-                                            "Resource Issues: Access to software",
-                                            "Resource Issues: Funding",
-                                            "Resource Issues: Software/license fees",
-                                            "Student Issues: Lack of background skills/knowledge",
-                                            "Student Issues: Lack of interest",
-                                            "Student Issues: Intimidated by topic",
-                                            "Student Issues: Varying student backrounds",
-                                            "Student Issues: Lack of basic computing skills",
-                                            "Student Issues: Career prospects",
-                                            "Curriculum Issues: Lack of integration", 
-                                            "Curriculum Issues: Too much content", 
-                                            "Curriculum Issues: Quickly changing technologies", 
-                                            "Curriculum Issues: Access to bioinformatics lesson plans/curriculum", 
-                                            "Curriculum Issues: Difficulty establishing relevance", 
-                                            "Curriculum Issues: Influence from professional schools",
-                                            "Institutional Issues: Lack of inter-departmental cooperation",
-                                            "Institutional Issues: Lack of IT support")
+                                            "Faculty Issues: No interest in topic",
+                                            "Faculty Issues: No comp-sci faculty",
+                                            "Facilities Issues: Access to computer labs",
+                                            "Facilities Issues: Inadaquate computers",
+                                            "Facilities Issues: Access to servers",
+                                            "Facilities Issues: Access to internet",
+                                            "Resource Issues: Access to operating systems",
+                                            "Resource Issues: Apropriate software", 
+                                            "Resource Issues: Access to high-performance computing", 
+                                            "Resource Issues: Funding", 
+                                            "Institutional Issues: Access to IT support", 
+                                            "Institutional Issues: Subscriptions/licenses", 
+                                            "Institutional Issues: No support from comp-sci faculty",
+                                            "Student Issues: Access to software off-campus", 
+                                            "Student Issues: Basic computing knowledge", 
+                                            "Student Issues: Access to computers Off-campus", 
+                                            "Student Issues: No interest in bioinformatics",
+                                            "Curriculum Issues: New program development required", 
+                                            "Curriculum Issues: Class size", 
+                                            "Curriculum Issues: Access to bioinformatics lesson plans")
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -330,6 +327,37 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.safe,
                         category.column.name.safe)
 
+
+#### CALCULATE SURVEY POWER ##########################
+
+analysis_power <- function(n.respondants, category.levels){
+  
+  small_effect <- pwr.chisq.test(w = .20, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels)-1))
+  medium_effect <- pwr.chisq.test(w = .50, 
+                                  N = n.respondants, 
+                                  df = (length(category.levels)-1))
+  large_effect <- pwr.chisq.test(w = .80, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels)-1))
+  
+  power_df <- data.frame("p_small_effect" =  small_effect$power, 
+                         "p_medium_effect" = medium_effect$power, 
+                         "p_large_effect" = large_effect$power, 
+                         stringsAsFactors = FALSE)
+  
+  power_df.filename <- paste(table.dir.path,
+                             "power_analysis_for_chi_tests",
+                             question.column.name.safe,
+                             ".csv",
+                             sep = "")
+  
+  write.csv(power_df, file = power_df.filename)
+  
+}
+
+analysis_power(n.respondants, category.levels)
 
 
 ######### RAW SCORE ANALYSIS #############################################################################

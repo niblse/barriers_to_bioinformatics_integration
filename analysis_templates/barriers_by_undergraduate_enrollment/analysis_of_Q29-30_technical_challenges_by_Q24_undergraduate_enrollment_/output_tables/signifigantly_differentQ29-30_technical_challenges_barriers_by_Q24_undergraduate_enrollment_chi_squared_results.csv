@@ -1,25 +1,22 @@
 "","Var2","chi_test"
-"1",Faculty Issues: Expertise/Training,0.000999500249875062
-"2",Faculty Issues: Time,0.0239880059970015
-"3",Faculty Issues: Differences of opinion,0.419790104947526
-"4",Faculty Issues: Content development,0.411294352823588
-"5",Faculty Issues: Too few faculty,0.535232383808096
-"6",Faculities Issues: Access to computer labs,0.896551724137931
-"7",Faculities Issues: Inadaquate computers,1
-"8",Resource Issues: Access to software,0.188405797101449
-"9",Resource Issues: Funding,0.0434782608695652
-"10",Resource Issues: Software/license fees,0.0804597701149425
-"11",Student Issues: Lack of background skills/knowledge,0.956021989005497
-"12",Student Issues: Lack of interest,0.24087956021989
-"13",Student Issues: Intimidated by topic,0.472263868065967
-"14",Student Issues: Varying student backrounds,0.0669665167416292
-"15",Student Issues: Lack of basic computing skills,0.230884557721139
-"16",Student Issues: Career prospects,0.23888055972014
-"17",Curriculum Issues: Lack of integration,0.738130934532734
-"18",Curriculum Issues: Too much content,0.39880059970015
-"19",Curriculum Issues: Quickly changing technologies,0.00999500249875063
-"20",Curriculum Issues: Access to bioinformatics lesson plans/curriculum,0.316341829085457
-"21",Curriculum Issues: Difficulty establishing relevance,0.43728135932034
-"22",Curriculum Issues: Influence from professional schools,1
-"23",Institutional Issues: Lack of inter-departmental cooperation,0.365817091454273
-"24",Institutional Issues: Lack of IT support,0.11544227886057
+"1",Faculty Issues: Expertise/training,0.0249875062468766
+"2",Faculty Issues: Time,0.739630184907546
+"3",Faculty Issues: No interest in topic,1
+"4",Faculty Issues: No comp-sci faculty,1
+"5",Facilities Issues: Access to computer labs,0.0939530234882559
+"6",Facilities Issues: Inadaquate computers,0.819590204897551
+"7",Facilities Issues: Access to servers,0.0104947526236882
+"8",Facilities Issues: Access to internet,0.0114942528735632
+"9",Resource Issues: Access to operating systems,0.0569715142428786
+"10",Resource Issues: Apropriate software,0.0534732633683158
+"11",Resource Issues: Access to high-performance computing,0.0144927536231884
+"12",Resource Issues: Funding,0.137931034482759
+"13",Institutional Issues: Access to IT support,0.000499750124937531
+"14",Institutional Issues: Subscriptions/licenses,0.76711644177911
+"15",Institutional Issues: No support from comp-sci faculty,0.550224887556222
+"16",Student Issues: Access to software off-campus,0.182408795602199
+"17",Student Issues: Basic computing knowledge,0.882058970514743
+"18",Student Issues: Access to computers Off-campus,0.0669665167416292
+"19",Curriculum Issues: New program development required,0.531234382808596
+"20",Curriculum Issues: Class size,0.111444277861069
+"21",Curriculum Issues: Access to bioinformatics lesson plans,1

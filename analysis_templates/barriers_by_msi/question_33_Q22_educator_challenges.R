@@ -3,6 +3,7 @@ require(ggplot2)
 require(tidyverse)
 require(reshape2)
 require(corrplot)
+require(pwr)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -320,6 +321,36 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.safe,
                         category.column.name.safe)
 
+#### CALCULATE SURVEY POWER ##########################
+
+analysis_power <- function(n.respondants, category.levels){
+  
+  small_effect <- pwr.chisq.test(w = .20, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels)-1))
+  medium_effect <- pwr.chisq.test(w = .50, 
+                                  N = n.respondants, 
+                                  df = (length(category.levels)-1))
+  large_effect <- pwr.chisq.test(w = .80, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels)-1))
+  
+  power_df <- data.frame("p_small_effect" =  small_effect$power, 
+                         "p_medium_effect" = medium_effect$power, 
+                         "p_large_effect" = large_effect$power, 
+                         stringsAsFactors = FALSE)
+  
+  power_df.filename <- paste(table.dir.path,
+                             "power_analysis_for_chi_tests",
+                             question.column.name.safe,
+                             ".csv",
+                             sep = "")
+  
+  write.csv(power_df, file = power_df.filename)
+  
+}
+
+analysis_power(n.respondants, category.levels)
 
 
 ######### RAW SCORE ANALYSIS #############################################################################

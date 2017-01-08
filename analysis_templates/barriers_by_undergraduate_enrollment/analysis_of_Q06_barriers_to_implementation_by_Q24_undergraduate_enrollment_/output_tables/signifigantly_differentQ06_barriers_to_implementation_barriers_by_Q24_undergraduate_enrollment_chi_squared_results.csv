@@ -1,23 +1,23 @@
 "","Var2","chi_test"
 "1",Faculty Issues: Expertise/training,0.000499750124937531
-"2",Faculty Issues: Time,0.0339830084957521
+"2",Faculty Issues: Time,0.0334832583708146
 "3",Faculty Issues: Too few faculty,0.000499750124937531
-"4",Faculty Issues: Lack of interest,0.582708645677161
-"5",Curriculum Issues: No space,0.893053473263368
-"6",Curriculum Issues: Incompatible with current curriculum,0.307346326836582
+"4",Faculty Issues: Lack of interest,0.559220389805097
+"5",Curriculum Issues: No space,0.871064467766117
+"6",Curriculum Issues: Incompatible with current curriculum,0.306346826586707
 "7",Curriculum Issues: Integration needed at every level,1
-"8",Curriculum Issues: Bioinformatics curriculum is under development,0.0174912543728136
+"8",Curriculum Issues: Bioinformatics curriculum is under development,0.0184907546226887
 "9",Curriculum Issues: Not required for life sci/pre-med majors,1
-"10",Curriculum Issues: Class size,0.55672163918041
-"11",Curriculum Issues: Too few seats,0.76711644177911
-"12",Student Issues: Lack of interest,0.0409795102448776
-"13",Student Issues: Background knowledge,0.582708645677161
-"14",Institutional: Institutional inertia,0.789605197401299
-"15",Institutional: Inter-departmental cooperation,0.337831084457771
-"16",Institutional: IT support,0.0294852573713143
-"17",Institutional: State regulation,0.338330834582709
-"18",Resource Issues: Funding,0.00899550224887556
-"19",Resource Issues: Access to software,0.0174912543728136
-"20",Resource Issues: Access to bioinformatics lesson plans/curricula,0.326336831584208
-"21",Facilities: Access to computer(s)/labs,0.485257371314343
-"22",Facilities: Servers,0.772613693153423
+"10",Curriculum Issues: Class size,0.556221889055472
+"11",Curriculum Issues: Too few seats,0.775112443778111
+"12",Student Issues: Lack of interest,0.0354822588705647
+"13",Student Issues: Background knowledge,0.596201899050475
+"14",Institutional: Institutional inertia,0.786606696651674
+"15",Institutional: Inter-departmental cooperation,0.344827586206897
+"16",Institutional: IT support,0.024487756121939
+"17",Institutional: State regulation,0.331834082958521
+"18",Resource Issues: Funding,0.0104947526236882
+"19",Resource Issues: Access to software,0.0189905047476262
+"20",Resource Issues: Access to bioinformatics lesson plans/curricula,0.342328835582209
+"21",Facilities: Access to computer(s)/labs,0.461769115442279
+"22",Facilities: Servers,0.802598700649675
