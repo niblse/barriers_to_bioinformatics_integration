@@ -185,6 +185,10 @@ total.top5%>%
   facet_grid(.~ Demographic)+
   theme_minimal()+
   theme(strip.text.x = element_text(size = 8, angle = 90))+
-  theme(axis.text.x=element_blank())
+  theme(axis.text.x=element_blank())+
+  ggtitle("Top 5 Barriers for Q38 across stratafying demographics")
+
+
+ggsave("top_5_Q38_plot.png")
 
 
