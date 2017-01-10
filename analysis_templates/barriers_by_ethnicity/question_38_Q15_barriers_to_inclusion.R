@@ -60,6 +60,10 @@ master.df <- master.df%>%
                                   yes = "Non-underrepresented", 
                                   no = "underrepresented"))
 
+# write dataframe for future refference
+
+write_csv(master.df, "decoded_df_w_ethnicity.csv")
+
                       
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
