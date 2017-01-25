@@ -699,7 +699,7 @@ write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
 
 #calculate power (TODO - is this correct?)
 
-proportion_table_summary
+
   
 
 
@@ -708,6 +708,7 @@ proportion_table_summary
 
 plot.sig.barriers <- function(df, 
                               category.df,
+                              category.levels,
                               category.nice.name.caps,
                               category.nice.name.lower,
                               n.respondants,
@@ -742,6 +743,20 @@ plot.sig.barriers <- function(df,
   
   #plot
   
+  # create legend lables that show the value of n for a stratfying category
+  legend.labels <- df%>%
+    ungroup()%>%
+    select(nice_names, responses)%>%
+    head(., n = length(category.levels))%>%
+    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+  
+  # create labels that show how many positive (coded) responses
+  x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
+    arrange(desc(summed_score))%>%
+    select(Var2, summed_score)%>%
+    distinct(Var2, .keep_all = TRUE)%>%
+    mutate(x.labels = paste(Var2, " \n(", "N+cr=", summed_score, ")", sep = ""))
+  
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
     aes(x=Var2, y=proportion, fill=nice_names)+
@@ -754,7 +769,9 @@ plot.sig.barriers <- function(df,
                           "n=",n.respondants ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps)
+    scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
+    scale_x_discrete(labels = x.labels$x.labels)
+  
   
   
   proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_signifigantly_by_category_proprotional_by_category",
@@ -768,10 +785,13 @@ plot.sig.barriers <- function(df,
          width = 13.8, 
          height = 8.81, 
          units = "in")
+  
+  
 }
 
 plot.sig.barriers(proportion_table_summary, 
                   category.df,
+                  category.levels,
                   category.nice.name.caps,
                   category.nice.name.lower,
                   n.respondants,
