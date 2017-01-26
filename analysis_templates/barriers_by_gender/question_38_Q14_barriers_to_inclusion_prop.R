@@ -2,11 +2,8 @@
 require(ggplot2)
 require(tidyverse)
 require(reshape2)
+require(corrplot)
 require(pwr)
-require(FactoMineR)
-require(factoextra)
-
-
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -16,20 +13,20 @@ master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/ou
 
 
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
+category.column.name <- "Q14_Sex"
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- "Carnegie Classification (Q21)"
+category.column.name.nice <- "Gender"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- "Q21_carnegie_classification"
+category.column.name.safe <- "gender"
 
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- "Institution Type"
-category.nice.name.lower <- "institution type"
+category.nice.name.caps <- "Gender"
+category.nice.name.lower <- "gender"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -43,13 +40,16 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[1:4]
+category.levels <- category.levels[1:2]
 
 #######################################################################################
+
 # Reset the category subset
 category.column.subset <-  master.df[[category.column.name]]
 
-############ TEMPLATE VARIABLES    ####################################################
+
+
+############ TEMPLATE VARIABLES    ############################
 # These variables should not change and are specific to a template that analyzes a particular question
 # Q38 Variables
 
@@ -200,27 +200,27 @@ category.reduced.df<- relavant.respondants.df%>%
 
 # create a set of nice names
 
-category.reduced.columns.nice.names <- c("Faculty Issues",
-                                        "Curriculum Issues", 
-                                        "Resource Issues", 
-                                        "Student Issues",
-                                        "Facilities Issues", 
-                                        "Institutional Issues",
-                                        "State Issues", 
-                                        "Accredidation Issues")
+category.reduced.columns.nice.names <- c("Faculty Issues (reduced)",
+                                        "Curriculum Issues (reduced)", 
+                                        "Resource Issues (reduced)", 
+                                        "Student Issues (reduced)",
+                                        "Facilities Issues (reduced)", 
+                                        "Institutional Issues (reduced)",
+                                        "State Issues (reduced)", 
+                                        "Accredidation Issues (reduced)")
 
 ######### CREATE DIRECTORIES #########################################################
 
 #Create directory for table outputs
 
-table.dir.path <- paste("./prop_analysis_of",
+table.dir.path <- paste("./analysis_of",
                         question.column.name.safe, 
                         "by",
                         category.column.name.safe,
                         "/output_tables_prop/",
                         sep = "_"
 )
-plot.dir.path <- paste("./prop_analysis_of",
+plot.dir.path <- paste("./analysis_of",
                        question.column.name.safe, 
                        "by",
                        category.column.name.safe,
@@ -240,10 +240,8 @@ dir.create(plot.dir.path, recursive = TRUE)
 #Nice names data frame - create a datframe of nice names for your categories, you must
 #complete the df for all of the categories
 
-category.df <- data.frame ("Associates"= category.levels[1], 
-                           "Baccalaureate" = category.levels[2] , 
-                           "Masters" = category.levels[3] , 
-                           "Doctoral" = category.levels[4], 
+category.df <- data.frame ("Female"= category.levels[1], 
+                           "Male" = category.levels[2] , 
                            stringsAsFactors = FALSE)
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
@@ -261,6 +259,7 @@ rownames(category.df)[1] <- "category_key"
 #Create a blank row that will will come in handy later for storing other values
 category.df.blank <- category.df
 category.df.blank[2,] <- NA
+
 
 ########## ANALYSIS FUNCTIONS ########################################################
 
@@ -955,8 +954,3 @@ fviz_mca_biplot(reduced.2.mca,
   theme_minimal()
 
 dev.off()
-
-
-
-
-

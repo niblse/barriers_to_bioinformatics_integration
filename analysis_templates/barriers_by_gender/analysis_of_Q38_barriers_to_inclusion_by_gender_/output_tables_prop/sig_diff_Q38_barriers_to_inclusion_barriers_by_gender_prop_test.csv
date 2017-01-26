@@ -1,0 +1,29 @@
+"","Var2","prop_test_chi_pvalue"
+"1",Faculty Issues: Expertise/training,0.00170371214667907
+"2",Faculty Issues: Time,0.00998223740120144
+"3",Faculty Issues: Curriculum design/integration,0.999999999999998
+"4",Faculty Issues: Lack of interest,0.678582939847447
+"5",Faculty Issues: New Faculty,0.640287656041438
+"6",Curriculum Issues: No space,0.0031333055647328
+"7",Curriculum Issues: Incompatible with current curriculum,0.222167170880871
+"8",Curriculum Issues: Time needed to develop,0.0307817277809512
+"9",Curriculum Issues: No control,0.350501433575372
+"10",Curriculum Issues: Covered elsewhere,0.256450896408279
+"11",Curriculum Issues: Class size,1
+"12",Curriculum Issues: Plan for future coverage,0.194474810072106
+"13",Curriculum Issues: Too much content,0.999999999999999
+"14",Curriculum Issues: Content requires several courses,0.999999999999999
+"15",Resource Issues: Access to exercises,0.634700932314494
+"16",Resource Issues: Access to lesson plans,0.0134851982541079
+"17",Resource Issues: Access to intro content,0.395690012336269
+"18",Resource Issues: Unable to vet content,0.017005987430822
+"19",Resource Issues: Funding,0.0368190522126118
+"20",Resource Issues: No appropriate textbook,0.952121755659008
+"21",Resource Issues: No access to online exercises,0.964517304409194
+"22",Resource Issues: No qualified TAs,0.999999999999999
+"23",Student Issues: Background knowledge,0.648581079243029
+"24",Student Issues: Interest in topic,0.228539083523962
+"25",Facilities: Access to equipment,0.999999999999999
+"26",Institutional: Inertia,0.972593410267892
+"27",State Restrictions,0.460896901486972
+"28",Accreditation,0.984221680637273
