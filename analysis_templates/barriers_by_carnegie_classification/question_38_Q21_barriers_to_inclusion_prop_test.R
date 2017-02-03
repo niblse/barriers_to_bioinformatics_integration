@@ -839,7 +839,7 @@ plot.sig.barriers(proportion_table_summary,
                   category.column.name.safe)
 
 
-############## Muliple correspondance analysis of signifigant barriers by reduced stratafying categories
+############## Analysis of Reduced Categories ##################################
 
 
 
@@ -876,6 +876,7 @@ for(categories in colnames(reduced.tally.df)){
   reduced.tally.df[,categories] <- round(((reduced.tally.df[,categories] / denom)*100), digits = 1)
 }
 
+
 #generate baloon plot
 
 reduced.baloonplot.filename <- paste("reduced_baloonplot",
@@ -902,11 +903,63 @@ balloonplot(as.table(reduced.tally.df),
             )
 dev.off()
 
+# Barplot
+
+#transpose and restore dataframeness
+
+reduced.tally.df.t <- t(reduced.tally.df)
+reduced.tally.df.t <- data.frame(reduced.tally.df.t)
+
+#melt as matrix for plotting
+reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
+
+
+#create plot
+reduced.tally.df.m%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  labs(x = category.column.name.nice,
+     y = "percentage of respondants", 
+     title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
+     subtitle = paste("Shown as proportion of users within each",
+                      category.nice.name.lower,
+                      "n=",n.respondants ))+
+  theme_minimal()+
+  scale_fill_discrete(name= "Reduced Barrier Categories")
+
+reduced.summary.persentage.filename <- paste("reduced_category_barplot",
+                              question.column.name.safe,
+                              "by",
+                              category.column.name.safe,
+                              ".png",
+                              sep = "_")
+
+
+ggsave(paste(plot.dir.path,reduced.summary.persentage.filename, sep= ""), 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+# Correlation plot
+
+reduced.tally.df.correlated <- cor(reduced.tally.df.t)
+corrplot(reduced.tally.df.correlated, 
+         order = "hclust", 
+         tl.srt=45)
+
 
 #MCA
 
 
-# Assign nice names to category.reduced.df and rename
+# Assign nice names to category.reduced.df column names and category column and rename
+
+for (response in category.reduced.df[[length(category.reduced.df)]] ) {
+  category.reduced.df[[length(category.reduced.df)]][category.reduced.df[[length(category.reduced.df)]] == response] <- nice.names.df[response, "rownames"]
+  print(response)
+}
+
+
 colnames(category.reduced.df) <- c(category.reduced.columns.nice.names,category.column.name.nice )
 mca.category.reduced.df <- category.reduced.df
 
