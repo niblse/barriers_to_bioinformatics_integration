@@ -69,6 +69,7 @@ ggplot()+
   geom_errorbar(limits,position = error.dodge, width = .2)+
   theme_minimal()
 
+# Error bards on plot are not very interesting, but I will use the proceedue when I have a facet plot that has differing sample sizes. 
 
 #2 Proportion Testing  #######################################################################################################
 

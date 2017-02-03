@@ -1,6 +1,6 @@
 "","Var1","Var2","value","summed_score","percentage","responses","proportion","nice_names"
-"1","1_Yes","Faculty Issues: Expertise/Training",94,219,42.9223744292237,354,0.265536723163842,"Minority.Serving"
-"2","2_No","Faculty Issues: Expertise/Training",125,219,57.0776255707763,399,0.31328320802005,"Non.Minority.Serving"
+"1","1_Yes","Faculty Issues: Expertise/training",94,219,42.9223744292237,354,0.265536723163842,"Minority.Serving"
+"2","2_No","Faculty Issues: Expertise/training",125,219,57.0776255707763,399,0.31328320802005,"Non.Minority.Serving"
 "3","1_Yes","Faculty Issues: Time",35,70,50,354,0.0988700564971751,"Minority.Serving"
 "4","2_No","Faculty Issues: Time",35,70,50,399,0.087719298245614,"Non.Minority.Serving"
 "5","1_Yes","Faculty Issues: Differences of opinion",5,13,38.4615384615385,354,0.0141242937853107,"Minority.Serving"

@@ -128,7 +128,7 @@ category.raw.scored.df <- relavant.respondants.df%>%
 
 # Create a set of nice names for these columns
 
-category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/Training", 
+category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
                                             "Faculty Issues: Differences of opinion",
                                             "Faculty Issues: Content development",
