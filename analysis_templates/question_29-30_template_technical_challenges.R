@@ -78,7 +78,7 @@ question29.column.subset <- master.df[[question.29.column.name]]
 #remove respondants not in US/Puerto Rico
 remove.non.us.repondants <- function(df){
   countries <- c("United States","Puerto Rico")
-  df <- master.df%>%
+  df <- df%>%
     filter(Country_Country %in% countries )
   return(df)
 }
