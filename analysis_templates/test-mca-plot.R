@@ -35,16 +35,14 @@ data.relavant  <- data%>%
          q33_Faculty_issues_reduced,
          q33_Facility_issues_reduced,
          q33_Resources_issues_reduced,
-         q33_Resources_issues_reduced,
          q33_Student_issues_reduced,
-         q33_Curriculum_issues_reduced,
+         q33_Institutional_issues_reduced,
          q29_Faculty_issues_reduced, 
          q29_Facilities_issues_reduced, 
          q29_Resources_issues_reduced,
          q29_Institutional_issues_reduced, 
          q29_Student_issues_reduced, 
          q29_Curriculum_issues_reduced, 
-         q33_Institutional_issues_reduced,
          q38_Faculty_issues_reduced, 
          q38_Curriculum_issues_reduced, 
          q38_Resources_issues_reduced, 
@@ -130,7 +128,7 @@ data.relavant <- data.relavant%>%
 
 
 
-#manually format nice names
+#manually format nice names; "Don't know responses" treated as NAs
 
 #reduced columns
 
@@ -201,6 +199,10 @@ data.relavant$q38_Accredited_issues_reduced[data.relavant$q38_Accredited_issues_
 data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors"] <- "Teaching: Dedicated Bioinformatics Course"
 data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors"  ] <- "Teaching: Integrating Bioinformatics"
 data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors"] <- "Teaching: Not Integrating Bioinformatics"
+data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "4_Graduate supervisors in the life sciences"] <- NA
+
+
+
 
 #Q3
 data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "1_No training/experience"] <- "Bioinformatics Training: None"
@@ -215,16 +217,21 @@ data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformat
 #Q5
 data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "1_Yes" ] <- "Additional Bioinformatics Courses Needed"
 data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "2_No" ] <- "No additional Bioinformatics Courses Needed"
+data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "3_Don't know"] <- "Unsure if additional Bioinformatics Courses Needed"
+
 
 #14
 data.relavant$Q14_Sex[data.relavant$Q14_Sex == "1_Female"  ] <- "Female"
 data.relavant$Q14_Sex[data.relavant$Q14_Sex == "2_Male"   ] <- "Male"
+data.relavant$Q14_Sex[data.relavant$Q14_Sex == "3_Rather not say"   ] <- NA
+
 
 #17
 data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "1_B.S. (or equivalent)" ] <- "B.S. Degree"
 data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "2_M.S. (or equivalent)"  ] <- "M.S. Degree"
 data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "3_Professional degree (e.g., M.D.)" ] <- "Professional Degree"
 data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "4_Ph.D. (or equivalent)"  ] <- "PhD"
+data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "5_Other"] <- "Other Degree"
 
 ##18
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "1_2016"] <- "2016"
@@ -240,7 +247,7 @@ data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highe
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "11_2006"] <- "2006"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "12_2005"] <- "2005"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "13_2004"] <- "2004"
-data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. ==  "14_2003"] <- "2003"
+data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "14_2003"] <- "2003"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "15_2002"] <- "2002"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "16_2001"] <- "2001"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "17_2000"] <- "2000"
@@ -260,7 +267,7 @@ data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highe
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "31_1986"] <- "1986"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "32_1985"] <- "1985"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "33_1984"] <- "1984"
-data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. ==  "34_1983"] <- "1983"
+data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "34_1983"] <- "1983"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "35_1982"] <- "1982"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "36_1981"] <- "1981"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "37_1980"] <- "1980"
@@ -294,69 +301,188 @@ data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highe
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "65_1952"] <- "1952"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "66_1951"] <- "1951"
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "67_1950"] <- "1950"
-data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "68_Rather Not Say"] <- "Rather Not Say"
-
+data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "68_Rather Not Say"] <- NA
 
 #21
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College"] <- "Carnegie Classification: Associates"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College"] <- "Carnegie Classification: Baccalaureate"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)"] <- "Carnegie Classification: Masters"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)"] <- "Carnegie Classification: Doctoral"
+data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "5_Don't know"] <- NA
 
 
 
+#22
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority Serving Institution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non-minority Serving Institution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "3_Don't know" ] <- NA
+
+
+
+#23
+data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "1_'< 5,000' student'" ] <- "Total Students: < 5,000"
+data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "2_'5,000 - 15,000' students"  ] <- "Total Students: 5-15,000"
+data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "3_'> 15,000' students"  ] <- "Total Students: > 15,000"
+data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "4_Don't know"  ] <- NA
+
+
+
+#24
+data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "1_'< 5,000' students" ] <- "Total Undergraduates < 5,000"
+data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "2_'5,000 - 15,000' students" ] <- "Total Undergraduates: 5-15,000"
+data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "3_'> 15,000' students"  ] <- "Total Undergraduates > 15,000"
+data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "4_Don't know" ] <- NA
+
+
+
+#26
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "1_'< 10'" ] <- "Full-time faculty < 10"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "2_'10 - 20'" ] <- "Full-time faculty 10-20"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "3_'21 - 30'"] <- "Full-time faculty 21-30"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "4_'31 - 40'" ] <- "Full-time faculty 31-40"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "5_'41 - 50'" ] <- "Full-time faculty 41-50"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "6_'> 50'"] <- "Full-time faculty > 50"
+data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "7_Don't know"] <- NA
+
+
+#27
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "1_'< 50'" ] <- "Department undergrads < 50"
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "2_'51 - 100'"] <- "Department undergrads: 51-100"
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "3_'101 - 500'"] <- "Department undergrads: 101-500"
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "4_'501 - 2000'"] <- "Department undergrads: 500-2,000"
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "5_'> 2000'" ] <- "Department undergrads > 2,000"
+data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "6_Don't know"] <- NA
+
+
+
+#29
+data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes"] <- "TECHNICAL BARRIERS"
+data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" ] <- "no technical barriers"
+
+#57
+data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu. == "1_Teach at 4-year institution"] <- "4-year Institution"
+data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu. == "2_Teach at 2-year institution"] <- "2-year Institution"
+data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu. == "3_Teach at 'Other'"] <- "OTHER Institution type"
 
 
 
 #filter out unsure respondants
 
-#filter out non-relavant responders
-data.filtered <- data.relavant%>%
-  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... != "4_Graduate supervisors in the life sciences")%>%
-  filter(Q14_Sex != "3_Rather not say")%>%
-  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. != "5_Don't know")%>%
-  filter(Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... != "3_Don't know")%>%
-  filter(Q17_Highest.earned.degree..If..other...please.explain. != "4_Ph.D. (or equivalent)")%>%
+
+
+
+
+
+#### MCA calculation and plotting function
+
+#Define Question Column Names
+
+q6 <- c("q06_Faculty_issues_reduced",
+        "q06_Curriculum_issues_reduced",
+        "q06_Student_issues_reduced",
+        "q06_Institutional_issues_reduced",
+        "q06_Resource_issues_reduced",
+        "q06_Facilities_issues_reduced")
+q33 <- c("q33_Curriculum_issues_reduced",
+         "q33_Faculty_issues_reduced",
+         "q33_Facility_issues_reduced",
+         "q33_Resources_issues_reduced",
+         "q33_Student_issues_reduced",
+         "q33_Institutional_issues_reduced")
+q29 <- c("q29_Faculty_issues_reduced", 
+         "q29_Facilities_issues_reduced", 
+         "q29_Resources_issues_reduced",
+         "q29_Institutional_issues_reduced", 
+         "q29_Student_issues_reduced", 
+         "q29_Curriculum_issues_reduced")
+q38 <- c("q38_Faculty_issues_reduced", 
+         "q38_Curriculum_issues_reduced", 
+         "q38_Resources_issues_reduced", 
+         "q38_Student_issues_reduced", 
+         "q38_Facilities_issues_reduced", 
+         "q38_Institutional_issues_reduced", 
+         "q38_State_issues_reduced", 
+         "q38_Accredited_issues_reduced")
+Q1 <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
+Q3 <- "Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training." 
+Q5 <- "Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur..."
+Q14 <- "Q14_Sex"
+Q17 <- "Q17_Highest.earned.degree..If..other...please.explain."
+Q18 <- "Q18_Year.of.highest.earned.degree."
+Q21 <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
+Q22 <- "Q22_Is.your.institution.classified.as.minority.serving."
+Q23 <- "Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution."
+Q24 <- "Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution."
+Q26 <- "Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju..."
+Q27 <- "Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.."
+Q29 <- "Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g....."
+Q57 <- "Q57_Please.select.the.statement.belOw.that.best.describes.yOu."
+state <- "State_State"
+region <- "Region_Region"
+tracked_ethnicities <- "tracked_ethnicities"
+representation <- "representation"
+
+
+
+calculate_mca_and_plot <-  function(df, 
+                                    #data frame for analysis
+                                    qualitative_supplimentary_columns, 
+                                    #qualitative_supplimentary_columns - these are variables that will be 'predicted' based on the other rows - a vector in the form c(x,y,...) 
+                                    active_columns, 
+                                    #active columns - these are the variables to include in the MCA analsis - a vector in the form c(x,y,...)
+                                    active_filters,
+                                    #active_filter - these are the variables that you wish to filter to remove NA values, analagous to active_columns a vector in the form c(x,y,...)
+                                    habillage_col, 
+                                    #column containing the variable you want to draw confidence elipses around, 
+                                    habillage_nice_name, 
+                                    #nice name for habbiliage column/variable, 
+                                    plot_title 
+                                    #title of plot
+                                    )
+{
   
 
+  
+ 
+ n.supp.cols <- length(qualitative_supplimentary_columns)
+ 
+ df.selected <- df%>%
+   select_(.dots = c(qualitative_supplimentary_columns, active_columns))
+ 
+ colnames(df.selected)[colnames(df.selected) == habillage_col] <- habillage_nice_name
+ 
+ df.na.filtered <- df.selected%>%
+   drop_na()
+ 
+ 
+ 
+ return(df.na.filtered)
+                                      
+}
 
 
-data.active <- data%>%
-  select(q33_Faculty_issues_reduced,
-         q33_Curriculum_issues_reduced,
-         q33_Facility_issues_reduced,
-         q33_Institutional_issues_reduced,
-         q33_Resources_issues_reduced,
-         q33_Student_issues_reduced,
-         Q21_What.is.the.Carnegie.classification.of.your.institution.,
-         Q14_Sex,
-         Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.,
-         Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...)
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(q33), 
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14), 
+                              habillage_col = Q5, 
+                              habillage_nice_name = "Opinion_on_courses_needed")
+
+MCA.object <- MCA(X = as.matrix(tmp), 
+                  quali.sup = 1:6,
+                  graph = FALSE)
 
 
-
-
-
-
-
-
-
-
-reduced.mca <- MCA(X = as.matrix(data.active),
-                     quali.sup = 1:6,
-                     graph = FALSE)
-
-
-
-
-
-fviz_mca_biplot(reduced.mca, 
+fviz_mca_biplot(MCA.object, 
                 invisible=c("ind"),
-                habillage =  "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...",
+                habillage = 9,
                 addEllipses = TRUE, 
+                repel = TRUE,
                 labelsize = 3,
                 ellipse.level = 0.95, 
-                title = "test")+
+                title = "test"
+                  )+
   theme_minimal()
+
+
 
 
