@@ -366,36 +366,30 @@ data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[dat
 
 
 
-#filter out unsure respondants
-
-
-
-
-
 
 #### MCA calculation and plotting function
 
 #Define Question Column Names
 
-q6 <- c("q06_Faculty_issues_reduced",
+q6.cols <- c("q06_Faculty_issues_reduced",
         "q06_Curriculum_issues_reduced",
         "q06_Student_issues_reduced",
         "q06_Institutional_issues_reduced",
         "q06_Resource_issues_reduced",
         "q06_Facilities_issues_reduced")
-q33 <- c("q33_Curriculum_issues_reduced",
+q33.cols <- c("q33_Curriculum_issues_reduced",
          "q33_Faculty_issues_reduced",
          "q33_Facility_issues_reduced",
          "q33_Resources_issues_reduced",
          "q33_Student_issues_reduced",
          "q33_Institutional_issues_reduced")
-q29 <- c("q29_Faculty_issues_reduced", 
+q29.cols <- c("q29_Faculty_issues_reduced", 
          "q29_Facilities_issues_reduced", 
          "q29_Resources_issues_reduced",
          "q29_Institutional_issues_reduced", 
          "q29_Student_issues_reduced", 
          "q29_Curriculum_issues_reduced")
-q38 <- c("q38_Faculty_issues_reduced", 
+q38.cols <- c("q38_Faculty_issues_reduced", 
          "q38_Curriculum_issues_reduced", 
          "q38_Resources_issues_reduced", 
          "q38_Student_issues_reduced", 
@@ -438,51 +432,101 @@ calculate_mca_and_plot <-  function(df,
                                     #nice name for habbiliage column/variable, 
                                     plot_title 
                                     #title of plot
-                                    )
-{
+){
   
 
-  
+
+    n.supp.cols <- length(qualitative_supplimentary_columns)
+    
+    df.selected <- df%>%
+      select_(.dots = c(qualitative_supplimentary_columns, active_columns))
+    
+    colnames(df.selected)[colnames(df.selected) == habillage_col] <- habillage_nice_name
+    
+    df.na.filtered <- df.selected%>%
+      drop_na()
+    
+    return(df.na.filtered)
+    
+  }
  
- n.supp.cols <- length(qualitative_supplimentary_columns)
- 
- df.selected <- df%>%
-   select_(.dots = c(qualitative_supplimentary_columns, active_columns))
- 
- colnames(df.selected)[colnames(df.selected) == habillage_col] <- habillage_nice_name
- 
- df.na.filtered <- df.selected%>%
-   drop_na()
- 
- 
- 
- return(df.na.filtered)
-                                      
-}
+
+# Draw selected correspondance plots
+
+dir.create("./mca_plots", recursive = TRUE)
 
 
+#Question 33 
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q33), 
+                              qualitative_supplimentary_columns = c(q6.cols), 
                               active_columns = c(Q1, Q3, Q5, Q24, Q14), 
                               habillage_col = Q5, 
-                              habillage_nice_name = "Opinion_on_courses_needed")
+                              habillage_nice_name = as.character("Opinion.on.courses.needed"))
 
-MCA.object <- MCA(X = as.matrix(tmp), 
+MCA.object <- MCA(X = as.matrix(tmp),
                   quali.sup = 1:6,
                   graph = FALSE)
 
-
-fviz_mca_biplot(MCA.object, 
+fviz_mca_biplot(MCA.object,
                 invisible=c("ind"),
                 habillage = 9,
-                addEllipses = TRUE, 
+                addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 3,
-                ellipse.level = 0.95, 
-                title = "test"
-                  )+
-  theme_minimal()
+                ellipse.level = 0.95)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondance Analysis, question 6, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinforatics training \nSex \nTotal number of undergaduates at institution")
+
+ggsave(filename = "./mca_plots/Q5_Opinion_on_courses_needed_Q6_q1teaching_status_q3_preperation_q14_sex_q24_nUndergrads.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+#Question 38 
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(q38), 
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14), 
+                              habillage_col = Q5, 
+                              habillage_nice_name = as.character("Opinion.on.courses.needed"))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1:8,
+                  graph = FALSE)
+
+fviz_mca_biplot(MCA.object,
+                invisible=c("ind"),
+                habillage = 11,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 3,
+                ellipse.level = 0.95)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondance Analysis, question 6, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinforatics training \nSex \nTotal number of undergaduates at institution")
+
+ggsave(filename = "./mca_plots/Q5_Opinion_on_courses_needed_Q6_q1teaching_status_q3_preperation_q14_sex_q24_nUndergrads.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
 
 
-
+#Q1 <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
+#Q3 <- "Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training." 
+#Q5 <- "Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur..."
+#Q14 <- "Q14_Sex"
+#Q17 <- "Q17_Highest.earned.degree..If..other...please.explain."
+#Q18 <- "Q18_Year.of.highest.earned.degree."
+#Q21 <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
+#Q22 <- "Q22_Is.your.institution.classified.as.minority.serving."
+#Q23 <- "Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution."
+#Q24 <- "Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution."
+#Q26 <- "Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju..."
+#Q27 <- "Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.."
+#Q29 <- "Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g....."
+#Q57 <- "Q57_Please.select.the.statement.belOw.that.best.describes.yOu."
+#state <- "State_State"
+#region <- "Region_Region"
+#tracked_ethnicities <- "tracked_ethnicities"
+#representation <- "representation"
 
