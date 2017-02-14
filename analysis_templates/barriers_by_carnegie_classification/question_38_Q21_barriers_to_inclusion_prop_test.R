@@ -691,7 +691,7 @@ sig.diff.chi.analysis <- function(df){
   # calculate chi-values (by proportion test) on each category and return signifigantly different barriers
   proportional.responses.summed.by.barriers.grouped <- group_by(df, Var2)
   proportional.responses.summed.by.barriers.grouped.prop <- proportional.responses.summed.by.barriers.grouped%>%
-    do(prop_test_chi_pvalue = prop.test(.$positive_scored_response,.$null_scored_response)$p.value)
+    do(prop_test_chi_pvalue = prop.test(.$positive_scored_response,.$responses)$p.value)
   
   proportional.sig.responses.summed.by.barriers.filename <- paste(table.dir.path,
                                                                   "sig_diff_", 

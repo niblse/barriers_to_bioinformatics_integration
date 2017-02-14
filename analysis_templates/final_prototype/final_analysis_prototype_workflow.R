@@ -84,13 +84,35 @@ subset.proportion.test <- df.summary %>%
 View(subset.proportion.test)
 
 #b Proportion test is calculated as:
-proportion.test.results <- prop.test(subset.proportion.test$positive_scored_response, subset.proportion.test$null_scored_response)
+proportion.test.results.wrong <- prop.test(subset.proportion.test$positive_scored_response, subset.proportion.test$null_scored_response)
 
 # view p values
 proportion.test.results$p.value
 
 #This test has already been done and is represented in the data frame as
-df.summary$prop_test_chi_pvalue
+df.summary$err.prop_test_chi_pvalue
+
+
+#Corrrect
+
+#Create contigency table and save in a temporary variable
+subset.proportion.test <- df.summary %>%
+  select(nice_names, responses, positive_scored_response, null_scored_response)%>%
+  head(4)
+
+View(subset.proportion.test)
+
+#b Proportion test is calculated as:
+proportion.test.results <- prop.test(subset.proportion.test$positive_scored_response, subset.proportion.test$responses)
+
+# view p values
+proportion.test.results$p.value
+
+#This test has already been done and is represented in the data frame as
+df.summary$err.prop_test_chi_pvalue
+
+
+#Corrrect
 
 
 #3 Power testing #######################################################################################################
