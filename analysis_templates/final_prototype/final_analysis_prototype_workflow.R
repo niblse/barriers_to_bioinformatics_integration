@@ -32,8 +32,6 @@ n.sample <- as.numeric(levels(as.factor(df.summary$n.sample)))
 
 #c set N (population sample size) to a pre-determined value (total number of life science faculty in US), proportion size, and confidence interval. 
 N.population <- 100000
-
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! still not 100 sure how P.proportion_size is chosen or adjusted
 P.proportion_size <-  .5 
 z.confidence.interval <-  1.96
 
@@ -74,26 +72,7 @@ ggplot()+
 #2 Proportion Testing  #######################################################################################################
 
 #a contigency table is the number of respondants who we scored as reporting a particular barrier (positive_cored_response) and those who provided
-# no response, or did not answer the question (null_scored_response)
-
-#Create contigency table and save in a temporary variable
-subset.proportion.test <- df.summary %>%
-  select(nice_names, responses, positive_scored_response, null_scored_response)%>%
-  head(4)
-
-View(subset.proportion.test)
-
-#b Proportion test is calculated as:
-proportion.test.results.wrong <- prop.test(subset.proportion.test$positive_scored_response, subset.proportion.test$null_scored_response)
-
-# view p values
-proportion.test.results$p.value
-
-#This test has already been done and is represented in the data frame as
-df.summary$err.prop_test_chi_pvalue
-
-
-#Corrrect
+# no response, and total number of responses ($responses)
 
 #Create contigency table and save in a temporary variable
 subset.proportion.test <- df.summary %>%
