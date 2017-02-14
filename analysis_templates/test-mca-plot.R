@@ -356,8 +356,8 @@ data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..a
 
 
 #29
-data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes"] <- "TECHNICAL BARRIERS"
-data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" ] <- "no technical barriers"
+data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes"] <- "Technical barriers reported"
+data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" ] <- "No technical barriers reported"
 
 #57
 data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[data.relavant$Q57_Please.select.the.statement.belOw.that.best.describes.yOu. == "1_Teach at 4-year institution"] <- "4-year Institution"
@@ -441,8 +441,6 @@ calculate_mca_and_plot <-  function(df,
     df.selected <- df%>%
       select_(.dots = c(qualitative_supplimentary_columns, active_columns))
     
-    colnames(df.selected)[colnames(df.selected) == habillage_col] <- habillage_nice_name
-    
     df.na.filtered <- df.selected%>%
       drop_na()
     
@@ -456,60 +454,119 @@ calculate_mca_and_plot <-  function(df,
 dir.create("./mca_plots", recursive = TRUE)
 
 
-#Question 33 
+#Question 6 - Habillage on Q5, opinion on need for additonal classes
 tmp <- calculate_mca_and_plot(df = data.relavant, 
                               qualitative_supplimentary_columns = c(q6.cols), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14), 
-                              habillage_col = Q5, 
-                              habillage_nice_name = as.character("Opinion.on.courses.needed"))
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14))
 
 MCA.object <- MCA(X = as.matrix(tmp),
                   quali.sup = 1:6,
                   graph = FALSE)
 
 fviz_mca_biplot(MCA.object,
-                invisible=c("ind"),
                 habillage = 9,
+                label = "var",
+                pointsize = 1,
+                alpha.ind = 0.4,
                 addEllipses = TRUE,
                 repel = TRUE,
-                labelsize = 3,
+                labelsize = 4,
+                legend.title = "Respondant's opinion on the need for additional \nbioinformatics classes at their institutions",
                 ellipse.level = 0.95)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondance Analysis, question 6, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinforatics training \nSex \nTotal number of undergaduates at institution")
+  ggtitle(paste("Multiple Correspondence Analysis; question 6 barriers, question 5 categories, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training \nTotal number of undergraduates at institution \nSex")
 
-ggsave(filename = "./mca_plots/Q5_Opinion_on_courses_needed_Q6_q1teaching_status_q3_preperation_q14_sex_q24_nUndergrads.png", 
+ggsave(filename = "./mca_plots/Q5Q6-Q5-additional_courses.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
-#Question 38 
+
+#Question 6 by Habillage on carnegie classification
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q38), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14), 
-                              habillage_col = Q5, 
-                              habillage_nice_name = as.character("Opinion.on.courses.needed"))
+                              qualitative_supplimentary_columns = c(q6.cols), 
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14, Q21))
 
 MCA.object <- MCA(X = as.matrix(tmp),
-                  quali.sup = 1:8,
+                  quali.sup = 1:6,
                   graph = FALSE)
 
 fviz_mca_biplot(MCA.object,
-                invisible=c("ind"),
-                habillage = 11,
+                habillage = 12,
+                label = "var",
+                pointsize = 1,
+                alpha.ind = 0.4,
                 addEllipses = TRUE,
                 repel = TRUE,
-                labelsize = 3,
+                labelsize = 4,
+                legend.title = "Carnegie Classification of Institution",
                 ellipse.level = 0.95)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondance Analysis, question 6, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinforatics training \nSex \nTotal number of undergaduates at institution")
+  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and q21 Carnegie classification groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training  \nTotal number of undergraduates at institution \nSex")
 
-ggsave(filename = "./mca_plots/Q5_Opinion_on_courses_needed_Q6_q1teaching_status_q3_preperation_q14_sex_q24_nUndergrads.png", 
+ggsave(filename = "./mca_plots/Q5Q6-Q21_carnegie_classification.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
+#Question 6 by Habillage on Q29, reporting of technical barriers
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(q6.cols), 
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14, Q29))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1:6,
+                  graph = FALSE)
+
+fviz_mca_biplot(MCA.object,
+                habillage = 12,
+                label = "var",
+                pointsize = 1,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Do you experience technical barriers in \nintegrating bioinformatics",
+                ellipse.level = 0.95)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and q29 groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training \nSex \nTotal number of undergraduates at institution")
+
+ggsave(filename = "./mca_plots/Q5Q6-Q29-technical-barriers.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+#Question 6 by Habillage on region
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(q6.cols), 
+                              active_columns = c(Q1, Q3, Q5, Q24, Q14, region))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1:6,
+                  graph = FALSE)
+
+fviz_mca_biplot(MCA.object,
+                habillage = 12,
+                label = "var",
+                pointsize = 1,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "US Region of Institution",
+                ellipse.level = 0.95)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and regional groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training  \nTotal number of undergraduates at institution \nSex")
+
+ggsave(filename = "./mca_plots/Q5Q6-region.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
 
 #Q1 <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
 #Q3 <- "Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training." 
