@@ -828,6 +828,66 @@ response.counts.29.by.category.plot$category_key <-
            colnames(category.df))
 
 
+#rebuild datafram for plotting
+
+response.counts.29.by.category.plot.tmp <- response.counts.29.by.category.plot%>%
+  filter(variable == "Yes"| variable == "No")
+
+response_count_col <- filter(response.counts.29.by.category.plot , variable == "response_count")$value
+response.counts.29.by.category.plot.tmp $response_count <- response_count_col
+Yes_percentage_col <- filter(response.counts.29.by.category.plot , variable == "Yes_percentage")$value
+response.counts.29.by.category.plot.tmp $Yes_percentage <- Yes_percentage_col
+No_percentage_col <- filter(response.counts.29.by.category.plot , variable == "No_percentage")$value
+response.counts.29.by.category.plot.tmp $No_percentage <- No_percentage_col
+
+response_stratafying_cat_col <- filter(response.counts.29.by.category.plot , variable == "response_stratafying_cat")$value
+response.counts.29.by.category.plot.tmp $response_stratafying_cat <- response_stratafying_cat_col
+percentage_of_n_col <- filter(response.counts.29.by.category.plot , variable == "percentage_of_n")$value
+response.counts.29.by.category.plot.tmp $percentage_of_n <- percentage_of_n_col
+
+proportion_error_col <- filter(response.counts.29.by.category.plot , variable == "proportion_error")$value
+response.counts.29.by.category.plot.tmp $proportion_error <- proportion_error_col
+
+ymax_y_col <- filter(response.counts.29.by.category.plot , variable == "ymax_y")$value
+response.counts.29.by.category.plot.tmp $ymax_y <- ymax_y_col
+
+ymin_y_col <- filter(response.counts.29.by.category.plot , variable == "ymin_y")$value
+response.counts.29.by.category.plot.tmp $ymin_y <- ymin_y_col
+
+ymax_n_col <- filter(response.counts.29.by.category.plot , variable == "ymax_n")$value
+response.counts.29.by.category.plot.tmp $ymax_n <- ymax_n_col
+
+ymin_n_col <- filter(response.counts.29.by.category.plot , variable == "ymin_n")$value
+response.counts.29.by.category.plot.tmp $ymin_n <- ymin_n_col
+
+
+chi_values_col <- filter(response.counts.29.by.category.plot , variable == "chi_values")$value
+response.counts.29.by.category.plot.tmp $chi_values <- chi_values_col
+
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot.tmp
+
+
+#set error bar limits
+
+ylimits <- aes(ymax = response.counts.29.by.category.plot$ymax_y, ymin = response.counts.29.by.category.plot$ymin_y)
+nlimits <- aes(ymax = response.counts.29.by.category.plot$ymax_n, ymin = response.counts.29.by.category.plot$ymax_n)
+general_error_limits <- aes(ymin = (.$proportion_error+ (.Yes_percentage * .$proportion_error)), ymax =)
+error.dodge <- position_dodge(width=0.9)
+
+response.counts.29.by.category.plot%>%
+  ggplot()+
+  aes(x=category_key, y=value, fill = variable)+
+  geom_bar(stat="identity", 
+           position = "dodge")
+
+
+
+
+
+
+
+
+
 
 
 
