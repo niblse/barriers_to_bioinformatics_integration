@@ -5,7 +5,8 @@ require(reshape2)
 require(pwr)
 require(FactoMineR)
 require(factoextra)
-
+require(gplots)
+require(corrplot)
 
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
@@ -24,6 +25,8 @@ category.column.name.nice <- "Carnegie Classification (Q21)"
 # set a 'safe name' for naming variables: "Q#_category_category"
 category.column.name.safe <- "Q21_carnegie_classification"
 
+# set a 'short' for naming filename variables: "Q#_category_category"
+category.column.name.short <- "Q21_carnegie"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
@@ -60,6 +63,8 @@ question.column.name <- "Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatic
 question.column.name.nice <- "Barriers to Including Bioinformatics (Q38)"
 # 'nice name' to describe this question
 question.column.name.safe <- "Q38_barriers_to_inclusion"
+# 'short name' to describe this question
+question.column.name.short <- "Q38_inclusion"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
@@ -161,30 +166,6 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
                                             "State Restrictions", 
                                             "Accreditation")
 
-category.summed.columns <- c("q38_Faculty_issues_sum", 
-                             "q38_Curriculum_issues_sum", 
-                             "q38_Resources_issues_sum", 
-                             "q38_Student_issues_sum", 
-                             "q38_Facilities_issues_sum", 
-                             "q38_Institutional_issues_sum", 
-                             "q38_State_issues_sum", 
-                             "q38_Accredited_issues_sum",
-                             category.column.name)
-
-category.summed.df<- relavant.respondants.df%>%
-  select(one_of(category.summed.columns))
-
-# create a set of nice names
-
-category.summed.columns.nice.names <- c("Faculty Issues (summed)",
-                                        "Curriculum Issues (summed)", 
-                                        "Resource Issues (summed)", 
-                                        "Student Issues (summed)",
-                                        "Facilities Issues (summed)", 
-                                        "Institutional Issues (summed)",
-                                        "State Issues (summed)", 
-                                        "Accredidation Issues (summed)")
-
 category.reduced.columns <- c("q38_Faculty_issues_reduced", 
                               "q38_Curriculum_issues_reduced", 
                               "q38_Resources_issues_reduced", 
@@ -214,16 +195,16 @@ category.reduced.columns.nice.names <- c("Faculty Issues",
 #Create directory for table outputs
 
 table.dir.path <- paste("./prop_analysis_of",
-                        question.column.name.safe, 
+                        question.column.name.short, 
                         "by",
-                        category.column.name.safe,
+                        category.column.name.short,
                         "/output_tables_prop/",
                         sep = "_"
 )
 plot.dir.path <- paste("./prop_analysis_of",
-                       question.column.name.safe, 
+                       question.column.name.short, 
                        "by",
-                       category.column.name.safe,
+                       category.column.name.short,
                        "/output_plots_prop/",
                        sep = "_"
 )
@@ -291,7 +272,7 @@ num.cat.respondants <- function(df,
   
   response.counts.by.category.filename <- paste(table.dir.path,
                                                 "count_of_responses_to_", 
-                                                question.column.name.safe, 
+                                                question.column.name.short, 
                                                 ".csv", 
                                                 sep = "")
   write.csv(response.counts.by.category, file = response.counts.by.category.filename)
@@ -351,9 +332,9 @@ plot.summary.statistics <- function(df,
                              
   
   summary.response.plotname <- paste("count_of_respondants",
-                                     question.column.name.safe,
+                                     question.column.name.short,
                                      "by",
-                                     category.column.name.safe,
+                                     category.column.name.short,
                                      ".png",
                                      sep = "_")
   
@@ -371,6 +352,11 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.nice,
                         question.column.name.safe,
                         category.column.name.safe)
+
+
+
+
+
 
 
 ######### RAW SCORE ANALYSIS #############################################################################
@@ -420,17 +406,17 @@ raw.score.analysis <- function(df,
 
   raw.score.counts.by.category.filename <- paste(table.dir.path,
                                                  "tally_raw_of_", 
-                                                 question.column.name.safe,
+                                                 question.column.name.short,
                                                  "_by_",
-                                                 category.column.name.safe,
+                                                 category.column.name.short,
                                                  ".csv", 
                                                  sep = "")
   ,
   raw.score.counts.by.category.filename <- paste(table.dir.path,
                                                  "tally_reduced_of_", 
-                                                 question.column.name.safe,
+                                                 question.column.name.short,
                                                  "_by_",
-                                                 category.column.name.safe,
+                                                 category.column.name.short,
                                                  ".csv", 
                                                  sep = "")
   )
@@ -494,16 +480,16 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
   ifelse(file.name.switch == 0, 
          
   raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_categories",
-                                                        question.column.name.safe,
+                                                        question.column.name.short,
                                                         "by",
-                                                        category.column.name.safe,
+                                                        category.column.name.short,
                                                         ".png",
                                                         sep = "_")
   ,
   raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_reduced_coded_barriers_all_categories",
-                                                        question.column.name.safe,
+                                                        question.column.name.short,
                                                         "by",
-                                                        category.column.name.safe,
+                                                        category.column.name.short,
                                                         ".png",
                                                         sep = "_")
   )
@@ -583,9 +569,9 @@ proportional.responses <- function(df,
 
   proportional.responses.summed.by.barriers.filename <- paste(table.dir.path,
                                                               "tally_of_raw_score_of_", 
-                                                              question.column.name.safe,
+                                                              question.column.name.short,
                                                               "_by_",
-                                                              category.column.name.safe,
+                                                              category.column.name.short,
                                                               "_proportions",
                                                               ".csv", 
                                                               sep = "")
@@ -658,10 +644,10 @@ plot.of.top5.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps)
   
-  proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_category",
-                                                                        question.column.name.safe,
+  proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_cat",
+                                                                        question.column.name.short,
                                                                         "by",
-                                                                        category.column.name.safe,
+                                                                        category.column.name.short,
                                                                         ".png",
                                                                         sep = "_")
   
@@ -695,9 +681,9 @@ sig.diff.chi.analysis <- function(df){
   
   proportional.sig.responses.summed.by.barriers.filename <- paste(table.dir.path,
                                                                   "sig_diff_", 
-                                                                  question.column.name.safe,
+                                                                  question.column.name.short,
                                                                   "_barriers_by_",
-                                                                  category.column.name.safe,
+                                                                  category.column.name.short,
                                                                   "_prop_test",
                                                                   ".csv", 
                                                                   sep = "")
@@ -710,12 +696,20 @@ sig.diff.chi.analysis <- function(df){
 # remove NaN Values
 proportion_table_non_zero <- proportion_table%>%
   filter(summed_score != 0)
-proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportion_table_non_zero)
+
+# for valid chi tests, remove scored categories where any scored category has less than 5 respondants
+proportion_table_minimal_scoring <- proportion_table_non_zero%>%
+  group_by(Var2)%>%
+  filter(all(value >= 5))
+  
+
+#execute function to test for signifigance
+proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportion_table_minimal_scoring)
 
 
 # Add signifigance to proportion table
 
-proportion_table_summary <- proportion_table_non_zero%>%
+proportion_table_summary <- proportion_table_minimal_scoring%>%
   group_by(Var2)%>%
   left_join(., proportional.sig.responses.summed.by.barriers)
 
@@ -723,23 +717,42 @@ proportion_table_summary <- proportion_table_non_zero%>%
 proportion_table_summary$prop_test_chi_pvalue <- as.numeric(proportion_table_summary$prop_test_chi_pvalue)
 
 
-proportion_table_summary.filename <- paste(table.dir.path,
-                                           "sum_table_",
-                                           question.column.name.safe,
-                                           "_by_",
-                                           category.column.name.safe,
-                                           ".csv",
-                                           sep = "")
+
+######Caclualte Margins of Error ####################################################################
+# Interval estimate of population proportion at 95% confidence interval
+
+proportion_table_summary <- proportion_table_summary%>%
+  mutate(proportion_error = as.numeric(sqrt((proportion * (1 - proportion)/responses))*qnorm(.975)))%>%
+  mutate(ymax = proportion + (proportion * proportion_error))%>%
+  mutate(ymin = proportion - (proportion * proportion_error))
 
 #CREATE FRAME FOR SAVING
-
+proportion_table_summary.filename <- paste(table.dir.path,
+                                           "sum_table_",
+                                           question.column.name.short,
+                                           "_by_",
+                                           category.column.name.short,
+                                           ".csv",
+                                           sep = "")
 write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
 
-#calculate power (TODO - is this correct?)
+######### POWER ANALYSIS #############################################################################
+# Calculate possible effect size given 80% power for a chi.test statistic 
+
+effect.size <- round(pwr.chisq.test(w = NULL, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels) - 1), 
+                                 sig.level = 0.05, 
+                                 power = 0.8)$w, digits = 3)
 
 
-  
-
+effect_statement <- if(effect.size <= .1){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting small effects [.1]", sep= "")
+}else if (effect.size > .1 | effect.size <= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting medium effects [.3]", sep= "")
+}else if (effect.size >= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
+}
 
 ############ Plot signifigantly different barriers ####################################
 
@@ -795,6 +808,11 @@ plot.sig.barriers <- function(df,
     distinct(Var2, .keep_all = TRUE)%>%
     mutate(x.labels = paste(Var2, " \n(", "N(cr+)=", summed_score, ")", sep = ""))
   
+  # get values of error bars
+  
+  error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
+  error.dodge <- position_dodge(width=0.9)
+  
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
     aes(x=Var2, y=proportion, fill=nice_names)+
@@ -804,18 +822,20 @@ plot.sig.barriers <- function(df,
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
          subtitle = paste("Shown as proportion of users within each",
                           category.nice.name.lower,
-                          "n=",n.respondants ))+
+                          "n=",n.respondants, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
-    scale_x_discrete(labels = x.labels$x.labels)
+    scale_x_discrete(labels = x.labels$x.labels)+
+    geom_errorbar(error.limits, position = error.dodge, width = .2)
+    
   
   
   
   proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_signifigantly_by_category_proprotional_by_category",
-                                                                       question.column.name.safe,
+                                                                       question.column.name.short,
                                                                        "by",
-                                                                       category.column.name.safe,
+                                                                       category.column.name.short,
                                                                        ".png",
                                                                        sep = "_")
   
@@ -844,7 +864,7 @@ plot.sig.barriers(proportion_table_summary,
 
 
 # baloon plot of percentages of faculty reporting barrier by stratafying category
-library("gplots")
+
 
 #get tallies for reduced columns
 reduced.tally.df <- raw.score.analysis(category.reduced.df,
@@ -880,9 +900,9 @@ for(categories in colnames(reduced.tally.df)){
 #generate baloon plot
 
 reduced.baloonplot.filename <- paste("reduced_baloonplot",
-                                     question.column.name.safe,
+                                     question.column.name.short,
                                      "by",
-                                     category.column.name.safe,
+                                     category.column.name.short,
                                      ".png",
                                      sep = "_")
 
@@ -905,10 +925,15 @@ dev.off()
 
 # Barplot
 
+
+
 #transpose and restore dataframeness
 
 reduced.tally.df.t <- t(reduced.tally.df)
 reduced.tally.df.t <- data.frame(reduced.tally.df.t)
+
+# Restore nice names
+colnames(reduced.tally.df.t) <- category.reduced.columns.nice.names
 
 #melt as matrix for plotting
 reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
@@ -929,9 +954,9 @@ reduced.tally.df.m%>%
   scale_fill_discrete(name= "Reduced Barrier Categories")
 
 reduced.summary.persentage.filename <- paste("reduced_category_barplot",
-                              question.column.name.safe,
+                              question.column.name.short,
                               "by",
-                              category.column.name.safe,
+                              category.column.name.short,
                               ".png",
                               sep = "_")
 
@@ -942,72 +967,26 @@ ggsave(paste(plot.dir.path,reduced.summary.persentage.filename, sep= ""),
        units = "in")
 
 # Correlation plot
+correlation.plot.filename <- paste("reduced_category_correlation",
+                                             question.column.name.short,
+                                             "by",
+                                             category.column.name.short,
+                                             ".png",
+                                             sep = "_")
+
+png(filename = paste(plot.dir.path,correlation.plot.filename, sep= ""),
+    width = 14, 
+    height = 14, 
+    units = "in", 
+    res = 600)
 
 reduced.tally.df.correlated <- cor(reduced.tally.df.t)
 corrplot(reduced.tally.df.correlated, 
          order = "hclust", 
          tl.srt=45)
-
-
-#MCA
-
-
-# Assign nice names to category.reduced.df column names and category column and rename
-
-for (response in category.reduced.df[[length(category.reduced.df)]] ) {
-  category.reduced.df[[length(category.reduced.df)]][category.reduced.df[[length(category.reduced.df)]] == response] <- nice.names.df[response, "rownames"]
-  print(response)
-}
-
-
-colnames(category.reduced.df) <- c(category.reduced.columns.nice.names,category.column.name.nice )
-mca.category.reduced.df <- category.reduced.df
-
-# replace scores (1) with the names of relavant barriers
-name.length <- 1
-while(name.length <= length(mca.category.reduced.df)-1){
-  replacement <- (colnames(mca.category.reduced.df[,name.length]))
-  mca.category.reduced.df[,replacement][mca.category.reduced.df[,replacement] == 1] <- replacement
-  mca.category.reduced.df[,replacement][mca.category.reduced.df[,replacement] == 0] <- NA
-  name.length <- name.length +1
-}
-
-
-# select active variables for MCA
-mca.category.reduced.df.active <- mca.category.reduced.df[,1:((length(mca.category.reduced.df))-1)]
-
-#reduced.mca <- MCA(as.matrix(mca.category.reduced.df.active), graph = FALSE)
-reduced.2.mca <- MCA(X = as.matrix(mca.category.reduced.df),
-                     quali.sup = length(mca.category.reduced.df),
-                     graph = FALSE)
-#Plot the MCA
-
-
-reduced.mca.filename <- paste("reduced_MCAplot",
-                                     question.column.name.safe,
-                                     "by",
-                                     category.column.name.safe,
-                                     ".png",
-                                     sep = "_")
-
-png(filename = paste(plot.dir.path,reduced.mca.filename, sep= ""),
-    width = 13.8, 
-    height = 8.81, 
-    units = "in", 
-    res = 600)
-
-
-
-fviz_mca_biplot(reduced.2.mca, 
-                invisible=c("ind","quali.sup"),
-                habillage = mca.category.reduced.df[[category.column.name.nice]],
-                addEllipses = TRUE, 
-                ellipse.level = 0.95, 
-                title = paste("MCA analysis of", category.column.name.nice, "and", question.column.name.nice,
-                "\n n=",n.respondants))+
-  theme_minimal()
-
 dev.off()
+
+
 
 
 
