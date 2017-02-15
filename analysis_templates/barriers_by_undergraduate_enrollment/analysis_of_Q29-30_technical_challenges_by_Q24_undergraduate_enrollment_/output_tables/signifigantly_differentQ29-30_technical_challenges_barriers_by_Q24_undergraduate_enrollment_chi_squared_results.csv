@@ -1,22 +1,22 @@
 "","Var2","chi_test"
-"1",Faculty Issues: Expertise/training,0.0249875062468766
-"2",Faculty Issues: Time,0.739630184907546
+"1",Faculty Issues: Expertise/training,0.0179910044977511
+"2",Faculty Issues: Time,0.744627686156922
 "3",Faculty Issues: No interest in topic,1
 "4",Faculty Issues: No comp-sci faculty,1
-"5",Facilities Issues: Access to computer labs,0.0939530234882559
-"6",Facilities Issues: Inadaquate computers,0.819590204897551
+"5",Facilities Issues: Access to computer labs,0.0914542728635682
+"6",Facilities Issues: Inadaquate computers,0.838580709645177
 "7",Facilities Issues: Access to servers,0.0104947526236882
-"8",Facilities Issues: Access to internet,0.0114942528735632
-"9",Resource Issues: Access to operating systems,0.0569715142428786
-"10",Resource Issues: Apropriate software,0.0534732633683158
-"11",Resource Issues: Access to high-performance computing,0.0144927536231884
-"12",Resource Issues: Funding,0.137931034482759
+"8",Facilities Issues: Access to internet,0.0189905047476262
+"9",Resource Issues: Access to operating systems,0.0619690154922539
+"10",Resource Issues: Apropriate software,0.0574712643678161
+"11",Resource Issues: Access to high-performance computing,0.0149925037481259
+"12",Resource Issues: Funding,0.129935032483758
 "13",Institutional Issues: Access to IT support,0.000499750124937531
-"14",Institutional Issues: Subscriptions/licenses,0.76711644177911
-"15",Institutional Issues: No support from comp-sci faculty,0.550224887556222
-"16",Student Issues: Access to software off-campus,0.182408795602199
-"17",Student Issues: Basic computing knowledge,0.882058970514743
-"18",Student Issues: Access to computers Off-campus,0.0669665167416292
-"19",Curriculum Issues: New program development required,0.531234382808596
-"20",Curriculum Issues: Class size,0.111444277861069
+"14",Institutional Issues: Subscriptions/licenses,0.774112943528236
+"15",Institutional Issues: No support from comp-sci faculty,0.557721139430285
+"16",Student Issues: Access to software off-campus,0.15792103948026
+"17",Student Issues: Basic computing knowledge,0.883058470764618
+"18",Student Issues: Access to computers Off-campus,0.0789605197401299
+"19",Curriculum Issues: New program development required,0.548725637181409
+"20",Curriculum Issues: Class size,0.11744127936032
 "21",Curriculum Issues: Access to bioinformatics lesson plans,1

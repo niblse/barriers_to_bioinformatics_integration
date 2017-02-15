@@ -100,6 +100,7 @@ question.column.subset <- relavant.respondants.df[[question.column.name]]
 
 
 ############# column selection #################################################
+#select columns that will be used in this analysis and create sets of nice names for those columns
 
 
 category.raw.scored.columns <- c("Q38_Faculty.Issue...No.Expertise..Training", 
@@ -244,6 +245,7 @@ category.df.blank <- category.df
 category.df.blank[2,] <- NA
 
 ########## ANALYSIS FUNCTIONS ########################################################
+# The remainder of this script should not change based on the question or category
 
 ### count responses
 # Determine how many respondents identifed in the accepted stratafying categories 

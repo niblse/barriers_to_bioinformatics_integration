@@ -69,6 +69,37 @@ ggplot()+
 
 # Error bards on plot are not very interesting, but I will use the proceedue when I have a facet plot that has differing sample sizes. 
 
+
+
+########## ERROR TESTING ON PROPORTIONS
+
+df.summary.error <- df.summary%>%
+  mutate(proportion_error = as.numeric(sqrt((proportion * (1 - proportion)/responses))*qnorm(.975)))%>%
+  mutate(ymax = proportion + (proportion * proportion_error))%>%
+  mutate(ymin = proportion - (proportion * proportion_error))
+
+#plot s subset for fun
+head8.df.summary <- df.summary.error%>%
+  head(8)
+
+limits <- aes(ymax = head8.df.summary$ymax, ymin = head8.df.summary$ymin)
+error.dodge <- position_dodge(width=0.9)
+df.summary%>%
+  head(8)%>%
+  ggplot()+
+  aes(x=Var2, y=proportion, fill=nice_names)+
+  geom_bar(stat = "identity", position = "dodge")+
+  labs(x = "Barrier", 
+       y = "proportion of respondants", 
+       title = "testplot",
+       subtitle = paste("Shown as proportion of users within each",
+                        "Institution Type Q21",
+                        "n=",n.sample ))+
+  geom_errorbar(limits,position = error.dodge, width = .2)+
+  theme_minimal()
+
+
+
 #2 Proportion Testing  #######################################################################################################
 
 #a contigency table is the number of respondants who we scored as reporting a particular barrier (positive_cored_response) and those who provided

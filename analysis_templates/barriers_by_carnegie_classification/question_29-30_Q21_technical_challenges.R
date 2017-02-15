@@ -765,23 +765,71 @@ for (category in colnames(response.counts.29.by.category)){
 }
 
 #plot the Y/N responses for this category
+#reshape the data and preserve as data frame
 response.counts.29.by.category <- t(response.counts.29.by.category)
 response.counts.29.by.category <- as.data.frame(response.counts.29.by.category, stringsAsFactors = FALSE)
+#ensure columns are numeric
 response.counts.29.by.category$Yes <- as.numeric(as.character(response.counts.29.by.category$Yes))
 response.counts.29.by.category$No <- as.numeric(as.character(response.counts.29.by.category$No))
 response.counts.29.by.category$response_count <- as.numeric(as.character(response.counts.29.by.category$response_count))
-response.counts.29.by.category <- response.counts.29.by.category%>%
-  mutate(Yes = Yes/response_count)
-response.counts.29.by.category <- response.counts.29.by.category%>%
-  mutate(No = No/response_count)
-response.counts.29.by.category$category_key <- colnames(category.df.blank)
-response.counts.29.by.category.plot <- melt(response.counts.29.by.category)
-response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
-  filter(variable != "response_count")
 
+#calculate yes/no percentages
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(Yes_percentage = Yes/response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(No_percentage = No/response_count)
+#calculate percentage of N responding by number of responses in stratfying category
+total.response.count.column <- response.counts.by.category%>%
+  t()%>%
+  data.frame(.,stringsAsFactors = FALSE)%>%
+  select(response_count)
+response.counts.29.by.category$response_stratafying_cat <-  as.numeric(total.response.count.column$response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(percentage_of_n = response_count/response_stratafying_cat)
+# calculate error
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(proportion_error = as.numeric(sqrt((percentage_of_n * (1 - percentage_of_n)/response_stratafying_cat))*qnorm(.975)))%>%
+  mutate(ymax_y = Yes_percentage + (Yes_percentage * proportion_error))%>%
+  mutate(ymin_y = Yes_percentage - (Yes_percentage * proportion_error))%>%
+  mutate(ymax_n = No_percentage + (No_percentage * proportion_error))%>%
+  mutate(ymin_n = No_percentage - (No_percentage * proportion_error))
+# calculate proportion test chi_statistic
+response.counts.29.by.category.chivalues <- response.counts.29.by.category%>%
+  group_by(category_key)%>%
+  do(prop_test_chi_pvalue = chisq.test(c(.$Yes,.$No))$p.value)
+
+response.counts.29.by.category$chi_values <- as.numeric(response.counts.29.by.category.chivalues$prop_test_chi_pvalue)
+
+
+#save table
+
+technical.barriers.summary.filename <- paste(table.dir.path,
+                                             "yes_no_analyais",
+                                             question.column.name.safe,
+                                             "by",
+                                             category.column.name.safe,
+                                             ".csv",
+                                             sep = "_")
+
+write.csv(response.counts.29.by.category, file = technical.barriers.summary.filename)
+
+
+########### PLOT ####################################################################
+
+#add nice names
+response.counts.29.by.category$category_key <- colnames(category.df.blank)
+
+#reshape data
+response.counts.29.by.category.plot <- melt(response.counts.29.by.category)
+
+#arrange levels
 response.counts.29.by.category.plot$category_key <- 
   factor(response.counts.29.by.category.plot$category_key, levels = 
            colnames(category.df))
+
+
+
+
 
 response.counts.29.by.category.plot%>%
   ggplot()+
