@@ -801,19 +801,6 @@ response.counts.29.by.category.chivalues <- response.counts.29.by.category%>%
 response.counts.29.by.category$chi_values <- as.numeric(response.counts.29.by.category.chivalues$prop_test_chi_pvalue)
 
 
-#save table
-
-technical.barriers.summary.filename <- paste(table.dir.path,
-                                             "yes_no_analyais",
-                                             question.column.name.safe,
-                                             "by",
-                                             category.column.name.safe,
-                                             ".csv",
-                                             sep = "_")
-
-write.csv(response.counts.29.by.category, file = technical.barriers.summary.filename)
-
-
 ########### PLOT ####################################################################
 
 #add nice names
@@ -866,38 +853,28 @@ response.counts.29.by.category.plot.tmp $chi_values <- chi_values_col
 
 response.counts.29.by.category.plot <- response.counts.29.by.category.plot.tmp
 
+#replace value with percentages
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  mutate(value = value/response_count)
+
 
 #set error bar limits
 
-ylimits <- aes(ymax = response.counts.29.by.category.plot$ymax_y, ymin = response.counts.29.by.category.plot$ymin_y)
-nlimits <- aes(ymax = response.counts.29.by.category.plot$ymax_n, ymin = response.counts.29.by.category.plot$ymax_n)
-general_error_limits <- aes(ymin = (.$proportion_error+ (.Yes_percentage * .$proportion_error)), ymax =)
-error.dodge <- position_dodge(width=0.9)
 
-response.counts.29.by.category.plot%>%
-  ggplot()+
-  aes(x=category_key, y=value, fill = variable)+
-  geom_bar(stat="identity", 
-           position = "dodge")
+general_error_limits <- aes(ymin = (response.counts.29.by.category.plot$value  - (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))),
+                            ymax = (response.counts.29.by.category.plot$value  + (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))))
 
+error.dodge <- position_dodge(width= .9)
 
-
-
-
-
-
-
-
-
-
-
-response.counts.29.by.category.plot%>%
+q29plot <- response.counts.29.by.category.plot%>%
   ggplot()+
   aes(x=category_key, y=value, fill = variable)+
   geom_bar(stat="identity", 
            position = "dodge")+
+  geom_errorbar(general_error_limits,
+                position = error.dodge, width = .4)+
   ylab("percentage of individuals reporting")+
-  xlab(category.nice.name.caps)+
+  xlab(paste(category.nice.name.caps, " and Signifigance/p-values", sep = ""))+
   scale_fill_discrete(name = "Response")+
   ggtitle(paste("Percentage Reporting\n",
                 question.29.column.name.nice,
@@ -906,6 +883,24 @@ response.counts.29.by.category.plot%>%
                 "\n n=",
                 n.respondants))+
   theme_minimal()
+
+# add signifigance indication
+
+sig.response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  select(category_key, chi_values)%>%
+  mutate(label = ifelse(test = chi_values <= 0.05, 
+                        yes = paste("(*)p=",round(chi_values, digits = 4),sep = "" ),
+                        no = ifelse(test = chi_values <= 0.01, 
+                                                yes = paste("(**)p=",round(chi_values, digits = 4),sep = "" ),
+                                                no = ifelse(test = chi_values <= 0.001, 
+                                                            yes = paste("(***)p=",round(chi_values, digits = 4),sep = "" ), 
+                                                            no = paste(" NS, p=",round(chi_values, digits = 4),sep = "" )))))
+sig.response.counts.29.by.category.plot <- sig.response.counts.29.by.category.plot%>%
+  mutate(sig_lables = paste(category_key, label))
+
+#plot with signifigance labels
+q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)
+
 
 response.counts.29.by.category.plotfilename <- paste("Q29_yes.no_responses",
                                                      "by",
@@ -918,10 +913,10 @@ ggsave(paste(plot.dir.path,response.counts.29.by.category.plotfilename, sep= "")
          units = "in")
 
 response.counts.29.by.category.plot.filename <- paste(table.dir.path,
-                                                                "Q29_y.n_response_percentages", 
+                                                                "Q29_y_n_response_percentages", 
                                                                 "_by_",
                                                                 category.column.name.safe,
                                                                 ".csv", 
                                                                 sep = "")
-write.csv(as.matrix(response.counts.29.by.category.plot), 
+write.csv(response.counts.29.by.category.plot, 
           file = response.counts.29.by.category.plot.filename)
