@@ -168,6 +168,9 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
                                             "State Restrictions", 
                                             "Accreditation")
 
+# Select the reduced columns (columns where coded responses have been summarized into
+# binary values (1 = at least one faculty issue reported , 0 = no faculty issues reported
+
 category.reduced.columns <- c("q38_Faculty_issues_reduced", 
                               "q38_Curriculum_issues_reduced", 
                               "q38_Resources_issues_reduced", 

@@ -2,8 +2,11 @@
 require(ggplot2)
 require(tidyverse)
 require(reshape2)
-require(corrplot)
 require(pwr)
+require(FactoMineR)
+require(factoextra)
+require(gplots)
+require(corrplot)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -21,6 +24,8 @@ category.column.name.nice <- ""
 # set a 'safe name' for naming variables: "Q#_category_category"
 category.column.name.safe <- ""
 
+# set a 'short' for naming filename variables: "Q#_category"
+category.column.name.short <- ""
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
@@ -63,6 +68,8 @@ question.column.name <- "Q30_Optional..Please.describe."
 question.column.name.nice <- "Technical Challenges to Including Bioinformatics (Q29,30)"
 # 'nice name' to describe this question
 question.column.name.safe <- "Q29-30_technical_challenges"
+# 'short name' to describe this question
+question.column.name.short <- "Q29-30_technical"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
@@ -158,6 +165,30 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
                                             "Curriculum Issues: New program development required", 
                                             "Curriculum Issues: Class size", 
                                             "Curriculum Issues: Access to bioinformatics lesson plans")
+                                            
+# Select the reduced columns (columns where coded responses have been summarized into
+# binary values (1 = at least one faculty issue reported , 0 = no faculty issues reported
+
+category.reduced.columns <- c("q29_Faculty_issues_reduced", 
+         					  "q29_Facilities_issues_reduced", 
+         					  "q29_Resources_issues_reduced",
+           					  "q29_Institutional_issues_reduced", 
+         					  "q29_Student_issues_reduced", 
+         					  "q29_Curriculum_issues_reduced", 
+                              category.column.name)
+
+category.reduced.df<- relavant.respondants.df%>%
+  select(one_of(category.reduced.columns))
+
+# create a set of nice names
+
+category.reduced.columns.nice.names <- c("Faculty Issues",
+                                        "Facilities Issues", 
+                                        "Resource Issues", 
+                                        "Institutional Issues",
+                                        "Student Issues", 
+                                        "Curriculum Issues")
+
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -217,6 +248,7 @@ category.df.blank <- category.df
 category.df.blank[2,] <- NA
 
 ########## ANALYSIS FUNCTIONS ########################################################
+# The remainder of this script should not change based on the question or category
 
 ### count responses
 # Determine how many respondents identifed in the accepted stratafying categories 
@@ -245,7 +277,7 @@ num.cat.respondants <- function(df,
   
   response.counts.by.category.filename <- paste(table.dir.path,
                                                 "count_of_responses_to_", 
-                                                question.column.name.safe, 
+                                                question.column.name.short, 
                                                 ".csv", 
                                                 sep = "")
   write.csv(response.counts.by.category, file = response.counts.by.category.filename)
@@ -305,13 +337,13 @@ plot.summary.statistics <- function(df,
                              
   
   summary.response.plotname <- paste("count_of_respondants",
-                                     question.column.name.safe,
+                                     question.column.name.short,
                                      "by",
-                                     category.column.name.safe,
+                                     category.column.name.short,
                                      ".png",
                                      sep = "_")
   
-  ggsave(paste(plot.dir.path,summary.response.plotname, sep= ""), 
+  ggsave(paste(plot.dir.path, summary.response.plotname, sep= ""), 
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -326,49 +358,27 @@ plot.summary.statistics(response.counts.by.category,
                         question.column.name.safe,
                         category.column.name.safe)
 
-#### CALCULATE SURVEY POWER ##########################
 
-analysis_power <- function(n.respondants, category.levels){
-  
-  small_effect <- pwr.chisq.test(w = .20, 
-                                 N = n.respondants, 
-                                 df = (length(category.levels)-1))
-  medium_effect <- pwr.chisq.test(w = .50, 
-                                  N = n.respondants, 
-                                  df = (length(category.levels)-1))
-  large_effect <- pwr.chisq.test(w = .80, 
-                                 N = n.respondants, 
-                                 df = (length(category.levels)-1))
-  
-  power_df <- data.frame("p_small_effect" =  small_effect$power, 
-                         "p_medium_effect" = medium_effect$power, 
-                         "p_large_effect" = large_effect$power, 
-                         stringsAsFactors = FALSE)
-  
-  power_df.filename <- paste(table.dir.path,
-                             "power_analysis_for_chi_tests",
-                             question.column.name.safe,
-                             ".csv",
-                             sep = "")
-  
-  write.csv(power_df, file = power_df.filename)
-  
-}
 
-analysis_power(n.respondants, category.levels)
+
+
+
 
 ######### RAW SCORE ANALYSIS #############################################################################
 
 #Generate summary stats for raw scored sub-categories
 
 raw.score.analysis <- function(df,
-                               category.levels 
+                               category.levels,
+                               file.name.switch = 0, 
+                               column.nice.names.f
                                ){
   #prepare a blank dataframe
   raw.scored.analysis.df <- df
   
+  
   #generate the correct index numbers for the dataframe to analyze (not counting last column)
-  raw.scored.analysis.index <- length(category.raw.scored.df) - 1
+  raw.scored.analysis.index <- length(df) - 1
   
   #generate sums for each scored category by stratficiation category
   
@@ -385,40 +395,61 @@ raw.score.analysis <- function(df,
     }
   }
   
+  
   #remove extraneous rows, tranpose, restore dataframeness, remove extraneous last row, add nice names
   raw.scored.analysis.df <- tail(as.matrix(raw.scored.analysis.df), length(category.levels))
   raw.scored.analysis.df <- t(raw.scored.analysis.df)
   raw.scored.analysis.df <- data.frame(raw.scored.analysis.df, stringsAsFactors = FALSE)
   raw.scored.analysis.df <- head(raw.scored.analysis.df, nrow(raw.scored.analysis.df) -1)
   colnames(raw.scored.analysis.df) <- colnames(category.df)
-  rownames(raw.scored.analysis.df) <- category.raw.scored.columns.nice.names
+  rownames(raw.scored.analysis.df) <- column.nice.names.f
   
   
   #write the summary table
+  
+  ifelse(file.name.switch == 0, 
+
   raw.score.counts.by.category.filename <- paste(table.dir.path,
-                                                 "tally_of_raw_score_of_", 
-                                                 question.column.name.safe,
+                                                 "tally_raw_of_", 
+                                                 question.column.name.short,
                                                  "_by_",
-                                                 category.column.name.safe,
+                                                 category.column.name.short,
                                                  ".csv", 
                                                  sep = "")
+  ,
+  raw.score.counts.by.category.filename <- paste(table.dir.path,
+                                                 "tally_reduced_of_", 
+                                                 question.column.name.short,
+                                                 "_by_",
+                                                 category.column.name.short,
+                                                 ".csv", 
+                                                 sep = "")
+  )
+ 
+
+  
+  
+  
   write.csv(raw.scored.analysis.df, file = raw.score.counts.by.category.filename)
   
   
   # calculate raw score totals and preserve row names
   raw.scored.analysis.tallied.df <- raw.scored.analysis.df%>%
-    mutate_if(is.character,as.numeric)%>%
+   mutate_if(is.character,as.numeric)%>%
     mutate("Totals_in_all_categories" = Reduce("+",.[1:(length(category.levels))]))
-  rownames(raw.scored.analysis.tallied.df) <-category.raw.scored.columns.nice.names
+  rownames(raw.scored.analysis.tallied.df) <-column.nice.names.f
   raw.scored.analysis.tallied.df$Barrier <- rownames(raw.scored.analysis.tallied.df)
   
   return(raw.scored.analysis.tallied.df)
+
 }
 
 
 #tally up the number of individuals reponding in a given category of barrier
 raw.scored.analysis.tallied.df <- raw.score.analysis(category.raw.scored.df, 
-                                   category.levels)
+                                   category.levels,
+                                   file.name.switch = 0, 
+                                   category.raw.scored.columns.nice.names)
 
 
 
@@ -429,7 +460,8 @@ raw.scored.analysis.tallied.df <- raw.score.analysis(category.raw.scored.df,
 #plot raw score tallies
 plot.tallied.scored <- function(raw.scored.analysis.tallied.df, 
                                 question.column.name.nice, 
-                                n.respondants 
+                                n.respondants , 
+                                file.name.switch = 0
                                 ){
   
   raw.scored.analysis.tallied.df.plot.title <- paste(" Absolute number of issues scored across all categories\n",
@@ -450,12 +482,22 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
     geom_bar(stat = "identity")+
     theme_minimal()
   
-  raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_cateroies",
-                                                        question.column.name.safe,
+  ifelse(file.name.switch == 0, 
+         
+  raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_categories",
+                                                        question.column.name.short,
                                                         "by",
-                                                        category.column.name.safe,
+                                                        category.column.name.short,
                                                         ".png",
                                                         sep = "_")
+  ,
+  raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_reduced_coded_barriers_all_categories",
+                                                        question.column.name.short,
+                                                        "by",
+                                                        category.column.name.short,
+                                                        ".png",
+                                                        sep = "_")
+  )
   
   ggsave(paste(plot.dir.path,raw.scored.analysis.tallied.df.plot.filename, sep= ""), 
          width = 13.8, 
@@ -466,6 +508,7 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
 #plot number of respondants by barriers (all categories)
 plot.tallied.scored(raw.scored.analysis.tallied.df, 
                     question.column.name.nice, 
+                    file.name.switch = 0,
                     n.respondants)
 
 ########### Calculate indiviual proportion of users reporting idenifying with a barrier
@@ -531,9 +574,9 @@ proportional.responses <- function(df,
 
   proportional.responses.summed.by.barriers.filename <- paste(table.dir.path,
                                                               "tally_of_raw_score_of_", 
-                                                              question.column.name.safe,
+                                                              question.column.name.short,
                                                               "_by_",
-                                                              category.column.name.safe,
+                                                              category.column.name.short,
                                                               "_proportions",
                                                               ".csv", 
                                                               sep = "")
@@ -606,10 +649,10 @@ plot.of.top5.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps)
   
-  proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_category",
-                                                                        question.column.name.safe,
+  proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_cat",
+                                                                        question.column.name.short,
                                                                         "by",
-                                                                        category.column.name.safe,
+                                                                        category.column.name.short,
                                                                         ".png",
                                                                         sep = "_")
   
@@ -626,41 +669,102 @@ plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
                       question.column.name.safe,
                       category.column.name.safe)
 
+########### Create new columns for proportion tests
+
+proportion_table <- proportional.responses.summed.by.barriers%>%
+  mutate(positive_scored_response = value)%>%
+  mutate(null_scored_response = responses - value)
+
+
 ############ Signifigantly Different Barriers Across Categories  #########################################
 
 sig.diff.chi.analysis <- function(df){
-  # calculate chi-values on each category and return signifigantly different barriers
+  # calculate chi-values (by proportion test) on each category and return signifigantly different barriers
   proportional.responses.summed.by.barriers.grouped <- group_by(df, Var2)
-  proportional.responses.summed.by.barriers.grouped.chi <- proportional.responses.summed.by.barriers.grouped%>%
-    do(chi_test = chisq.test(.$value,simulate.p.value = TRUE)$p.value)
+  proportional.responses.summed.by.barriers.grouped.prop <- proportional.responses.summed.by.barriers.grouped%>%
+    do(prop_test_chi_pvalue = prop.test(.$positive_scored_response,.$responses)$p.value)
   
   proportional.sig.responses.summed.by.barriers.filename <- paste(table.dir.path,
-                                                                  "signifigantly_different", 
-                                                                  question.column.name.safe,
+                                                                  "sig_diff_", 
+                                                                  question.column.name.short,
                                                                   "_barriers_by_",
-                                                                  category.column.name.safe,
-                                                                  "_chi_squared_results",
+                                                                  category.column.name.short,
+                                                                  "_prop_test",
                                                                   ".csv", 
                                                                   sep = "")
-  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.chi), 
-            file = proportional.sig.responses.summed.by.barriers.filename)
+  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.prop), file = proportional.sig.responses.summed.by.barriers.filename)
   
-  return(proportional.responses.summed.by.barriers.grouped.chi)
+  return(proportional.responses.summed.by.barriers.grouped.prop)
 }
 
 #calculate chi values
 # remove NaN Values
-proportional.responses.summed.by.barriers <- proportional.responses.summed.by.barriers%>%
+proportion_table_non_zero <- proportion_table%>%
   filter(summed_score != 0)
+
+# for valid chi tests, remove scored categories where any scored category has less than 5 respondants
+proportion_table_minimal_scoring <- proportion_table_non_zero%>%
+  group_by(Var2)%>%
+  filter(all(value >= 5))
   
-proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportional.responses.summed.by.barriers)
+
+#execute function to test for signifigance
+proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportion_table_minimal_scoring)
+
+
+# Add signifigance to proportion table
+
+proportion_table_summary <- proportion_table_minimal_scoring%>%
+  group_by(Var2)%>%
+  left_join(., proportional.sig.responses.summed.by.barriers)
+
+#coerce proportion test values into numeric forms
+proportion_table_summary$prop_test_chi_pvalue <- as.numeric(proportion_table_summary$prop_test_chi_pvalue)
+
+
+
+######Caclualte Margins of Error ####################################################################
+# Interval estimate of population proportion at 95% confidence interval
+
+proportion_table_summary <- proportion_table_summary%>%
+  mutate(proportion_error = as.numeric(sqrt((proportion * (1 - proportion)/responses))*qnorm(.975)))%>%
+  mutate(ymax = proportion + (proportion * proportion_error))%>%
+  mutate(ymin = proportion - (proportion * proportion_error))
+
+#CREATE FRAME FOR SAVING
+proportion_table_summary.filename <- paste(table.dir.path,
+                                           "sum_table_",
+                                           question.column.name.short,
+                                           "_by_",
+                                           category.column.name.short,
+                                           ".csv",
+                                           sep = "")
+write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
+
+######### POWER ANALYSIS #############################################################################
+# Calculate possible effect size given 80% power for a chi.test statistic 
+
+effect.size <- round(pwr.chisq.test(w = NULL, 
+                                 N = n.respondants, 
+                                 df = (length(category.levels) - 1), 
+                                 sig.level = 0.05, 
+                                 power = 0.8)$w, digits = 3)
+
+
+effect_statement <- if(effect.size <= .1){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting small effects [.1]", sep= "")
+}else if (effect.size > .1 | effect.size <= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting medium effects [.3]", sep= "")
+}else if (effect.size >= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
+}
 
 ############ Plot signifigantly different barriers ####################################
 
 
 plot.sig.barriers <- function(df, 
-                              proportional.responses.summed.by.barriers, 
                               category.df,
+                              category.levels,
                               category.nice.name.caps,
                               category.nice.name.lower,
                               n.respondants,
@@ -669,16 +773,16 @@ plot.sig.barriers <- function(df,
   
   #signifigant barriers
   sig.barriers <- df%>%
-    filter(chi_test <= 0.05)
+    filter(prop_test_chi_pvalue <= 0.05)
   sigs <- as.character(sig.barriers$Var2)
   sigs <- c(sigs)
   
   #plot signifigant barriers
   
   #reformat Var2 names as chr
-  proportional.responses.summed.by.barriers$Var2 <- as.character(proportional.responses.summed.by.barriers$Var2)
+  df$Var2 <- as.character(df$Var2)
   
-  proportional.sig.responses.summed.by.barriers.plot <-proportional.responses.summed.by.barriers%>%
+  proportional.sig.responses.summed.by.barriers.plot <-df%>%
     filter(Var2 %in% sigs)
   
   #setup plot ordering
@@ -695,6 +799,25 @@ plot.sig.barriers <- function(df,
   
   #plot
   
+  # create legend lables that show the value of n for a stratfying category
+  legend.labels <- df%>%
+    ungroup()%>%
+    select(nice_names, responses)%>%
+    head(., n = length(category.levels))%>%
+    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+  
+  # create labels that show how many positive (coded) responses
+  x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
+    arrange(desc(summed_score))%>%
+    select(Var2, summed_score)%>%
+    distinct(Var2, .keep_all = TRUE)%>%
+    mutate(x.labels = paste(Var2, " \n(", "N(cr+)=", summed_score, ")", sep = ""))
+  
+  # get values of error bars
+  
+  error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
+  error.dodge <- position_dodge(width=0.9)
+  
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
     aes(x=Var2, y=proportion, fill=nice_names)+
@@ -704,16 +827,20 @@ plot.sig.barriers <- function(df,
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
          subtitle = paste("Shown as proportion of users within each",
                           category.nice.name.lower,
-                          "n=",n.respondants ))+
+                          "n=",n.respondants, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps)
+    scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
+    scale_x_discrete(labels = x.labels$x.labels)+
+    geom_errorbar(error.limits, position = error.dodge, width = .2)
+    
+  
   
   
   proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_signifigantly_by_category_proprotional_by_category",
-                                                                       question.column.name.safe,
+                                                                       question.column.name.short,
                                                                        "by",
-                                                                       category.column.name.safe,
+                                                                       category.column.name.short,
                                                                        ".png",
                                                                        sep = "_")
   
@@ -721,16 +848,150 @@ plot.sig.barriers <- function(df,
          width = 13.8, 
          height = 8.81, 
          units = "in")
+  
+  
 }
 
-plot.sig.barriers(proportional.sig.responses.summed.by.barriers, 
-                  proportional.responses.summed.by.barriers, 
+
+# plot signifigantly different responses
+plot.sig.barriers(proportion_table_summary, 
                   category.df,
+                  category.levels,
                   category.nice.name.caps,
                   category.nice.name.lower,
                   n.respondants,
                   question.column.name.safe,
                   category.column.name.safe)
+
+
+############## Analysis of Reduced Categories ##################################
+
+
+
+# baloon plot of percentages of faculty reporting barrier by stratafying category
+
+
+#get tallies for reduced columns
+reduced.tally.df <- raw.score.analysis(category.reduced.df,
+                                       category.levels,
+                                       file.name.switch = 1,
+                                       category.reduced.columns.nice.names)
+
+# Select relavant columns and ensure values are numeric
+reduced.tally.df <- as.matrix(reduced.tally.df[,1:(length(reduced.tally.df)-2)])
+
+
+
+#convert reponse numbers to percentages
+
+#get denominators (number of responses for each stratafying category)
+responses.n.for.all.categories <- proportional.responses.summed.by.barriers%>%
+  ungroup()%>%
+  select(responses, nice_names)%>%
+  head(.,n=length(category.levels))%>%
+  t()
+colnames(responses.n.for.all.categories) <- responses.n.for.all.categories["nice_names",]
+responses.n.for.all.categories <- head(responses.n.for.all.categories, n=1)
+responses.n.for.all.categories[1,] <- as.numeric(responses.n.for.all.categories[1,])
+
+
+#convert tally of reduced columns to percentages
+for(categories in colnames(reduced.tally.df)){
+  denom <- as.numeric(responses.n.for.all.categories[,categories])
+  reduced.tally.df[,categories] <- round(((reduced.tally.df[,categories] / denom)*100), digits = 1)
+}
+
+
+#generate baloon plot
+
+reduced.baloonplot.filename <- paste("reduced_baloonplot",
+                                     question.column.name.short,
+                                     "by",
+                                     category.column.name.short,
+                                     ".png",
+                                     sep = "_")
+
+png(filename = paste(plot.dir.path,reduced.baloonplot.filename, sep= ""),
+    width = 13.8, 
+    height = 8.81, 
+    units = "in", 
+    res = 600)
+
+balloonplot(as.table(reduced.tally.df),
+            main = paste("Percentages of Faculty Reporting", question.column.name.nice, "by", category.nice.name.caps, 
+                         "\n area proprotional to percentage", sep = " "),
+            show.margins = FALSE, 
+            show.zeros = FALSE, 
+            xlab = "Barriers", 
+            ylab = category.nice.name.caps,
+            text.size = 0.7
+            )
+dev.off()
+
+# Barplot
+
+
+
+#transpose and restore dataframeness
+
+reduced.tally.df.t <- t(reduced.tally.df)
+reduced.tally.df.t <- data.frame(reduced.tally.df.t)
+
+# Restore nice names
+colnames(reduced.tally.df.t) <- category.reduced.columns.nice.names
+
+#melt as matrix for plotting
+reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
+
+
+#create plot
+reduced.tally.df.m%>%
+  ggplot()+
+  aes(x= Var1, y = value, fill = Var2)+
+  geom_bar(stat="identity", position = "dodge")+
+  labs(x = category.column.name.nice,
+     y = "percentage of respondants", 
+     title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
+     subtitle = paste("Shown as proportion of users within each",
+                      category.nice.name.lower,
+                      "n=",n.respondants ))+
+  theme_minimal()+
+  scale_fill_discrete(name= "Reduced Barrier Categories")
+
+reduced.summary.persentage.filename <- paste("reduced_category_barplot",
+                              question.column.name.short,
+                              "by",
+                              category.column.name.short,
+                              ".png",
+                              sep = "_")
+
+
+ggsave(paste(plot.dir.path,reduced.summary.persentage.filename, sep= ""), 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+# Correlation plot
+correlation.plot.filename <- paste("reduced_category_correlation",
+                                             question.column.name.short,
+                                             "by",
+                                             category.column.name.short,
+                                             ".png",
+                                             sep = "_")
+
+png(filename = paste(plot.dir.path,correlation.plot.filename, sep= ""),
+    width = 14, 
+    height = 14, 
+    units = "in", 
+    res = 600)
+
+reduced.tally.df.correlated <- cor(reduced.tally.df.t)
+corrplot(reduced.tally.df.correlated, 
+         order = "hclust", 
+         tl.srt=45)
+dev.off()
+
+
 
 
 ########### Calculation of Q29 Y/N Responses as a function of stratafying category
@@ -767,31 +1028,116 @@ for (category in colnames(response.counts.29.by.category)){
 }
 
 #plot the Y/N responses for this category
+#reshape the data and preserve as data frame
 response.counts.29.by.category <- t(response.counts.29.by.category)
 response.counts.29.by.category <- as.data.frame(response.counts.29.by.category, stringsAsFactors = FALSE)
+#ensure columns are numeric
 response.counts.29.by.category$Yes <- as.numeric(as.character(response.counts.29.by.category$Yes))
 response.counts.29.by.category$No <- as.numeric(as.character(response.counts.29.by.category$No))
 response.counts.29.by.category$response_count <- as.numeric(as.character(response.counts.29.by.category$response_count))
-response.counts.29.by.category <- response.counts.29.by.category%>%
-  mutate(Yes = Yes/response_count)
-response.counts.29.by.category <- response.counts.29.by.category%>%
-  mutate(No = No/response_count)
-response.counts.29.by.category$category_key <- colnames(category.df.blank)
-response.counts.29.by.category.plot <- melt(response.counts.29.by.category)
-response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
-  filter(variable != "response_count")
 
+#calculate yes/no percentages
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(Yes_percentage = Yes/response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(No_percentage = No/response_count)
+#calculate percentage of N responding by number of responses in stratfying category
+total.response.count.column <- response.counts.by.category%>%
+  t()%>%
+  data.frame(.,stringsAsFactors = FALSE)%>%
+  select(response_count)
+response.counts.29.by.category$response_stratafying_cat <-  as.numeric(total.response.count.column$response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(percentage_of_n = response_count/response_stratafying_cat)
+# calculate error
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(proportion_error = as.numeric(sqrt((percentage_of_n * (1 - percentage_of_n)/response_stratafying_cat))*qnorm(.975)))%>%
+  mutate(ymax_y = Yes_percentage + (Yes_percentage * proportion_error))%>%
+  mutate(ymin_y = Yes_percentage - (Yes_percentage * proportion_error))%>%
+  mutate(ymax_n = No_percentage + (No_percentage * proportion_error))%>%
+  mutate(ymin_n = No_percentage - (No_percentage * proportion_error))
+# calculate proportion test chi_statistic
+response.counts.29.by.category.chivalues <- response.counts.29.by.category%>%
+  group_by(category_key)%>%
+  do(prop_test_chi_pvalue = chisq.test(c(.$Yes,.$No))$p.value)
+
+response.counts.29.by.category$chi_values <- as.numeric(response.counts.29.by.category.chivalues$prop_test_chi_pvalue)
+
+
+########### PLOT ####################################################################
+
+#add nice names
+response.counts.29.by.category$category_key <- colnames(category.df.blank)
+
+#reshape data
+response.counts.29.by.category.plot <- melt(response.counts.29.by.category)
+
+#arrange levels
 response.counts.29.by.category.plot$category_key <- 
   factor(response.counts.29.by.category.plot$category_key, levels = 
            colnames(category.df))
 
-response.counts.29.by.category.plot%>%
+
+#rebuild datafram for plotting
+
+response.counts.29.by.category.plot.tmp <- response.counts.29.by.category.plot%>%
+  filter(variable == "Yes"| variable == "No")
+
+response_count_col <- filter(response.counts.29.by.category.plot , variable == "response_count")$value
+response.counts.29.by.category.plot.tmp $response_count <- response_count_col
+Yes_percentage_col <- filter(response.counts.29.by.category.plot , variable == "Yes_percentage")$value
+response.counts.29.by.category.plot.tmp $Yes_percentage <- Yes_percentage_col
+No_percentage_col <- filter(response.counts.29.by.category.plot , variable == "No_percentage")$value
+response.counts.29.by.category.plot.tmp $No_percentage <- No_percentage_col
+
+response_stratafying_cat_col <- filter(response.counts.29.by.category.plot , variable == "response_stratafying_cat")$value
+response.counts.29.by.category.plot.tmp $response_stratafying_cat <- response_stratafying_cat_col
+percentage_of_n_col <- filter(response.counts.29.by.category.plot , variable == "percentage_of_n")$value
+response.counts.29.by.category.plot.tmp $percentage_of_n <- percentage_of_n_col
+
+proportion_error_col <- filter(response.counts.29.by.category.plot , variable == "proportion_error")$value
+response.counts.29.by.category.plot.tmp $proportion_error <- proportion_error_col
+
+ymax_y_col <- filter(response.counts.29.by.category.plot , variable == "ymax_y")$value
+response.counts.29.by.category.plot.tmp $ymax_y <- ymax_y_col
+
+ymin_y_col <- filter(response.counts.29.by.category.plot , variable == "ymin_y")$value
+response.counts.29.by.category.plot.tmp $ymin_y <- ymin_y_col
+
+ymax_n_col <- filter(response.counts.29.by.category.plot , variable == "ymax_n")$value
+response.counts.29.by.category.plot.tmp $ymax_n <- ymax_n_col
+
+ymin_n_col <- filter(response.counts.29.by.category.plot , variable == "ymin_n")$value
+response.counts.29.by.category.plot.tmp $ymin_n <- ymin_n_col
+
+
+chi_values_col <- filter(response.counts.29.by.category.plot , variable == "chi_values")$value
+response.counts.29.by.category.plot.tmp $chi_values <- chi_values_col
+
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot.tmp
+
+#replace value with percentages
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  mutate(value = value/response_count)
+
+
+#set error bar limits
+
+
+general_error_limits <- aes(ymin = (response.counts.29.by.category.plot$value  - (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))),
+                            ymax = (response.counts.29.by.category.plot$value  + (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))))
+
+error.dodge <- position_dodge(width= .9)
+
+q29plot <- response.counts.29.by.category.plot%>%
   ggplot()+
   aes(x=category_key, y=value, fill = variable)+
   geom_bar(stat="identity", 
            position = "dodge")+
+  geom_errorbar(general_error_limits,
+                position = error.dodge, width = .4)+
   ylab("percentage of individuals reporting")+
-  xlab(category.nice.name.caps)+
+  xlab(paste(category.nice.name.caps, " and Signifigance/p-values", sep = ""))+
   scale_fill_discrete(name = "Response")+
   ggtitle(paste("Percentage Reporting\n",
                 question.29.column.name.nice,
@@ -800,6 +1146,24 @@ response.counts.29.by.category.plot%>%
                 "\n n=",
                 n.respondants))+
   theme_minimal()
+
+# add signifigance indication
+
+sig.response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  select(category_key, chi_values)%>%
+  mutate(label = ifelse(test = chi_values <= 0.05, 
+                        yes = paste("(*)p=",round(chi_values, digits = 4),sep = "" ),
+                        no = ifelse(test = chi_values <= 0.01, 
+                                                yes = paste("(**)p=",round(chi_values, digits = 4),sep = "" ),
+                                                no = ifelse(test = chi_values <= 0.001, 
+                                                            yes = paste("(***)p=",round(chi_values, digits = 4),sep = "" ), 
+                                                            no = paste(" NS, p=",round(chi_values, digits = 4),sep = "" )))))
+sig.response.counts.29.by.category.plot <- sig.response.counts.29.by.category.plot%>%
+  mutate(sig_lables = paste(category_key, label))
+
+#plot with signifigance labels
+q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)
+
 
 response.counts.29.by.category.plotfilename <- paste("Q29_yes.no_responses",
                                                      "by",
@@ -812,10 +1176,10 @@ ggsave(paste(plot.dir.path,response.counts.29.by.category.plotfilename, sep= "")
          units = "in")
 
 response.counts.29.by.category.plot.filename <- paste(table.dir.path,
-                                                                "Q29_y.n_response_percentages", 
+                                                                "Q29_y_n_response_percentages", 
                                                                 "_by_",
                                                                 category.column.name.safe,
                                                                 ".csv", 
                                                                 sep = "")
-write.csv(as.matrix(response.counts.29.by.category.plot), 
+write.csv(response.counts.29.by.category.plot, 
           file = response.counts.29.by.category.plot.filename)
