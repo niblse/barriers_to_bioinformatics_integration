@@ -3,11 +3,8 @@ require(ggplot2)
 require(tidyverse)
 require(reshape2)
 require(pwr)
-require(FactoMineR)
-require(factoextra)
 require(gplots)
 require(corrplot)
-
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -39,8 +36,10 @@ category.nice.name.lower <- "institution type"
 
 #subset the category column
 category.column.subset <-  master.df[[category.column.name]]
+
 #Get the levels (possible answers) within that catagories
 category.levels <- levels(as.factor(category.column.subset))
+
 
 ############# MANUAL!!!! SET 2nd SET OF MANUAL VARIABLES  #############################
 
@@ -49,32 +48,42 @@ category.levels <- levels(as.factor(category.column.subset))
 category.levels <- category.levels[1:4]
 
 #######################################################################################
+
 # Reset the category subset
 category.column.subset <-  master.df[[category.column.name]]
 
-############ TEMPLATE VARIABLES    ####################################################
+
+
+
+############ TEMPLATE VARIABLES    ############################
 # These variables should not change and are specific to a template that analyzes a particular question
-# Q38 Variables
+# Q30 Variables
 
 #Names
 # variable (Question) that will be analyzed ("COLUMN_NAME)
-question.column.name <- "Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatics.cOntent.in.these.cOurses."
+question.column.name <- "Q30_Optional..Please.describe."
 # subsetting variable for this column (e.g master.df$COLUMN_NAME)
-question.column.name.nice <- "Barriers to Including Bioinformatics (Q38)"
+question.column.name.nice <- "Technical Challenges to Including Bioinformatics (Q29,30)"
 # 'nice name' to describe this question
-question.column.name.safe <- "Q38_barriers_to_inclusion"
+question.column.name.safe <- "Q29-30_technical_challenges"
 # 'short name' to describe this question
-question.column.name.short <- "Q38_inclusion"
+question.column.name.short <- "Q29-30_technical"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
+#set names for special question (29)
+
+question.29.column.name <- "Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g....."
+question.29.column.name.nice <- "(Q29) Do you face technical barriers to teaching bioinformatics?"
+question.29.column.name.safe <- "Q29_technical_barriers"
+question29.column.subset <- master.df[[question.29.column.name]]
 
 ########## Cleaning Steps ###################################################
 
 #remove respondants not in US/Puerto Rico
 remove.non.us.repondants <- function(df){
   countries <- c("United States","Puerto Rico")
-  df <- master.df%>%
+  df <- df%>%
     filter(Country_Country %in% countries )
   return(df)
 }
@@ -97,40 +106,34 @@ relavant.respondants.df <- remove.non.relavant.repondants(master.df.us.only)
 #RESET SUBSET VALUES
 category.column.subset <- relavant.respondants.df[[category.column.name]]
 question.column.subset <- relavant.respondants.df[[question.column.name]]
+question29.column.subset <- relavant.respondants.df[[question.29.column.name]]
 
 
 ############# column selection #################################################
-#select columns that will be used in this analysis and create sets of nice names for those columns
 
 
-category.raw.scored.columns <- c("Q38_Faculty.Issue...No.Expertise..Training", 
-                                 "Q38_Faculty.Issue...Time", 
-                                 "Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum", 
-                                 "Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution", 
-                                 "Q38_Faculty.Issues...Faculty.is.new.to.current.Dept", 
-                                 "Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content", 
-                                 "Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure", 
-                                 "Q38_Curriculum.Issue...Time.for.Curriculum.Development", 
-                                 "Q38_Curric.Issues...Lack.of.Curric.Control.not.in.curent.Curric.", 
-                                 "Q38_Curric.Issues...Bioinf..Taught.in.other.courses.at.institution", 
-                                 "Q38_Curric.Issue...Class.Size", 
-                                 "Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available.", 
-                                 "Q38_Curric.Issue...Bioinfo.Conent.too.Massive", 
-                                 "Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses",
-                                 "Q38_Resources...Access.to.Quality.Exercises..Content", 
-                                 "Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric",
-                                 "Q38_Resources...Access.to.Approp.Introductory.Content", 
-                                 "Q38_Resources...Unable.to.identify.access.best.current.Bioinf.material", 
-                                 "Q38_Resource.Issues...Funding", 
-                                 "Q38_Resource.Issues...Not.available.in.course.textbook", 
-                                 "Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent", 
-                                 "Q38_Resource.Issues..TA.s.lack.approp.skils",
-                                 "Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge", 
-                                 "Q38_Student.Issues...Lack.of.interest.in.topic",
-                                 "Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment",
-                                 "Q38_Inst.Dept.Issues...Institutional.Inertia",  
-                                 "Q38_State.restrictions", 
-                                 "Q38_Not.accredited", 
+category.raw.scored.columns <- c("Q29.30_Faculty...No.Expertise.Training", 
+                                 "Q29.30_Faculty...Time", 
+                                 "Q29.30_Faculty...not.interested.in.topic", 
+                                 "Q29.30_Faculty...no.computer.sci.Faculty", 
+                                 "Q29.30_Facilities...Computer.Labs.limited.or.not.available", 
+                                 "Q29.30_Facilities...Computers.are.too.old..inadequate", 
+                                 "Q29.30_Facilities...Servers", 
+                                 "Q29.30_Facilities...Internet.Access.Limited", 
+                                 "Q29.30_Resources...Operating.System.Availability.Issues", 
+                                 "Q29.30_Resources...Approp..Software", 
+                                 "Q29.30_Resources...no.high.performance.systems.available", 
+                                 "Q29.30_Resources...Funding", 
+                                 "Q29.30_Inst.Dept.Support...No.IT.support", 
+                                 "Q29.30_Inst.Dept.Support...No.Sub.to.Pay.site.Databases", 
+                                 "Q29.30_Inst.Dept.Support...Comp.Sci.Dept.Will.not.support.Bioinf", 
+                                 "Q29.30_Student.Issues...Access.to.Approp.Software.off.campus", 
+                                 "Q29.30_Student.Issues...Basic.Computing.Knowledge", 
+                                 "Q29.30_Student.Issues...No.access.to.computers.at.home", 
+                                 "Q29.30_Student.Issues...No.interest.in.Bioinf", 
+                                 "Q29.30_Curriculum...Need.to.Develop.new.program",
+                                 "Q29.30_Curriculum.Class.Size.too.large",
+                                 "Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
                                  category.column.name)
 
 category.raw.scored.df <- relavant.respondants.df%>%
@@ -140,41 +143,36 @@ category.raw.scored.df <- relavant.respondants.df%>%
 
 category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
-                                            "Faculty Issues: Curriculum design/integration",
-                                            "Faculty Issues: Lack of interest",
-                                            "Faculty Issues: New Faculty",
-                                            "Curriculum Issues: No space",
-                                            "Curriculum Issues: Incompatible with current curriculum",
-                                            "Curriculum Issues: Time needed to develop",
-                                            "Curriculum Issues: No control",
-                                            "Curriculum Issues: Covered elsewhere",
-                                            "Curriculum Issues: Class size",
-                                            "Curriculum Issues: Plan for future coverage",
-                                            "Curriculum Issues: Too much content",
-                                            "Curriculum Issues: Content requires several courses",
-                                            "Resource Issues: Access to exercises",
-                                            "Resource Issues: Access to lesson plans",
-                                            "Resource Issues: Access to intro content",
-                                            "Resource Issues: Unable to vet content",
-                                            "Resource Issues: Funding",
-                                            "Resource Issues: No appropriate textbook",
-                                            "Resource Issues: No access to online exercises",
-                                            "Resource Issues: No qualified TAs",
-                                            "Student Issues: Background knowledge",
-                                            "Student Issues: Interest in topic",
-                                            "Facilities: Access to equipment",
-                                            "Institutional: Inertia",
-                                            "State Restrictions", 
-                                            "Accreditation")
+                                            "Faculty Issues: No interest in topic",
+                                            "Faculty Issues: No comp-sci faculty",
+                                            "Facilities Issues: Access to computer labs",
+                                            "Facilities Issues: Inadaquate computers",
+                                            "Facilities Issues: Access to servers",
+                                            "Facilities Issues: Access to internet",
+                                            "Resource Issues: Access to operating systems",
+                                            "Resource Issues: Apropriate software", 
+                                            "Resource Issues: Access to high-performance computing", 
+                                            "Resource Issues: Funding", 
+                                            "Institutional Issues: Access to IT support", 
+                                            "Institutional Issues: Subscriptions/licenses", 
+                                            "Institutional Issues: No support from comp-sci faculty",
+                                            "Student Issues: Access to software off-campus", 
+                                            "Student Issues: Basic computing knowledge", 
+                                            "Student Issues: Access to computers Off-campus", 
+                                            "Student Issues: No interest in bioinformatics",
+                                            "Curriculum Issues: New program development required", 
+                                            "Curriculum Issues: Class size", 
+                                            "Curriculum Issues: Access to bioinformatics lesson plans")
+                                            
+# Select the reduced columns (columns where coded responses have been summarized into
+# binary values (1 = at least one faculty issue reported , 0 = no faculty issues reported
 
-category.reduced.columns <- c("q38_Faculty_issues_reduced", 
-                              "q38_Curriculum_issues_reduced", 
-                              "q38_Resources_issues_reduced", 
-                              "q38_Student_issues_reduced", 
-                              "q38_Facilities_issues_reduced", 
-                              "q38_Institutional_issues_reduced", 
-                              "q38_State_issues_reduced", 
-                              "q38_Accredited_issues_reduced",
+category.reduced.columns <- c("q29_Faculty_issues_reduced", 
+         					  "q29_Facilities_issues_reduced", 
+         					  "q29_Resources_issues_reduced",
+           					  "q29_Institutional_issues_reduced", 
+         					  "q29_Student_issues_reduced", 
+         					  "q29_Curriculum_issues_reduced", 
                               category.column.name)
 
 category.reduced.df<- relavant.respondants.df%>%
@@ -183,30 +181,29 @@ category.reduced.df<- relavant.respondants.df%>%
 # create a set of nice names
 
 category.reduced.columns.nice.names <- c("Faculty Issues",
-                                        "Curriculum Issues", 
-                                        "Resource Issues", 
-                                        "Student Issues",
                                         "Facilities Issues", 
+                                        "Resource Issues", 
                                         "Institutional Issues",
-                                        "State Issues", 
-                                        "Accredidation Issues")
+                                        "Student Issues", 
+                                        "Curriculum Issues")
+
 
 ######### CREATE DIRECTORIES #########################################################
 
 #Create directory for table outputs
 
-table.dir.path <- paste("./prop_analysis_of",
-                        question.column.name.short, 
+table.dir.path <- paste("./analysis_of",
+                        question.column.name.safe, 
                         "by",
-                        category.column.name.short,
-                        "/output_tables_prop/",
+                        category.column.name.safe,
+                        "/output_tables/",
                         sep = "_"
 )
-plot.dir.path <- paste("./prop_analysis_of",
-                       question.column.name.short, 
+plot.dir.path <- paste("./analysis_of",
+                       question.column.name.safe, 
                        "by",
-                       category.column.name.short,
-                       "/output_plots_prop/",
+                       category.column.name.safe,
+                       "/output_plots/",
                        sep = "_"
 )
 
@@ -221,13 +218,20 @@ dir.create(plot.dir.path, recursive = TRUE)
 
 #Nice names data frame - create a datframe of nice names for your categories, you must
 #complete the df for all of the categories
+#example:
+#category.df <- data.frame ("Associates"= category.levels[1], 
+#                           "Baccalaureate" = category.levels[2] , 
+#                           "Masters" = category.levels[3] , 
+#                           "Doctoral" = category.levels[4], 
+#                           stringsAsFactors = FALSE)
+
 
 category.df <- data.frame ("Associates"= category.levels[1], 
                            "Baccalaureate" = category.levels[2] , 
                            "Masters" = category.levels[3] , 
                            "Doctoral" = category.levels[4], 
                            stringsAsFactors = FALSE)
-
+                           
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
 #Create and format nice name dataframe
@@ -860,7 +864,7 @@ plot.sig.barriers(proportion_table_summary,
                   question.column.name.safe,
                   category.column.name.safe)
 
-
+pdf(NULL)
 ############## Analysis of Reduced Categories ##################################
 
 
@@ -991,6 +995,192 @@ dev.off()
 
 
 
+########### Calculation of Q29 Y/N Responses as a function of stratafying category
 
 
+#fliter out NA responses
 
+relavant.q29.respondants.df <- relavant.respondants.df%>%
+  filter(!is.na(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))
+question29.column.subset <- relavant.q29.respondants.df[[question.29.column.name]]
+
+# Craate a df to hold the response counts
+response.counts.29.by.category <- category.df
+response.counts.29.by.category["Yes",] <- NA
+response.counts.29.by.category["No",] <- NA
+response.counts.29.by.category["response_count",] <- NA
+#
+for (category in colnames(response.counts.29.by.category)){
+  key <- response.counts.29.by.category["category_key",category]
+  response.counts.29.by.category["Yes", category] <- relavant.q29.respondants.df%>%
+    filter(relavant.q29.respondants.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes" &
+             relavant.q29.respondants.df[[category.column.name]] == key)%>%
+    count()
+  
+  response.counts.29.by.category["No", category] <- relavant.q29.respondants.df%>%
+    filter(relavant.q29.respondants.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" &
+             relavant.q29.respondants.df[[category.column.name]] == key)%>%
+    count()
+  
+  response.counts.29.by.category["response_count", category] <- relavant.q29.respondants.df%>%
+    filter(relavant.q29.respondants.df[[category.column.name]] == key)%>%
+    count()
+  
+}
+
+#plot the Y/N responses for this category
+#reshape the data and preserve as data frame
+response.counts.29.by.category <- t(response.counts.29.by.category)
+response.counts.29.by.category <- as.data.frame(response.counts.29.by.category, stringsAsFactors = FALSE)
+#ensure columns are numeric
+response.counts.29.by.category$Yes <- as.numeric(as.character(response.counts.29.by.category$Yes))
+response.counts.29.by.category$No <- as.numeric(as.character(response.counts.29.by.category$No))
+response.counts.29.by.category$response_count <- as.numeric(as.character(response.counts.29.by.category$response_count))
+
+#calculate yes/no percentages
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(Yes_percentage = Yes/response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(No_percentage = No/response_count)
+#calculate percentage of N responding by number of responses in stratfying category
+total.response.count.column <- response.counts.by.category%>%
+  t()%>%
+  data.frame(.,stringsAsFactors = FALSE)%>%
+  select(response_count)
+response.counts.29.by.category$response_stratafying_cat <-  as.numeric(total.response.count.column$response_count)
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(percentage_of_n = response_count/response_stratafying_cat)
+# calculate error
+response.counts.29.by.category <- response.counts.29.by.category%>%
+  mutate(proportion_error = as.numeric(sqrt((percentage_of_n * (1 - percentage_of_n)/response_stratafying_cat))*qnorm(.975)))%>%
+  mutate(ymax_y = Yes_percentage + (Yes_percentage * proportion_error))%>%
+  mutate(ymin_y = Yes_percentage - (Yes_percentage * proportion_error))%>%
+  mutate(ymax_n = No_percentage + (No_percentage * proportion_error))%>%
+  mutate(ymin_n = No_percentage - (No_percentage * proportion_error))
+# calculate proportion test chi_statistic
+response.counts.29.by.category.chivalues <- response.counts.29.by.category%>%
+  group_by(category_key)%>%
+  do(prop_test_chi_pvalue = chisq.test(c(.$Yes,.$No))$p.value)
+
+response.counts.29.by.category$chi_values <- as.numeric(response.counts.29.by.category.chivalues$prop_test_chi_pvalue)
+
+
+########### PLOT ####################################################################
+
+#add nice names
+response.counts.29.by.category$category_key <- colnames(category.df.blank)
+
+#reshape data
+response.counts.29.by.category.plot <- melt(response.counts.29.by.category)
+
+#arrange levels
+response.counts.29.by.category.plot$category_key <- 
+  factor(response.counts.29.by.category.plot$category_key, levels = 
+           colnames(category.df))
+
+
+#rebuild datafram for plotting
+
+response.counts.29.by.category.plot.tmp <- response.counts.29.by.category.plot%>%
+  filter(variable == "Yes"| variable == "No")
+
+response_count_col <- filter(response.counts.29.by.category.plot , variable == "response_count")$value
+response.counts.29.by.category.plot.tmp $response_count <- response_count_col
+Yes_percentage_col <- filter(response.counts.29.by.category.plot , variable == "Yes_percentage")$value
+response.counts.29.by.category.plot.tmp $Yes_percentage <- Yes_percentage_col
+No_percentage_col <- filter(response.counts.29.by.category.plot , variable == "No_percentage")$value
+response.counts.29.by.category.plot.tmp $No_percentage <- No_percentage_col
+
+response_stratafying_cat_col <- filter(response.counts.29.by.category.plot , variable == "response_stratafying_cat")$value
+response.counts.29.by.category.plot.tmp $response_stratafying_cat <- response_stratafying_cat_col
+percentage_of_n_col <- filter(response.counts.29.by.category.plot , variable == "percentage_of_n")$value
+response.counts.29.by.category.plot.tmp $percentage_of_n <- percentage_of_n_col
+
+proportion_error_col <- filter(response.counts.29.by.category.plot , variable == "proportion_error")$value
+response.counts.29.by.category.plot.tmp $proportion_error <- proportion_error_col
+
+ymax_y_col <- filter(response.counts.29.by.category.plot , variable == "ymax_y")$value
+response.counts.29.by.category.plot.tmp $ymax_y <- ymax_y_col
+
+ymin_y_col <- filter(response.counts.29.by.category.plot , variable == "ymin_y")$value
+response.counts.29.by.category.plot.tmp $ymin_y <- ymin_y_col
+
+ymax_n_col <- filter(response.counts.29.by.category.plot , variable == "ymax_n")$value
+response.counts.29.by.category.plot.tmp $ymax_n <- ymax_n_col
+
+ymin_n_col <- filter(response.counts.29.by.category.plot , variable == "ymin_n")$value
+response.counts.29.by.category.plot.tmp $ymin_n <- ymin_n_col
+
+
+chi_values_col <- filter(response.counts.29.by.category.plot , variable == "chi_values")$value
+response.counts.29.by.category.plot.tmp $chi_values <- chi_values_col
+
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot.tmp
+
+#replace value with percentages
+response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  mutate(value = value/response_count)
+
+
+#set error bar limits
+
+
+general_error_limits <- aes(ymin = (response.counts.29.by.category.plot$value  - (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))),
+                            ymax = (response.counts.29.by.category.plot$value  + (response.counts.29.by.category.plot$value* (sqrt((response.counts.29.by.category.plot$value*((1-response.counts.29.by.category.plot$value)/response.counts.29.by.category.plot$response_stratafying_cat)))*qnorm(.975)))))
+
+error.dodge <- position_dodge(width= .9)
+
+q29plot <- response.counts.29.by.category.plot%>%
+  ggplot()+
+  aes(x=category_key, y=value, fill = variable)+
+  geom_bar(stat="identity", 
+           position = "dodge")+
+  geom_errorbar(general_error_limits,
+                position = error.dodge, width = .4)+
+  ylab("percentage of individuals reporting")+
+  xlab(paste(category.nice.name.caps, " and Signifigance/p-values", sep = ""))+
+  scale_fill_discrete(name = "Response")+
+  ggtitle(paste("Percentage Reporting\n",
+                question.29.column.name.nice,
+                "by",
+                category.column.name.nice, 
+                "\n n=",
+                n.respondants))+
+  theme_minimal()
+
+# add signifigance indication
+
+sig.response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>%
+  select(category_key, chi_values)%>%
+  mutate(label = ifelse(test = chi_values <= 0.05, 
+                        yes = paste("(*)p=",round(chi_values, digits = 4),sep = "" ),
+                        no = ifelse(test = chi_values <= 0.01, 
+                                                yes = paste("(**)p=",round(chi_values, digits = 4),sep = "" ),
+                                                no = ifelse(test = chi_values <= 0.001, 
+                                                            yes = paste("(***)p=",round(chi_values, digits = 4),sep = "" ), 
+                                                            no = paste(" NS, p=",round(chi_values, digits = 4),sep = "" )))))
+sig.response.counts.29.by.category.plot <- sig.response.counts.29.by.category.plot%>%
+  mutate(sig_lables = paste(category_key, label))
+
+#plot with signifigance labels
+q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)
+
+
+response.counts.29.by.category.plotfilename <- paste("Q29_yes.no_responses",
+                                                     "by",
+                                                     category.column.name.safe,
+                                                     ".png",
+                                                     sep = "_")
+ggsave(paste(plot.dir.path,response.counts.29.by.category.plotfilename, sep= ""), 
+         width = 13.8, 
+         height = 8.81, 
+         units = "in")
+
+response.counts.29.by.category.plot.filename <- paste(table.dir.path,
+                                                                "Q29_y_n_response_percentages", 
+                                                                "_by_",
+                                                                category.column.name.safe,
+                                                                ".csv", 
+                                                                sep = "")
+write.csv(response.counts.29.by.category.plot, 
+          file = response.counts.29.by.category.plot.filename)

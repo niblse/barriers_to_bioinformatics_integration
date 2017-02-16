@@ -63,6 +63,8 @@ question.column.name <- "Q33_In.your.opinion..what.do.you.think.are.the.most.imp
 question.column.name.nice <- "Educator Challenges to Including Bioinformatics (Q33)"
 # 'nice name' to describe this question
 question.column.name.safe <- "Q33_educator_challenges"
+# 'short name' to describe this question
+question.column.name.short <- "Q33_edu_challenges"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
@@ -856,7 +858,7 @@ plot.sig.barriers(proportion_table_summary,
                   question.column.name.safe,
                   category.column.name.safe)
 
-
+pdf(NULL)
 ############## Analysis of Reduced Categories ##################################
 
 

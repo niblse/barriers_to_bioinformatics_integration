@@ -3,8 +3,6 @@ require(ggplot2)
 require(tidyverse)
 require(reshape2)
 require(pwr)
-require(FactoMineR)
-require(factoextra)
 require(gplots)
 require(corrplot)
 
@@ -863,7 +861,7 @@ plot.sig.barriers(proportion_table_summary,
                   question.column.name.safe,
                   category.column.name.safe)
 
-
+pdf(NULL)
 ############## Analysis of Reduced Categories ##################################
 
 

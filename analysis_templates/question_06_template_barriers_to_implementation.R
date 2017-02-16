@@ -850,7 +850,7 @@ plot.sig.barriers(proportion_table_summary,
                   question.column.name.safe,
                   category.column.name.safe)
 
-
+pdf(NULL)
 ############## Analysis of Reduced Categories ##################################
 
 
