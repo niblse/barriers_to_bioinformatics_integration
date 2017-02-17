@@ -1,13 +1,13 @@
 #README
 
-## NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
+### NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
 ### Analysis of barriers to bioinformatics integration
 
 NIBLSE is supported by NSF Award #1539900
 
 NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubeshub.org/groups/niblse)
 
-#### Items in this directory
+## Items in this directory
 
 |Item|Notes|
 |----|-----|
@@ -17,9 +17,9 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 |04_decode_survey_responses/|Contains `decoded_responses.R`as well as survey mapping header files (`Header_mapping.tab`, `Header_mapping.txt` ); <br>used in conjunction with `Header_mapping.txt` to transform numeric survey codings into readable options; <br>*output:* `decoded_df.csv` <br>**Note:** This output is used in the majority analyses, except those analyzing survey responses by ethnicity.|
 |05_adjust_ethnicities/|Contains `adjust_ethnicities.R`; <br>used to adjust survey ethnicity information into categories that match with standard race/ethnicity demographic categories and also separately categorizes respondents identified as races/ethnicities underrepresented in science; <br>*output:* `decoded_df_w_ethnicity.csv`|
 
-#### Additional notes
+## Additional notes
 
-##### Script details
+### Script details
 
 *01_combine_excel_outputs_to_csv/combine_coded_csvs.R*
 

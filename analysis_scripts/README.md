@@ -1,13 +1,13 @@
 #README
 
-## NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
+### NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
 ### Analysis of barriers to bioinformatics integration
 
 NIBLSE is supported by NSF Award #1539900
 
 NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubeshub.org/groups/niblse)
 
-#### Items in this directory
+## Items in this directory
 
 |Item|Notes|
 |----|-----|
@@ -26,19 +26,19 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 |top_barriers_plots.R|Analysis of reported barriers for multiple scored free-text questions|
 |templates/|Template scripts for analyses of 4 survey question types|
 
-#### Additional notes
+## Additional notes
 
-##### Script details
+### Script details
 
 These analyses involve 7 scripts:
 
-Special analyses 
+*Special analyses* 
 
 - `mca-plot.R`: Multiple correspondence analysis of several survey responses
 - `Top5_barriers.plots.R`: Side-by-side plotting of several question responses
 - `summarize_and_plot_demographic_information/response_summary_plots.R`: Plots and tables summarizing the number of respondents in several demographic categories
 
-Analysis templates (templates/)
+*Analysis templates (templates/)*
 
 Analyses are conducted on the following question, numbered as named
 
@@ -49,10 +49,59 @@ Analyses are conducted on the following question, numbered as named
 |Q33|"In your opinion, what do you think are the most important challenges currently facing those educating undergraduate life scientists in bioinformatics?"|Educator challenges|`templates/question_33_template_educator_challenges.R`|
 |Q38|"What is preventing you from including bioinformatics content in these courses?"|Barriers to inclusion|`templates/question_38_template_barriers_to_inclusion.R`|
 
+*Running analysis template scripts*
 
-##### Output details
+Each of the template scripts have sections that are custom for that question (i.e. which variables/columns from the survey data). In addition to run the script from a template the following items are customized:
 
-Tabular Outputs
+1. The variable for the demographic to be analyzed needs to be selected long with custom names for outputs:
+    
+     ```
+    # set the variable (Question) that will be analyzed:"COLUMN_NAME"
+category.column.name <- ""
+
+    # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
+category.column.name.nice <- ""
+
+    # set a 'safe name' for naming variables: "Q#_category_category"
+category.column.name.safe <- ""
+
+    # set a 'short' for naming filename variables: "Q#_category_category"
+category.column.name.short <- ""
+
+    #set a nice name in upper and lower case that describes the category kinds 
+#(e.g. gender, institution type): ""
+
+    category.nice.name.caps <- ""
+category.nice.name.lower <- ""
+```
+2. A `category.levels` variable is set to indicate which of the responses to a demographic will be analyzed. For example, if there are 3 levels (e.g '1_Female', '2_Male', '3_NA') selecting the range category.levels[1:2] will eliminate NA values from the analysis:
+    ```
+    #Set levels to retain ( excluding for example responses such as 'Don't Know     or 'NA')
+# select the range of values within category.levels to use (e.g. category.levels[1:4])
+category.levels <- category.levels[1:4]
+```
+3. Create a data frame that will contain nicely formatted names:
+```
+#Nice names data frame - create a datframe of nice names for your categories, you must
+#complete the df for all of the categories
+#example:
+#category.df <- data.frame ("Associates"= category.levels[1], 
+#                           "Baccalaureate" = category.levels[2] , 
+#                           "Masters" = category.levels[3] , 
+#                           "Doctoral" = category.levels[4], 
+#                           stringsAsFactors = FALSE)
+
+    
+    category.df <- data.frame ("Associates"= category.levels[1], 
+                           "Baccalaureate" = category.levels[2] , 
+                           "Masters" = category.levels[3] , 
+                           "Doctoral" = category.levels[4], 
+                        stringsAsFactors = FALSE)
+```
+
+### Output details
+
+**Tabular Outputs**
 
 |Naming*|Notes|Columns/Variables|
 |-------|-----|-----------------|
@@ -65,3 +114,43 @@ Tabular Outputs
 |Q29_y_n_response_percentages_by_~~~.csv||<ul><li>`(Col1)`:numbered rows <li>`category_key`: Demographic bins<li>`variable`: Indicated a 'Yes' or 'No' response to this question<li>`value`: Percentage of respondents indicating the response in `variable` <li>`response_count`: Total number of 'Yes' and 'No' responses<li>`Yes_percentage`: Percentage of 'Yes' responses<li>`No_percentage` Percentage of 'No' responses:<li>`response_stratafying_cat`: Total number of respondents in the demographic indicated in `category_key`<li>`percentage_of_n`: Total number of respondents in `response_count` as a percentage of total survey respondents for all demographic categories in `category_key`<li>`proportion_error`:Interval estimate of population proportion margin of error at 95% confidence interval<li>`ymax_y`:ymax error bar for 'Yes' responses<li>`ymin_y`: ymin error bar for 'Yes' response<li>`ymax_n`: ymax error bar for 'No' responses<li>`ymin_n`:ymin error bar for 'No' responses<li>`chi_values`:p-values from proportion test (chi-squared) of coded free-text responses as reported by different demographic categories as grouped by demographic categories in `category_key` </ul>|
 
 Naming - Output names start with an identification of the survey question the template is derived from (%%%) and the demographic question (~~~) survey respondents are drawn from. 
+
+
+**Plots**
+
+
+|Plot*|Notes|
+|-----|-----|
+|count_of_respondants_%%%_by_~~~.png|Bar chart displaying numerical counts of survey responstant identifying in a specific demographic category|
+|Q%Q~-~~~.png (mca plots)| Plot of a multiple correspondence analysis|
+|reduced_category_barplot_%%%_by_~~~.png|Bar chart showing percentage of respondents in a demographic who had an issue scored in a one of the super-categories (reduced) barrier bins|
+|reduced_category_correlation_%%%_by_~~~.png|Correlation plot showing correlation between super-categories (reduced) barrier bins|
+|reduced_barriers_Q33_Q38.png|Faceted plot of responses to Q33, Q38 showing percentage of respondents across all demographics who had an issue scored in a one of the super-categories (reduced) barrier bins |
+|scored_barriers_Q33_Q38.png|Faceted plot of responses to Q33, Q38 showing percentage of respondents across all demographics who had an issue scored in a one of the coded free-text barrier bins|
+|barriers_differing_signifigantly_by_category_proprotional_by_category_%%%_by_~~~.png|Bar chart shows significantly different (between demographic categories) percentages of people reporting barriers. Significance is shown by proportion test (chi-squared values), error bars are Interval estimate of population proportion margin of error at 95% confidence interval. Each barrier shows the number of 'positive' responses - responses where any barrier was reported. No significance tests were run when any barrier had less than 5 responses|
+|tally_of_raw_coded_barriers_all_categories_%%%_by_~~~.png|Count of all responses to barriers in coded free-text responses across an entire demographic category|
+|Q29_yes.no_responses_by_~~~.png|Plots of proportional responses to Q29 across a demographic. Significance is shown for each demographic, proportion test (chi-squared values). Error bars are Interval estimate of population proportion margin of error at 95% confidence interval|
+|top_5_reported_barriers_proprotional_by_cat_%%%_by_~~~.png|Bar plot showing top 5 reported barriers as percentage of respondents across a demographic|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,13 +1,13 @@
 #README
 
-## NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
+### NIBLSE 2016 Survey on Bioinformatics in Undergraduate Education
 ### Analysis of barriers to bioinformatics integration
 
 NIBLSE is supported by NSF Award #1539900
 
 NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubeshub.org/groups/niblse)
 
-#### Items in this directory
+## Items in this directory
 
 |Item|Notes|
 |----|-----|
@@ -18,7 +18,7 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 
 
 
-#### Additional notes
+## Additional notes
 
 None. 
 
