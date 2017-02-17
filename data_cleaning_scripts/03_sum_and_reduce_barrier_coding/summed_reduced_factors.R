@@ -10,7 +10,7 @@ df <- read_csv("../02_transform_coding_to_binary/output/binary_scores.csv")
 
 
 #For each coded question, create two new columns:
-#qXX_ISSUE_Sum: Numeric sum of all coded responses in a super-catagory (e.g. faculty isues)
+#qXX_ISSUE_sum: Numeric sum of all coded responses in a super-catagory (e.g. faculty isues)
 #qXX_ISSUE_reduced: Binary value, 1 (1 or more reponses in super-catagory),
 #0 for no responses in super-catagory
 #These sums eliminate any column indicated as "General" as this is already a super-catagory
