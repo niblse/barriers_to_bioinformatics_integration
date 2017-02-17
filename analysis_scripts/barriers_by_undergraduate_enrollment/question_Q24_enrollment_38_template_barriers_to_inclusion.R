@@ -231,10 +231,11 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           stringsAsFactors = FALSE)
 
 
-category.df <- data.frame ("Less than 5000"= category.levels[1],
-                           "5000-15000"= category.levels[2],  
-                           "More than 15000"= category.levels[3],  
+category.df <- data.frame ("Less than 5,000"=category.levels[1],
+                           "5,000-15,000"= category.levels[2],  
+                           "More than 15,000"= category.levels[3],  
                            stringsAsFactors = FALSE)
+
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
