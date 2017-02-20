@@ -224,7 +224,12 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           "Masters" = category.levels[3] , 
 #                           "Doctoral" = category.levels[4], 
 #                           stringsAsFactors = FALSE)
-
+# In the nice names...
+# Use underscores which will be replace by spaces
+# Use X to be replaced in plots by ","
+# Use K for lines starting with numbers to be replaced by ""
+# Use D to be replaced by "-"
+# All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
 category.df <- data.frame ("NAME"= category.levels[1],  
                            stringsAsFactors = FALSE)
@@ -1062,6 +1067,7 @@ response.counts.29.by.category.chivalues <- response.counts.29.by.category%>%
 response.counts.29.by.category$chi_values <- as.numeric(response.counts.29.by.category.chivalues$prop_test_chi_pvalue)
 
 
+
 ########### PLOT ####################################################################
 
 #add nice names
@@ -1152,16 +1158,37 @@ sig.response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>
   mutate(label = ifelse(test = chi_values <= 0.05, 
                         yes = paste("(*)p=",round(chi_values, digits = 4),sep = "" ),
                         no = ifelse(test = chi_values <= 0.01, 
-                                                yes = paste("(**)p=",round(chi_values, digits = 4),sep = "" ),
-                                                no = ifelse(test = chi_values <= 0.001, 
-                                                            yes = paste("(***)p=",round(chi_values, digits = 4),sep = "" ), 
-                                                            no = paste(" NS, p=",round(chi_values, digits = 4),sep = "" )))))
+                                    yes = paste("(**)p=",round(chi_values, digits = 4),sep = "" ),
+                                    no = ifelse(test = chi_values <= 0.001, 
+                                                yes = paste("(***)p=",round(chi_values, digits = 4),sep = "" ), 
+                                                no = paste(" NS, p=",round(chi_values, digits = 4),sep = "" )))))
 sig.response.counts.29.by.category.plot <- sig.response.counts.29.by.category.plot%>%
   mutate(sig_lables = paste(category_key, label))
 
-#plot with signifigance labels
-q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)
 
+#SUBSTITUTION
+#replace underscores with spaces
+sig.response.counts.29.by.category.plot$sig_lables<- gsub("_",
+                                                   " ",
+                                                   sig.response.counts.29.by.category.plot$sig_lables)
+#replace X with comma
+sig.response.counts.29.by.category.plot$sig_lables <- gsub("X",
+                                                    ",",
+                                                    sig.response.counts.29.by.category.plot$sig_lables)
+#replace K with no space
+sig.response.counts.29.by.category.plot$sig_lables <- gsub("K",
+                                                    "",
+                                                    sig.response.counts.29.by.category.plot$sig_lables)
+#replace D with -
+sig.response.counts.29.by.category.plot$sig_lables <- gsub("D",
+                                                    "-",
+                                                    sig.response.counts.29.by.category.plot$sig_lables)
+
+
+#plot with signifigance labels
+q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)+
+  theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))
+ 
 
 response.counts.29.by.category.plotfilename <- paste("Q29_yes.no_responses",
                                                      "by",
@@ -1179,5 +1206,9 @@ response.counts.29.by.category.plot.filename <- paste(table.dir.path,
                                                                 category.column.name.safe,
                                                                 ".csv", 
                                                                 sep = "")
+
+
+
+
 write.csv(response.counts.29.by.category.plot, 
           file = response.counts.29.by.category.plot.filename)

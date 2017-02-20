@@ -213,7 +213,12 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           "Masters" = category.levels[3] , 
 #                           "Doctoral" = category.levels[4], 
 #                           stringsAsFactors = FALSE)
-
+# In the nice names...
+# Use underscores which will be replace by spaces
+# Use X to be replaced in plots by ","
+# Use K for lines starting with numbers to be replaced by ""
+# Use D to be replaced by "-"
+# All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
 category.df <- data.frame ("NAME"= category.levels[1],  
                            stringsAsFactors = FALSE)

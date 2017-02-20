@@ -224,11 +224,17 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           "Masters" = category.levels[3] , 
 #                           "Doctoral" = category.levels[4], 
 #                           stringsAsFactors = FALSE)
+# In the nice names...
+# Use underscores which will be replace by spaces
+# Use X to be replaced in plots by ","
+# Use K for lines starting with numbers to be replaced by ""
+# Use D to be replaced by "-"
+# All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
 
-category.df <- data.frame ("Less than 5000"= category.levels[1],
-                           "5000-15000"= category.levels[2],  
-                           "More than 15000"= category.levels[3],  
+category.df <- data.frame ("Less_than_5X000"=category.levels[1],
+                           "K5X000D15X000"= category.levels[2],  
+                           "More_than_15X000"= category.levels[3],  
                            stringsAsFactors = FALSE)
                            
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
@@ -1129,6 +1135,9 @@ general_error_limits <- aes(ymin = (response.counts.29.by.category.plot$value  -
 
 error.dodge <- position_dodge(width= .9)
 
+
+
+
 q29plot <- response.counts.29.by.category.plot%>%
   ggplot()+
   aes(x=category_key, y=value, fill = variable)+
@@ -1146,6 +1155,7 @@ q29plot <- response.counts.29.by.category.plot%>%
                 "\n n=",
                 n.respondants))+
   theme_minimal()
+  
 
 # add signifigance indication
 
@@ -1161,9 +1171,34 @@ sig.response.counts.29.by.category.plot <- response.counts.29.by.category.plot%>
 sig.response.counts.29.by.category.plot <- sig.response.counts.29.by.category.plot%>%
   mutate(sig_lables = paste(category_key, label))
 
-#plot with signifigance labels
-q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)
 
+
+#correct nice_names for plotting
+#SUBSTITUTION
+
+response.counts.29.by.category.plot$legends <- response.counts.29.by.category.plot$category_key
+
+#replace underscores with spaces
+response.counts.29.by.category.plot$legends<- gsub("_",
+                                                        " ",
+                                                        response.counts.29.by.category.plot$legends)
+#replace X with comma
+response.counts.29.by.category.plot$legends <- gsub("X",
+                                                         ",",
+                                                         response.counts.29.by.category.plot$legends)
+#replace K with no space
+response.counts.29.by.category.plot$legends <- gsub("K",
+                                                         "",
+                                                         response.counts.29.by.category.plot$legends)
+#replace D with -
+response.counts.29.by.category.plot$legends <- gsub("D",
+                                                         "-",
+                                                         response.counts.29.by.category.plot$legends)
+
+#plot with signifigance labels
+q29plot + scale_x_discrete(labels = sig.response.counts.29.by.category.plot$sig_lables)+
+  theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))
+ 
 
 response.counts.29.by.category.plotfilename <- paste("Q29_yes.no_responses",
                                                      "by",
@@ -1181,5 +1216,14 @@ response.counts.29.by.category.plot.filename <- paste(table.dir.path,
                                                                 category.column.name.safe,
                                                                 ".csv", 
                                                                 sep = "")
+
+
+
+
 write.csv(response.counts.29.by.category.plot, 
           file = response.counts.29.by.category.plot.filename)
+
+
+scale_fill_discrete(limits = labels = head(response.counts.29.by.category.plot$legends,n = length(category.levels) ))
+
+

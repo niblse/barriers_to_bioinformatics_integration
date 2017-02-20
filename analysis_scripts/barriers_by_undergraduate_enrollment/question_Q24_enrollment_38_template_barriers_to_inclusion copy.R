@@ -12,24 +12,24 @@ master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/ou
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- ""
+category.column.name <- "Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution."
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- ""
+category.column.name.nice <- "Undergraduate Enrollment (Q24)"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- ""
+category.column.name.safe <- "Q24_undergraduate_enrollment"
+
 
 # set a 'short' for naming filename variables: "Q#_category"
-category.column.name.short <- ""
+category.column.name.short <- "Q24_enroll"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- ""
-category.nice.name.lower <- ""
+category.nice.name.caps <- "Undergraduate Enrollment"
+category.nice.name.lower <- "undergraduate enrollment"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -43,7 +43,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[]
+category.levels <- category.levels[1:3]
 
 #######################################################################################
 
@@ -229,6 +229,7 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           "Masters" = category.levels[3] , 
 #                           "Doctoral" = category.levels[4], 
 #                           stringsAsFactors = FALSE)
+# 
 # In the nice names...
 # Use underscores which will be replace by spaces
 # Use X to be replaced in plots by ","
@@ -236,8 +237,12 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use D to be replaced by "-"
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("NAME"= category.levels[1],  
+
+category.df <- data.frame ("Less_than_5X000"=category.levels[1],
+                           "K5X000D15X000"= category.levels[2],  
+                           "More_than_15X000"= category.levels[3],  
                            stringsAsFactors = FALSE)
+
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -327,6 +332,25 @@ plot.summary.statistics <- function(df,
   
   # ggplot barplot 
   categories <- nice.category.names 
+  
+  #correct nice_names for plotting
+  #SUBSTITUTION
+
+  nice.category.names <- chartr("XD",
+                     ",-", 
+                     nice.category.names)
+  nice.category.names <- gsub("K",
+                     "", 
+                     nice.category.names)
+  nice.category.names <- gsub("_",
+                              " ", 
+                              nice.category.names)
+  
+  
+  categories <- nice.category.names
+  View(categories)
+  
+  
   summary.response.df%>%
   ggplot()+
     aes(x=Var2, y=value)+
@@ -642,6 +666,25 @@ plot.of.top5.barriers <- function(df,
     factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
              colnames(category.df))
   
+  #SUSTITUTION for plotting
+  #replace underscores with spaces
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("_",
+                               " ",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace X with comma
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("X",
+                               ",",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace X with comma
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("K",
+                               "",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace X with comma
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
+                               "-",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  
+  
   #plot
   proportional.responses.summed.by.barriers.top5.plot%>%
     ggplot()+
@@ -814,6 +857,27 @@ plot.sig.barriers <- function(df,
     head(., n = length(category.levels))%>%
     mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
   
+  #correct nice_names for plotting
+  #SUBSTITUTION
+
+  #replace underscores with spaces
+  legend.labels$legend <- gsub("_",
+                               " ",
+                               legend.labels$legend)
+  #replace X with comma
+  legend.labels$legend <- gsub("X",
+                               ",",
+                               legend.labels$legend)
+  #replace X with comma
+  legend.labels$legend <- gsub("K",
+                               "",
+                               legend.labels$legend)
+  #replace X with comma
+  legend.labels$legend <- gsub("D",
+                               "-",
+                               legend.labels$legend)
+ 
+  
   # create labels that show how many positive (coded) responses
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
     arrange(desc(summed_score))%>%
@@ -825,6 +889,11 @@ plot.sig.barriers <- function(df,
   
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
+  
+
+  
+  
+  
   
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
@@ -925,7 +994,24 @@ png(filename = paste(plot.dir.path,reduced.baloonplot.filename, sep= ""),
     units = "in", 
     res = 600)
 
-balloonplot(as.table(reduced.tally.df),
+
+reduced.tally.df.baloon <- reduced.tally.df
+
+#correct nice_names for plotting
+#SUBSTITUTION
+colnames(reduced.tally.df.baloon) <- chartr("XD", 
+                                            ",-", 
+                                            colnames(reduced.tally.df.baloon))
+colnames(reduced.tally.df.baloon) <- gsub("_", 
+                                            " ", 
+                                            colnames(reduced.tally.df.baloon))
+colnames(reduced.tally.df.baloon) <- gsub("K", 
+                                            "", 
+                                            colnames(reduced.tally.df.baloon))
+
+
+
+balloonplot(as.table(reduced.tally.df.baloon),
             main = paste("Percentages of Faculty Reporting", question.column.name.nice, "by", category.nice.name.caps, 
                          "\n area proprotional to percentage", sep = " "),
             show.margins = FALSE, 
@@ -953,6 +1039,28 @@ reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
 
 
 #create plot
+
+#correct nice_names for plotting
+#SUBSTITUTION
+
+#replace underscores with spaces
+reduced.tally.df.m$Var1 <- gsub("_",
+                             " ",
+                             reduced.tally.df.m$Var1)
+#replace X with comma
+reduced.tally.df.m$Var1 <- gsub("X",
+                             ",",
+                             reduced.tally.df.m$Var1)
+#replace K with no space
+reduced.tally.df.m$Var1 <- gsub("K",
+                             "",
+                             reduced.tally.df.m$Var1)
+#replace D with -
+reduced.tally.df.m$Var1 <- gsub("D",
+                             "-",
+                             reduced.tally.df.m$Var1)
+
+
 reduced.tally.df.m%>%
   ggplot()+
   aes(x= Var1, y = value, fill = Var2)+
