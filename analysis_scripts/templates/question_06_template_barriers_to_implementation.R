@@ -878,11 +878,11 @@ plot.sig.barriers <- function(df,
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
-         y = "proportion of respondants", 
+         y = "percentage of respondants", 
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
-         subtitle = paste("Shown as proportion of users within each",
+         subtitle = paste("Shown as percentage of users within each ",
                           category.nice.name.lower,
-                          "n=",n.respondants, "\n", effect_statement, sep = "" ))+
+                          " n=",n.respondants, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
@@ -1034,8 +1034,21 @@ reduced.tally.df.m$Var1 <- gsub("D",
                              "-",
                              reduced.tally.df.m$Var1)
 
+
+
 #create plot
-reduced.tally.df.m%>%
+#convert percentages to decimal
+reduced.tally.df.m.plot <- reduced.tally.df.m
+reduced.tally.df.m.plot$value <- reduced.tally.df.m.plot$value/100 
+
+#setup ordering of plot
+reduced.tally.df.m.plot$Var2 <- 
+  factor(reduced.tally.df.m.plot$Var2, levels = 
+           reduced.tally.df.m.plot$Var2[order(desc(reduced.tally.df.m.plot$value))])
+
+
+
+reduced.tally.df.m.plot%>%
   ggplot()+
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
@@ -1060,6 +1073,7 @@ ggsave(paste(plot.dir.path,reduced.summary.percentage.filename, sep= ""),
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
 
 
 

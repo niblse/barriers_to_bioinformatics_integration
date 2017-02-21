@@ -899,11 +899,11 @@ plot.sig.barriers <- function(df,
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
-         y = "proportion of respondants", 
+         y = "percentage of respondants", 
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
-         subtitle = paste("Shown as proportion of users within each",
+         subtitle = paste("Shown as percentage of users within each ",
                           category.nice.name.lower,
-                          "n=",n.respondants, "\n", effect_statement, sep = "" ))+
+                          " n=",n.respondants, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+

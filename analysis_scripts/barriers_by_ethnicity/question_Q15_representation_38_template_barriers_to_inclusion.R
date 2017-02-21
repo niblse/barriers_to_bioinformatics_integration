@@ -232,10 +232,15 @@ dir.create(plot.dir.path, recursive = TRUE)
 #                           "Masters" = category.levels[3] , 
 #                           "Doctoral" = category.levels[4], 
 #                           stringsAsFactors = FALSE)
+# In the nice names...
+# Use underscores which will be replace by spaces
+# Use X to be replaced in plots by ","
+# Use K for lines starting with numbers to be replaced by ""
+# Use D to be replaced by "-"
+# All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-
-category.df <- data.frame ("Not underrepresented in STEM"= category.levels[1],
-                           "Underrepresented in STEM" = category.levels[2], 
+category.df <- data.frame ("Not_underrepresented_in_STEM"= category.levels[1],
+                           "Underrepresented_in_STEM" = category.levels[2], 
                            stringsAsFactors = FALSE)
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
@@ -325,6 +330,27 @@ plot.summary.statistics <- function(df,
   summary.response.df[,"value"] <- as.numeric(as.character(summary.response.df$value))
   
   # ggplot barplot 
+  categories <- nice.category.names 
+  
+  #correct nice_names for plotting
+  #SUBSTITUTION
+  
+  #Change 'X' to ',' and 'D' to '-'
+  nice.category.names <- chartr("XD",
+                     ",-", 
+                     nice.category.names)
+  #Change 'K' to ""                   
+  nice.category.names <- gsub("K",
+                     "", 
+                     nice.category.names)
+  #Change '_' to " "                   
+  nice.category.names <- gsub("_",
+                              " ", 
+                              nice.category.names)
+  
+  
+  
+   
   categories <- nice.category.names 
   summary.response.df%>%
   ggplot()+
@@ -641,15 +667,39 @@ plot.of.top5.barriers <- function(df,
     factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
              colnames(category.df))
   
+  
+  
+  #correct nice_names for plotting
+  #SUBSTITUTION
+  
+  #replace underscores with spaces
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("_",
+                               " ",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'X' with ','
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("X",
+                               ",",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'K' with ""
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("K",
+                               "",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'D' with '-'
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
+                               "-",
+                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  
+  
+  
   #plot
   proportional.responses.summed.by.barriers.top5.plot%>%
     ggplot()+
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice, 
-         y = "proportion of respondants", 
+         y = "percentage of respondants", 
          title = "Top 5 Most Commonly Reported Barriers to Including Bioinformatics in Existing Courses",
-         subtitle = paste("Shown as proportion of users within each",
+         subtitle = paste("Shown as percentage of users within each",
                           category.nice.name.lower,
                           "n=",n.respondants ))+
     theme_minimal()+
@@ -813,7 +863,27 @@ plot.sig.barriers <- function(df,
     head(., n = length(category.levels))%>%
     mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
   
+  #correct nice_names for plotting
+  #SUBSTITUTION
+
+  #replace underscores with spaces
+  legend.labels$legend <- gsub("_",
+                               " ",
+                               legend.labels$legend)
+  #replace 'X' with ','
+  legend.labels$legend <- gsub("X",
+                               ",",
+                               legend.labels$legend)
+  #replace 'K' with ""
+  legend.labels$legend <- gsub("K",
+                               "",
+                               legend.labels$legend)
+  #replace 'D' with '-'
+  legend.labels$legend <- gsub("D",
+                               "-",
+                               legend.labels$legend)
   # create labels that show how many positive (coded) responses
+  
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
     arrange(desc(summed_score))%>%
     select(Var2, summed_score)%>%
@@ -830,11 +900,11 @@ plot.sig.barriers <- function(df,
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
-         y = "proportion of respondants", 
+         y = "percentage of respondants", 
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
-         subtitle = paste("Shown as proportion of users within each",
+         subtitle = paste("Shown as percentage of users within each ",
                           category.nice.name.lower,
-                          "n=",n.respondants, "\n", effect_statement, sep = "" ))+
+                          " n=",n.respondants, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
@@ -917,6 +987,20 @@ reduced.baloonplot.filename <- paste("reduced_baloonplot",
                                      category.column.name.short,
                                      ".png",
                                      sep = "_")
+# Create df for baloon plot
+reduced.tally.df.baloon <- reduced.tally.df
+
+#correct nice_names for plotting
+#SUBSTITUTION
+colnames(reduced.tally.df.baloon) <- chartr("XD", 
+                                            ",-", 
+                                            colnames(reduced.tally.df.baloon))
+colnames(reduced.tally.df.baloon) <- gsub("_", 
+                                            " ", 
+                                            colnames(reduced.tally.df.baloon))
+colnames(reduced.tally.df.baloon) <- gsub("K", 
+                                            "", 
+                                            colnames(reduced.tally.df.baloon))
 
 png(filename = paste(plot.dir.path,reduced.baloonplot.filename, sep= ""),
     width = 13.8, 
@@ -924,7 +1008,7 @@ png(filename = paste(plot.dir.path,reduced.baloonplot.filename, sep= ""),
     units = "in", 
     res = 600)
 
-balloonplot(as.table(reduced.tally.df),
+balloonplot(as.table(reduced.tally.df.baloon),
             main = paste("Percentages of Faculty Reporting", question.column.name.nice, "by", category.nice.name.caps, 
                          "\n area proprotional to percentage", sep = " "),
             show.margins = FALSE, 
@@ -933,7 +1017,9 @@ balloonplot(as.table(reduced.tally.df),
             ylab = category.nice.name.caps,
             text.size = 0.7
             )
+
 dev.off()
+pdf(NULL)
 
 # Barplot
 
@@ -950,22 +1036,54 @@ colnames(reduced.tally.df.t) <- category.reduced.columns.nice.names
 #melt as matrix for plotting
 reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
 
+#correct nice_names for plotting
+#SUBSTITUTION
+
+#replace underscores with spaces
+reduced.tally.df.m$Var1 <- gsub("_",
+                             " ",
+                             reduced.tally.df.m$Var1)
+#replace 'X' with ','
+reduced.tally.df.m$Var1 <- gsub("X",
+                             ",",
+                             reduced.tally.df.m$Var1)
+#replace 'K' with  ""
+reduced.tally.df.m$Var1 <- gsub("K",
+                             "",
+                             reduced.tally.df.m$Var1)
+#replace 'D' with -
+reduced.tally.df.m$Var1 <- gsub("D",
+                             "-",
+                             reduced.tally.df.m$Var1)
+
+
 
 #create plot
-reduced.tally.df.m%>%
+#convert percentages to decimal
+reduced.tally.df.m.plot <- reduced.tally.df.m
+reduced.tally.df.m.plot$value <- reduced.tally.df.m.plot$value/100 
+
+#setup ordering of plot
+reduced.tally.df.m.plot$Var2 <- 
+  factor(reduced.tally.df.m.plot$Var2, levels = 
+           reduced.tally.df.m.plot$Var2[order(desc(reduced.tally.df.m.plot$value))])
+
+
+
+reduced.tally.df.m.plot%>%
   ggplot()+
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
   labs(x = category.column.name.nice,
      y = "percentage of respondants", 
      title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
-     subtitle = paste("Shown as proportion of users within each",
+     subtitle = paste("Shown as percentage of users within each",
                       category.nice.name.lower,
                       "n=",n.respondants ))+
   theme_minimal()+
   scale_fill_discrete(name= "Reduced Barrier Categories")
 
-reduced.summary.persentage.filename <- paste("reduced_category_barplot",
+reduced.summary.percentage.filename <- paste("reduced_category_barplot",
                               question.column.name.short,
                               "by",
                               category.column.name.short,
@@ -973,10 +1091,14 @@ reduced.summary.persentage.filename <- paste("reduced_category_barplot",
                               sep = "_")
 
 
-ggsave(paste(plot.dir.path,reduced.summary.persentage.filename, sep= ""), 
+ggsave(paste(plot.dir.path,reduced.summary.percentage.filename, sep= ""), 
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
+
+
+
 
 # Correlation plot
 correlation.plot.filename <- paste("reduced_category_correlation",
