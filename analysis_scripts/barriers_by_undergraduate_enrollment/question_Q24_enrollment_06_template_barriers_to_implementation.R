@@ -1039,14 +1039,20 @@ reduced.tally.df.m$Var1 <- gsub("D",
                              reduced.tally.df.m$Var1)
 
 
-#setup ordering of plot
-
-reduced.tally.df.m$Var1 <- 
-  factor(reduced.tally.df.m$Var1, levels = 
-           reduced.tally.df.m$Var1[order(desc(reduced.tally.df.m$value))])
 
 #create plot
-reduced.tally.df.m%>%
+#convert percentages to decimal
+reduced.tally.df.m.plot <- reduced.tally.df.m
+reduced.tally.df.m.plot$value <- reduced.tally.df.m.plot$value/100 
+
+#setup ordering of plot
+reduced.tally.df.m.plot$Var2 <- 
+  factor(reduced.tally.df.m.plot$Var2, levels = 
+           reduced.tally.df.m.plot$Var2[order(desc(reduced.tally.df.m.plot$value))])
+
+
+
+reduced.tally.df.m.plot%>%
   ggplot()+
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
