@@ -1048,6 +1048,13 @@ reduced.tally.df.m$Var1 <- gsub("D",
                              "-",
                              reduced.tally.df.m$Var1)
 
+
+#setup ordering of plot
+
+reduced.tally.df.m$Var1 <- 
+  factor(reduced.tally.df.m$Var1, levels = 
+           reduced.tally.df.m$Var1[order(desc(reduced.tally.df.m$value))])
+
 #create plot
 reduced.tally.df.m%>%
   ggplot()+
