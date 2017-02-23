@@ -231,7 +231,7 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use D to be replaced by "-"
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-ccategory.df <- data.frame ("Not_underrepresented_in_STEM"= category.levels[1],
+category.df <- data.frame ("Not_underrepresented_in_STEM"= category.levels[1],
                            "Underrepresented_in_STEM" = category.levels[2], 
                            stringsAsFactors = FALSE)
 
