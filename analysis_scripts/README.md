@@ -55,7 +55,7 @@ Each of the template scripts have sections that are custom for that question (i.
 
 1. The variable for the demographic to be analyzed needs to be selected long with custom names for outputs:
     
-     ```
+     ```R
     # set the variable (Question) that will be analyzed:"COLUMN_NAME"
 category.column.name <- ""
 
@@ -75,23 +75,13 @@ category.column.name.short <- ""
 category.nice.name.lower <- ""
 ```
 2. A `category.levels` variable is set to indicate which of the responses to a demographic will be analyzed. For example, if there are 3 levels (e.g '1_Female', '2_Male', '3_NA') selecting the range category.levels[1:2] will eliminate NA values from the analysis:
-    ```
+    ```R
     #Set levels to retain ( excluding for example responses such as 'Don't Know     or 'NA')
 # select the range of values within category.levels to use (e.g. category.levels[1:4])
 category.levels <- category.levels[1:4]
 ```
 3. Create a data frame that will contain nicely formatted names:
-```
-#Nice names data frame - create a datframe of nice names for your categories, you must
-#complete the df for all of the categories
-#example:
-#category.df <- data.frame ("Associates"= category.levels[1], 
-#                           "Baccalaureate" = category.levels[2] , 
-#                           "Masters" = category.levels[3] , 
-#                           "Doctoral" = category.levels[4], 
-#                           stringsAsFactors = FALSE)
-
-    
+```R 
     category.df <- data.frame ("Associates"= category.levels[1], 
                            "Baccalaureate" = category.levels[2] , 
                            "Masters" = category.levels[3] , 

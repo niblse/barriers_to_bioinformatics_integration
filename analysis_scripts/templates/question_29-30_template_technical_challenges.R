@@ -80,7 +80,7 @@ question29.column.subset <- master.df[[question.29.column.name]]
 
 ########## Cleaning Steps ###################################################
 
-#remove respondants not in US/Puerto Rico
+#remove respondents not in US/Puerto Rico
 remove.non.us.repondants <- function(df){
   countries <- c("United States","Puerto Rico")
   df <- df%>%
@@ -92,7 +92,7 @@ master.df.us.only <- remove.non.us.repondants(master.df)
 
 # We will only analyze data that match the category.levels you have selected
 # assuming you removed NA's or 'Don't knows, we will only analyze data for 
-# respondants for which we have a response to the stratfying category
+# respondents for which we have a response to the stratfying category
 
 remove.non.relavant.repondants <- function(df){
   responses <- c("United States","Puerto Rico")
@@ -101,12 +101,12 @@ remove.non.relavant.repondants <- function(df){
   return(df)
 }
 
-relavant.respondants.df <- remove.non.relavant.repondants(master.df.us.only)
+relavant.respondents.df <- remove.non.relavant.repondants(master.df.us.only)
 
 #RESET SUBSET VALUES
-category.column.subset <- relavant.respondants.df[[category.column.name]]
-question.column.subset <- relavant.respondants.df[[question.column.name]]
-question29.column.subset <- relavant.respondants.df[[question.29.column.name]]
+category.column.subset <- relavant.respondents.df[[category.column.name]]
+question.column.subset <- relavant.respondents.df[[question.column.name]]
+question29.column.subset <- relavant.respondents.df[[question.29.column.name]]
 
 
 ############# column selection #################################################
@@ -136,7 +136,7 @@ category.raw.scored.columns <- c("Q29.30_Faculty...No.Expertise.Training",
                                  "Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
                                  category.column.name)
 
-category.raw.scored.df <- relavant.respondants.df%>%
+category.raw.scored.df <- relavant.respondents.df%>%
   select(one_of(category.raw.scored.columns))
 
 # Create a set of nice names for these columns
@@ -175,7 +175,7 @@ category.reduced.columns <- c("q29_Faculty_issues_reduced",
          					  "q29_Curriculum_issues_reduced", 
                               category.column.name)
 
-category.reduced.df<- relavant.respondants.df%>%
+category.reduced.df<- relavant.respondents.df%>%
   select(one_of(category.reduced.columns))
 
 # create a set of nice names
@@ -258,7 +258,7 @@ category.df.blank[2,] <- NA
 # (e.g. how many identifed as male or female)
 
 
-num.cat.respondants <- function(df,
+num.cat.respondents <- function(df,
                                 category.df.blank, 
                                 category.column.subset,
                                 table.dir.path,
@@ -273,7 +273,7 @@ num.cat.respondants <- function(df,
   
   for (category in colnames(response.counts.by.category)) {
     response.counts.by.category["response_count",category] <- df%>%
-      # filter pipe below will return counts for all respondants that match the category
+      # filter pipe below will return counts for all respondents that match the category
       filter(category.column.subset == response.counts.by.category["category_key",category])%>%
       count()
   }
@@ -285,25 +285,25 @@ num.cat.respondants <- function(df,
                                                 sep = "")
   write.csv(response.counts.by.category, file = response.counts.by.category.filename)
   
-  # 2. Calculate "overall n" for the stratifying category - these are the number of respondants 
+  # 2. Calculate "overall n" for the stratifying category - these are the number of respondents 
   # who answered to your chosen category, and who will be analyzed 
   
-  n.respondants <- sum(as.numeric(response.counts.by.category["response_count",]))
+  n.respondents <- sum(as.numeric(response.counts.by.category["response_count",]))
   
-  return(list(n.respondants = n.respondants,
+  return(list(n.respondents = n.respondents,
               response.counts.by.category = response.counts.by.category))
 }
 
 
-# calculate number of respondants who identified within a stratfying category and write to file
-n.respondants.object <- num.cat.respondants(category.raw.scored.df,
+# calculate number of respondents who identified within a stratfying category and write to file
+n.respondents.object <- num.cat.respondents(category.raw.scored.df,
                                       category.df.blank, 
                                       category.column.subset,
                                       table.dir.path,
                                       question.column.name.safe)
 
-n.respondants <- as.numeric(n.respondants.object[1])
-response.counts.by.category <-as.data.frame(n.respondants.object[2])
+n.respondents <- as.numeric(n.respondents.object[1])
+response.counts.by.category <-as.data.frame(n.respondents.object[2])
 
 
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
@@ -348,16 +348,16 @@ plot.summary.statistics <- function(df,
     ylab("Individual Responses")+
     xlab(category.column.name.nice)+
     scale_x_discrete(labels = categories )+
-    ggtitle(paste(" Count of Respondants\n",
+    ggtitle(paste(" Count of respondents\n",
                   question.column.name.nice,
                   "by",
                   category.column.name.nice, 
                   "\n n=",
-                  n.respondants))+
+                  n.respondents))+
     theme_minimal()
                              
   
-  summary.response.plotname <- paste("count_of_respondants",
+  summary.response.plotname <- paste("count_of_respondents",
                                      question.column.name.short,
                                      "by",
                                      category.column.name.short,
@@ -481,7 +481,7 @@ raw.scored.analysis.tallied.df <- raw.score.analysis(category.raw.scored.df,
 #plot raw score tallies
 plot.tallied.scored <- function(raw.scored.analysis.tallied.df, 
                                 question.column.name.nice, 
-                                n.respondants , 
+                                n.respondents , 
                                 file.name.switch = 0
                                 ){
   
@@ -489,7 +489,7 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
                                                      question.column.name.nice,
                                                      "\n",
                                                      "n=",
-                                                     n.respondants
+                                                     n.respondents
   )
   
   raw.scored.analysis.tallied.df%>%
@@ -526,11 +526,11 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
          units = "in")
 }
 
-#plot number of respondants by barriers (all categories)
+#plot number of respondents by barriers (all categories)
 plot.tallied.scored(raw.scored.analysis.tallied.df, 
                     question.column.name.nice, 
                     file.name.switch = 0,
-                    n.respondants)
+                    n.respondents)
 
 ########### Calculate indiviual proportion of users reporting idenifying with a barrier
 
@@ -560,9 +560,9 @@ proportional.responses <- function(df,
     mutate(summed_score = sum(as.numeric(as.character(value))))%>%
     mutate(percentage = (value / summed_score) * 100) 
   
-  #add proportion calculation to barriers table where porpotion is out of total respondants
+  #add proportion calculation to barriers table where porpotion is out of total respondents
   # in a category. e.g. if 100 answered 'Associates' to Q21 but 50 left a + comment in Q38
-  # then 50% of respondants at an Associates institution encountered a barrier
+  # then 50% of respondents at an Associates institution encountered a barrier
   
   #modify response.counts.by.category df for this analysis
   response.counts.df <- data.frame(response.counts.by.category["response_count",], stringsAsFactors = FALSE)
@@ -639,7 +639,7 @@ proportional.responses.summed.by.barriers.top5 <- top5.barriers.by.proportion(pr
 plot.of.top5.barriers <- function(df,
                                   question.column.name.nice,
                                   category.nice.name.lower,
-                                  n.respondants,
+                                  n.respondents,
                                   category.nice.name.caps,
                                   question.column.name.safe,
                                   category.column.name.safe
@@ -685,11 +685,11 @@ plot.of.top5.barriers <- function(df,
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice, 
-         y = "percentage of respondants", 
+         y = "percentage of respondents", 
          title = "Top 5 Most Commonly Reported Barriers to Including Bioinformatics in Existing Courses",
          subtitle = paste("Shown as percentage of users within each",
                           category.nice.name.lower,
-                          "n=",n.respondants ))+
+                          "n=",n.respondents ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps)
@@ -709,7 +709,7 @@ plot.of.top5.barriers <- function(df,
 plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
                       question.column.name.nice,
                       category.nice.name.lower,
-                      n.respondants,
+                      n.respondents,
                       category.nice.name.caps,
                       question.column.name.safe,
                       category.column.name.safe)
@@ -747,7 +747,7 @@ sig.diff.chi.analysis <- function(df){
 proportion_table_non_zero <- proportion_table%>%
   filter(summed_score != 0)
 
-# for valid chi tests, remove scored categories where any scored category has less than 5 respondants
+# for valid chi tests, remove scored categories where any scored category has less than 5 respondents
 proportion_table_minimal_scoring <- proportion_table_non_zero%>%
   group_by(Var2)%>%
   filter(all(value >= 5))
@@ -790,7 +790,7 @@ write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
 # Calculate possible effect size given 80% power for a chi.test statistic 
 
 effect.size <- round(pwr.chisq.test(w = NULL, 
-                                 N = n.respondants, 
+                                 N = n.respondents, 
                                  df = (length(category.levels) - 1), 
                                  sig.level = 0.05, 
                                  power = 0.8)$w, digits = 3)
@@ -812,7 +812,7 @@ plot.sig.barriers <- function(df,
                               category.levels,
                               category.nice.name.caps,
                               category.nice.name.lower,
-                              n.respondants,
+                              n.respondents,
                               question.column.name.safe,
                               category.column.name.safe){
   
@@ -889,11 +889,11 @@ plot.sig.barriers <- function(df,
     aes(x=Var2, y=proportion, fill=nice_names)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
-         y = "percentage of respondants", 
+         y = "percentage of respondents", 
          title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
          subtitle = paste("Shown as percentage of users within each ",
                           category.nice.name.lower,
-                          " n=",n.respondants, "\n", effect_statement, sep = "" ))+
+                          " n=",n.respondents, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
@@ -925,7 +925,7 @@ plot.sig.barriers(proportion_table_summary,
                   category.levels,
                   category.nice.name.caps,
                   category.nice.name.lower,
-                  n.respondants,
+                  n.respondents,
                   question.column.name.safe,
                   category.column.name.safe)
 
@@ -1064,11 +1064,11 @@ reduced.tally.df.m.plot%>%
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
   labs(x = category.column.name.nice,
-     y = "percentage of respondants", 
+     y = "percentage of respondents", 
      title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
      subtitle = paste("Shown as percentage of users within each",
                       category.nice.name.lower,
-                      "n=",n.respondants ))+
+                      "n=",n.respondents ))+
   theme_minimal()+
   scale_fill_discrete(name= "Reduced Barrier Categories")
 
@@ -1117,9 +1117,9 @@ dev.off()
 
 #fliter out NA responses
 
-relavant.q29.respondants.df <- relavant.respondants.df%>%
+relavant.q29.respondents.df <- relavant.respondents.df%>%
   filter(!is.na(Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....))
-question29.column.subset <- relavant.q29.respondants.df[[question.29.column.name]]
+question29.column.subset <- relavant.q29.respondents.df[[question.29.column.name]]
 
 # Craate a df to hold the response counts
 response.counts.29.by.category <- category.df
@@ -1129,18 +1129,18 @@ response.counts.29.by.category["response_count",] <- NA
 #
 for (category in colnames(response.counts.29.by.category)){
   key <- response.counts.29.by.category["category_key",category]
-  response.counts.29.by.category["Yes", category] <- relavant.q29.respondants.df%>%
-    filter(relavant.q29.respondants.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes" &
-             relavant.q29.respondants.df[[category.column.name]] == key)%>%
+  response.counts.29.by.category["Yes", category] <- relavant.q29.respondents.df%>%
+    filter(relavant.q29.respondents.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes" &
+             relavant.q29.respondents.df[[category.column.name]] == key)%>%
     count()
   
-  response.counts.29.by.category["No", category] <- relavant.q29.respondants.df%>%
-    filter(relavant.q29.respondants.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" &
-             relavant.q29.respondants.df[[category.column.name]] == key)%>%
+  response.counts.29.by.category["No", category] <- relavant.q29.respondents.df%>%
+    filter(relavant.q29.respondents.df$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "2_No" &
+             relavant.q29.respondents.df[[category.column.name]] == key)%>%
     count()
   
-  response.counts.29.by.category["response_count", category] <- relavant.q29.respondants.df%>%
-    filter(relavant.q29.respondants.df[[category.column.name]] == key)%>%
+  response.counts.29.by.category["response_count", category] <- relavant.q29.respondents.df%>%
+    filter(relavant.q29.respondents.df[[category.column.name]] == key)%>%
     count()
   
 }
@@ -1263,7 +1263,7 @@ q29plot <- response.counts.29.by.category.plot%>%
                 "by",
                 category.column.name.nice, 
                 "\n n=",
-                n.respondants))+
+                n.respondents))+
   theme_minimal()
 
 # add signifigance indication

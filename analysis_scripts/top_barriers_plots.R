@@ -9,9 +9,9 @@ require(factoextra)
 #Read in data
 data.df <- read_csv("../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
-#remove non-us respondants
+#remove non-us respondents
 
-#remove respondants not in US/Puerto Rico
+#remove respondents not in US/Puerto Rico
 remove.non.us.repondants <- function(df){
   countries <- c("United States","Puerto Rico")
   df <- df%>%
@@ -246,11 +246,11 @@ total.reduced.cols%>%
   aes(x = barrier, y=percentage, fill = barrier)+
   geom_bar(stat = "identity", position = "dodge")+
   facet_grid(~ question)+
-  ggtitle(paste("Summary of barriers as reported by all respodants for Q33 and Q38 \n", 
+  ggtitle(paste("Summary of barriers as reported by all respondents for Q33 and Q38 \n", 
                 "n=", sample.size,
                 sep = "")) +
   xlab("Summarized barrier categories")+
-  ylab("Proportion of respondants reporting barrier")+
+  ylab("Proportion of respondents reporting barrier")+
   theme_minimal()+
   theme(axis.text.x = element_blank())
 
@@ -258,6 +258,8 @@ ggsave( filename= "./top5_plots/reduced_barriers_Q33_Q38.png",
         width = 13.8, 
         height = 8.81, 
         units = "in")
+    
+pdf(NULL)
 
 total.scored.cols%>%
   filter(percentage >= 0.05)%>%
@@ -269,7 +271,7 @@ total.scored.cols%>%
                 "n=", sample.size,
                 sep = "")) +
   xlab("Scored barrier categories")+
-  ylab("Proportion of respondants reporting barrier")+
+  ylab("Proportion of respondents reporting barrier")+
   theme_minimal()+
   theme(axis.text.x = element_blank())
 
@@ -279,3 +281,4 @@ ggsave( filename= "./top5_plots/scored_barriers_Q33_Q38.png",
         height = 8.81, 
         units = "in")
 
+pdf(NULL)

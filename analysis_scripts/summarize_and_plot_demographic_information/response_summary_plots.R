@@ -9,7 +9,7 @@ df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/de
 
 
 
-# remove any non-US respondants
+# remove any non-US respondents
 countries <- c("United States","Puerto Rico")
 df <- df%>%
   filter(Country_Country %in% countries )
@@ -333,7 +333,7 @@ Q27.undergrads.in.dept.table <- Q27.undergrads.in.dept.table%>%
   mutate(percentage = (Freq/total.responses)*100)
 write.csv(Q27.undergrads.in.dept.table, file = "./output_tables/Q27.undergrads.in.dept.table.csv")
 
-#question Region, respondants by region
+#question Region, respondents by region
 
 df %>%
   ggplot()+
@@ -345,7 +345,7 @@ df %>%
                             "MW",
                             "NE",
                             "WE"))+
-  ggtitle("QRegion - Number of respondants by region")+
+  ggtitle("QRegion - Number of respondents by region")+
   xlab("region")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
 ggsave("./output_plots/qRegion_survey_responses_by_region.png")

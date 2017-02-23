@@ -9,9 +9,9 @@ require(factoextra)
 #Read in data
 data <- read_csv("../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
-#remove non-us respondants
+#remove non-us respondents
 
-#remove respondants not in US/Puerto Rico
+#remove respondents not in US/Puerto Rico
 remove.non.us.repondants <- function(df){
   countries <- c("United States","Puerto Rico")
   df <- df%>%
@@ -471,7 +471,7 @@ fviz_mca_biplot(MCA.object,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "Respondant's opinion on the need for additional \nbioinformatics classes at their institutions",
+                legend.title = "respondent's opinion on the need for additional \nbioinformatics classes at their institutions",
                 ellipse.level = 0.95)+
   theme_minimal()+
   ggtitle(paste("Multiple Correspondence Analysis; question 6 barriers, question 5 categories, with selected factors n=", dim(tmp[1]), sep = ""), 
