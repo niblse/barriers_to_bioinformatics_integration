@@ -13,22 +13,14 @@ master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/ou
 
 #correcting for message catagory names
 
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "1_No training/experience" ] <- "1_no.training.experience"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "2_No formal training (self-taught)" ] <- "self.taught"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "3_Short workshop/bootcamp" ] <- "3_short.workshop"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "4_Some undergraduate courses" ] <- "4_some.undergraduate.courses"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "6_Undergraduate certificate" ] <- "6_undergraduate.certificate"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "7_Undergraduate degree" ] <- "7_undergraduate.degree"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "8_Post-graduate certificate" ] <- "8_post.graduate.degree"
-master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.
-                                                                                          == "9_Graduate course\tGraduate degree" ] <- "9_graduate.course.or.degree"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "1_No training/experience" ] <- "1_no_training_experience"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "2_No formal training (self-taught)" ] <- "2_No_formal_training_self_taught"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "3_Short workshop/bootcamp" ] <- "3_short_workshop"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "4_Some undergraduate courses" ] <- "4_some_undergraduate_courses"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "6_Undergraduate certificate" ] <- "6_undergraduate_certificate"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "7_Undergraduate degree" ] <- "7_undergraduate_degree"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "8_Post-graduate certificate" ] <- "8_post_graduate_degree"
+master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "9_Graduate course\tGraduate degree" ] <- "9_graduate.course_or_degree"
 
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
