@@ -1,5 +1,8 @@
 # this script creates a dataframe where the ehnicities reported are cleaned to account for hispanic/non-hispanic, and to indicate underrepresented groups in science
 
+require(tidyverse)
+
+
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
 master.df <- read_csv("../04_decode_survey_responses/output/decoded_df.csv")    
