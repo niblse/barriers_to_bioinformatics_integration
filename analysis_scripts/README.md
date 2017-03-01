@@ -111,7 +111,7 @@ Naming - Output names start with an identification of the survey question the te
 
 |Plot*|Notes|
 |-----|-----|
-|count_of_respondants_%%%_by_~~~.png|Bar chart displaying numerical counts of survey responstant identifying in a specific demographic category|
+|count_of_respondents_%%%_by_~~~.png|Bar chart displaying numerical counts of survey responstant identifying in a specific demographic category|
 |Q%Q~-~~~.png (mca plots)| Plot of a multiple correspondence analysis|
 |reduced_category_barplot_%%%_by_~~~.png|Bar chart showing percentage of respondents in a demographic who had an issue scored in a one of the super-categories (reduced) barrier bins|
 |reduced_category_correlation_%%%_by_~~~.png|Correlation plot showing correlation between super-categories (reduced) barrier bins|
@@ -152,7 +152,12 @@ loaded via a namespace (and not attached):
 [33] KernSmooth_2.23-15 stringi_1.1.2      lazyeval_0.2.0     munsell_0.4.3      broom_0.4.1
 ```
 
+#### Tips
 
+To run all the scripts in the barriers analysis directories from the bash command line:
+```bash
+$ for dir in ./barriers_by_*/; do cd $dir; for script in *.R; do Rscript $script;done ; cd -;done
+```
 
 
 

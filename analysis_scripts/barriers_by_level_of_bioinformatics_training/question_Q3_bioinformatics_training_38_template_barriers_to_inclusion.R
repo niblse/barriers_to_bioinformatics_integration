@@ -10,6 +10,13 @@ require(corrplot)
 #read in cleaned dataframe "decoded_df.csv"
 master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
+#filter the data frame - Q38 was only shown to users who answered 
+#"3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors" to Q1 
+
+master.df <- master.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
+
+
 #correcting for message catagory names
 
 master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[master.df$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "1_No training/experience" ] <- "1_no_training_experience"

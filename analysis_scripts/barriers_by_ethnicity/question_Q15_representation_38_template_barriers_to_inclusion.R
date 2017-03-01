@@ -10,6 +10,13 @@ require(corrplot)
 #read in cleaned dataframe "decoded_df_w_ethnicity.csv"
 master.df <- read_csv("../../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
 
+#filter the data frame - Q38 was only shown to users who answered 
+#"3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors" to Q1 
+
+master.df <- master.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
+
+
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
 

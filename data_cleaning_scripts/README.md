@@ -16,6 +16,7 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 |03_sum_and_reduce_barrier_coding/|Contains `summed_reduced_factors.R`; <br>used to create columns that summarize scored free-text responses into larger grouping; <br>*output:* `summed_reduced_factors.csv`|
 |04_decode_survey_responses/|Contains `decoded_responses.R`as well as survey mapping header files (`Header_mapping.tab`, `Header_mapping.txt` ); <br>used in conjunction with `Header_mapping.txt` to transform numeric survey codings into readable options; <br>*output:* `decoded_df.csv` <br>**Note:** This output is used in the majority analyses, except those analyzing survey responses by ethnicity.|
 |05_adjust_ethnicities/|Contains `adjust_ethnicities.R`; <br>used to adjust survey ethnicity information into categories that match with standard race/ethnicity demographic categories and also separately categorizes respondents identified as races/ethnicities underrepresented in science; <br>*output:* `decoded_df_w_ethnicity.csv`|
+|06_adjust_bioinformatics_training|Contains `adjust_bioinformatics_training.R`; <br>used to adjust survey bioinformatics training information into categories that condense into formal and informal training for better analysis; <br>*output:* `decoded_df_w_faculty_preperation.csv`
 
 ## Additional notes
 
@@ -48,6 +49,13 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
     - White
 
 a separate category 'underrepresented' was created for non-white, non-asian respondents who are not considered underrepresented in life science.  
+
+*decoded_df_w_faculty_preperation.csv*
+- Bins faculty bioinformatics training experience into the following categories:
+    - No Training
+    - Self-taught
+    - Workshops and Bootcamps
+    - Formal Training (from some undergraduate training, to bioinformatics graduate degree)
 
 
 
