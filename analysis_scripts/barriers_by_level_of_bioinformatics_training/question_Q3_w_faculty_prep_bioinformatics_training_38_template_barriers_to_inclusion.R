@@ -52,6 +52,9 @@ category.levels <- levels(as.factor(category.column.subset))
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
 category.levels <- category.levels[1:4]
 
+#Set an ordering for plotting based on category.levels names
+col.order <- c("No Training", "Self Taught", "Workshops and Bootcamps", "Formal Training")
+
 #######################################################################################
 
 # Reset the category subset
@@ -244,10 +247,13 @@ dir.create(plot.dir.path, recursive = TRUE)
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
 category.df <- data.frame ("Formal_Training"= category.levels[1],
-						   "No_Training"= category.levels[2], 
-						   "SelfDTaught"= category.levels[3], 
-						   "Workshops_and_Bootcamps"= category.levels[4],   
+                           "No_Training"= category.levels[2], 
+                           "SelfDTaught"= category.levels[3], 
+                           "Workshops_and_Bootcamps"= category.levels[4],   
                            stringsAsFactors = FALSE)
+
+
+
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -320,6 +326,10 @@ n.respondents.object <- num.cat.respondents(category.raw.scored.df,
 n.respondents <- as.numeric(n.respondents.object[1])
 response.counts.by.category <-as.data.frame(n.respondents.object[2])
 
+# fix response.counts.by.category column names and rebuild in correct order
+colnames(response.counts.by.category) <- response.counts.by.category["category_key",]
+response.counts.by.category <- response.counts.by.category%>%
+  select(one_of(col.order))
 
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
 
@@ -330,34 +340,15 @@ plot.summary.statistics <- function(df,
                                     question.column.name.nice,
                                     question.column.name.safe,
                                     category.column.name.safe){
+
+  
   # reshape the data for plotting and convert value to numeric types
   summary.response.df <- response.counts.by.category["response_count",]
   summary.response.df <- melt(as.matrix(summary.response.df))
   summary.response.df[,"value"] <- as.numeric(as.character(summary.response.df$value))
   
   # ggplot barplot 
-  categories <- nice.category.names 
-  
-  #correct nice_names for plotting
-  #SUBSTITUTION
-  
-  #Change 'X' to ',' and 'D' to '-'
-  nice.category.names <- chartr("XD",
-                     ",-", 
-                     nice.category.names)
-  #Change 'K' to ""                   
-  nice.category.names <- gsub("K",
-                     "", 
-                     nice.category.names)
-  #Change '_' to " "                   
-  nice.category.names <- gsub("_",
-                              " ", 
-                              nice.category.names)
-  
-  
-  
-   
-  categories <- nice.category.names 
+
   summary.response.df%>%
   ggplot()+
     aes(x=Var2, y=value)+
@@ -365,7 +356,6 @@ plot.summary.statistics <- function(df,
              position = "dodge")+
     ylab("Individual Responses")+
     xlab(category.column.name.nice)+
-    scale_x_discrete(labels = categories )+
     ggtitle(paste(" Count of respondents\n",
                   question.column.name.nice,
                   "by",
@@ -557,13 +547,20 @@ proportional.responses <- function(df,
                                    response.counts.by.category, 
                                    table.dir.path,
                                    question.column.name.safe,
-                                   category.column.name.safe
+                                   category.column.name.safe,
+                                   col.order
                                    ){
   
   #crate new df from raw.scored.analysis.df and change column names to category key names (safe)
   raw.scored.analysis.df <- df[,1:(length(category.levels))]
   raw.scored.analysis.wkey.df <- raw.scored.analysis.df
   colnames(raw.scored.analysis.wkey.df) <- category.levels
+  
+  #remake df according to prefered order
+  raw.scored.analysis.wkey.df.tmp <- raw.scored.analysis.wkey.df%>%
+    select(one_of(col.order))
+  rownames(raw.scored.analysis.wkey.df.tmp) <- rownames(raw.scored.analysis.wkey.df)
+  raw.scored.analysis.wkey.df <- raw.scored.analysis.wkey.df.tmp
   
   #melt and transpose and make "value" column numeric, preserving column name
   raw.scored.analysis.wkey.df <- t(raw.scored.analysis.wkey.df)
@@ -631,7 +628,8 @@ proportional.responses.summed.by.barriers <- proportional.responses(raw.scored.a
                                                                     response.counts.by.category, 
                                                                     table.dir.path,
                                                                     question.column.name.safe,
-                                                                    category.column.name.safe)
+                                                                    category.column.name.safe,
+                                                                    col.order)
 
 ############# Return top5 barriers ##############################################################
 
@@ -669,14 +667,12 @@ plot.of.top5.barriers <- function(df,
     factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
              proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))])
   
-  proportional.responses.summed.by.barriers.top5.plot$nice_names <- 
-    factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
-             colnames(category.df))
-  
-  
+
   
   #correct nice_names for plotting
   #SUBSTITUTION
+  
+
   
   #replace underscores with spaces
   proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("_",
@@ -700,7 +696,7 @@ plot.of.top5.barriers <- function(df,
   #plot
   proportional.responses.summed.by.barriers.top5.plot%>%
     ggplot()+
-    aes(x=Var2, y=proportion, fill=nice_names)+
+    aes(x=Var2, y=proportion, fill=Var1)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice, 
          y = "percentage of respondents", 
@@ -724,6 +720,9 @@ plot.of.top5.barriers <- function(df,
          height = 8.81, 
          units = "in")
 }
+
+
+
 plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
                       question.column.name.nice,
                       category.nice.name.lower,

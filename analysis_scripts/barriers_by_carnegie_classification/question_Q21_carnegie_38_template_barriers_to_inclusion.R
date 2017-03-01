@@ -570,6 +570,10 @@ proportional.responses <- function(df,
   raw.scored.analysis.wkey.df <- melt(as.matrix(raw.scored.analysis.wkey.df))
   raw.scored.analysis.wkey.df$value <- as.numeric(as.character(raw.scored.analysis.wkey.df$value))
   
+  #set column order
+  raw.scored.analysis.wkey.df <- raw.scored.analysis.wkey.df%>%
+    select(one_of(col.order))
+  
   
   #Caculate percentages of responses in barrier category attribitable to stratification category
   # add summed_score column with this value
@@ -669,12 +673,6 @@ plot.of.top5.barriers <- function(df,
     factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
              proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))])
   
-  proportional.responses.summed.by.barriers.top5.plot$nice_names <- 
-    factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
-             colnames(category.df))
-  
-  
-  
   #correct nice_names for plotting
   #SUBSTITUTION
   
@@ -695,7 +693,9 @@ plot.of.top5.barriers <- function(df,
   #                             "-",
   #                             proportional.responses.summed.by.barriers.top5.plot$nice_names)
   
-  
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- 
+    factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
+             colnames(category.df))
   
   #plot
   proportional.responses.summed.by.barriers.top5.plot%>%
@@ -1074,7 +1074,9 @@ reduced.tally.df.m.plot$Var2 <-
   factor(reduced.tally.df.m.plot$Var2, levels = 
            reduced.tally.df.m.plot$Var2[order(desc(reduced.tally.df.m.plot$value))])
 
-
+reduced.tally.df.m.plot$Var1 <- 
+  factor(reduced.tally.df.m.plot$Var1, levels = 
+           colnames(category.df))
 
 reduced.tally.df.m.plot%>%
   ggplot()+
