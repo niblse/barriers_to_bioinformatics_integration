@@ -14,22 +14,22 @@ master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/ou
 
 
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- ""
+category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- ""
+category.column.name.nice <- "Carnegie Classification (Q21)"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- ""
+category.column.name.safe <- "Q21_carnegie_classification"
 
-# set a 'short' for naming filename variables: "Q#_category"
-category.column.name.short <- ""
+# set a 'short' for naming filename variables: "Q#_category_category"
+category.column.name.short <- "Q21_carnegie"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- ""
-category.nice.name.lower <- ""
+category.nice.name.caps <- "Institution Type"
+category.nice.name.lower <- "institution type"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -43,7 +43,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[]
+category.levels <- category.levels[1:4]
 
 #######################################################################################
 
@@ -217,20 +217,23 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use underscores which will be replace by spaces
 # Use X to be replaced in plots by ","
 # Use K for lines starting with numbers to be replaced by ""
-# Use D to be replaced by "-"
+# 
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("NAME"= category.levels[1],  
+category.df <- data.frame ("Associates"= category.levels[1], 
+                           "Baccalaureate" = category.levels[2] , 
+                           "Masters" = category.levels[3] , 
+                           "Doctoral" = category.levels[4], 
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("")
+col.order <- c("1_Associate's College", "2_Baccalaureate College" , "3_Master's (Small, Medium, Large)" , "4_Doctoral University (High, Higher, Highest Research Activity)" )
 
 #With substitutions - must match category.df
-col.order2 <- c("")
+col.order2 <- c("Associates", "Baccalaureate", "Masters","Doctoral" )
 
 #Nice Labels for plotting
-nice.lables.list <- c("")
+nice.lables.list <- c("Associates", "Baccalaureate", "Masters","Doctoral")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -665,9 +668,9 @@ plot.of.top5.barriers <- function(df,
                                                                          "",
                                                                          proportional.responses.summed.by.barriers.top5.plot$nice_names)
   #replace 'D' with '-'
-  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
-                                                                         "-",
-                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
+  #                                                                      "-",
+  #                                                                      proportional.responses.summed.by.barriers.top5.plot$nice_names)
   
   
   
@@ -860,9 +863,9 @@ plot.sig.barriers <- function(df,
                                "",
                                legend.labels$legend)
   #replace 'D' with '-'
-  legend.labels$legend <- gsub("D",
-                               "-",
-                               legend.labels$legend)
+  #legend.labels$legend <- gsub("D",
+  #                             "-",
+  #                             legend.labels$legend)
   # create labels that show how many positive (coded) responses
   
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
@@ -976,7 +979,7 @@ reduced.tally.df.baloon <- reduced.tally.df
 
 #correct nice_names for plotting
 #SUBSTITUTION
-colnames(reduced.tally.df.baloon) <- chartr("XD", 
+colnames(reduced.tally.df.baloon) <- chartr("X", 
                                             ",-", 
                                             colnames(reduced.tally.df.baloon))
 colnames(reduced.tally.df.baloon) <- gsub("_", 
@@ -1038,9 +1041,9 @@ reduced.tally.df.m$Var1 <- gsub("K",
                                 "",
                                 reduced.tally.df.m$Var1)
 #replace 'D' with -
-reduced.tally.df.m$Var1 <- gsub("D",
-                                "-",
-                                reduced.tally.df.m$Var1)
+#reduced.tally.df.m$Var1 <- gsub("D",
+#                                "-",
+#                                reduced.tally.df.m$Var1)
 
 
 
@@ -1106,6 +1109,3 @@ corrplot(reduced.tally.df.correlated,
          order = "hclust", 
          tl.srt=45)
 dev.off()
-
-
-

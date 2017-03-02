@@ -158,12 +158,12 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
 
 
 category.reduced.columns <- c("q06_Faculty_issues_reduced",
-         					  "q06_Curriculum_issues_reduced",
-         					  "q06_Student_issues_reduced",
-         					  "q06_Institutional_issues_reduced",
-         					  "q06_Resource_issues_reduced",
-         					  "q06_Facilities_issues_reduced",
-                              category.column.name)
+							  "q06_Student_issues_reduced",
+							  "q06_Curriculum_issues_reduced",
+							  "q06_Institutional_issues_reduced",
+							  "q06_Resource_issues_reduced",
+							  "q06_Facilities_issues_reduced",
+							  category.column.name)
 
 category.reduced.df<- relavant.respondents.df%>%
   select(one_of(category.reduced.columns))
@@ -171,10 +171,10 @@ category.reduced.df<- relavant.respondents.df%>%
 # create a set of nice names
 
 category.reduced.columns.nice.names <- c("Faculty Issues",
-                                        "Curriculum Issues", 
-                                        "Student Issues", 
-                                        "Institutional Issues",
-                                        "Resource Issues", 
+										 "Student Issues",
+										 "Curriculum Issues",
+										 "Institutional Issues",
+										 "Resource Issues", 
                                         "Facilities Issues")
 
 ######### CREATE DIRECTORIES #########################################################
