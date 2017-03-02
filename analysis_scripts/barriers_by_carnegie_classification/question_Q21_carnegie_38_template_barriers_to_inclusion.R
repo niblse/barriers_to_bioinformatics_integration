@@ -255,7 +255,8 @@ col.order <- c("1_Associate's College", "2_Baccalaureate College" , "3_Master's 
 #With substitutions - must match category.df
 col.order2 <- c("Associates", "Baccalaureate", "Masters","Doctoral" )
 
-
+#Nice Labels for plotting
+nice.lables.list <- c("Associates", "Baccalaureate", "Masters","Doctoral")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -365,7 +366,7 @@ plot.summary.statistics <- function(df,
                   "\n n=",
                   n.respondents))+
     theme_minimal()+
-    scale_x_discrete(labels= col.order2)
+    scale_x_discrete(labels= nice.lables.list)
   
   
   summary.response.plotname <- paste("count_of_respondents",
@@ -709,7 +710,7 @@ plot.of.top5.barriers <- function(df,
                           "n=",n.respondents ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps, labels=col.order2)
+    scale_fill_discrete(name= category.nice.name.caps, labels=nice.lables.list)
   
   proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_cat",
                                                                         question.column.name.short,

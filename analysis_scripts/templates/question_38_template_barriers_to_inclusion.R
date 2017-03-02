@@ -10,6 +10,14 @@ require(corrplot)
 #read in cleaned dataframe "decoded_df.csv"
 master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
+#filter the data frame - Q38 was only shown to users who answered 
+#"3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors" to Q1
+# This filter must be removed from a script analyzing Q38 Q1 
+
+master.df <- master.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
+
+
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
 
@@ -239,6 +247,15 @@ dir.create(plot.dir.path, recursive = TRUE)
 category.df <- data.frame ("NAME"= category.levels[1],  
                            stringsAsFactors = FALSE)
 
+#Set an ordering for plotting - must match category.levels names
+col.order <- c("")
+
+#With substitutions - must match category.df
+col.order2 <- c("")
+
+#Nice Labels for plotting
+nice.lables.list <- c("")
+
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
 #Create and format nice name dataframe
@@ -268,7 +285,7 @@ num.cat.respondents <- function(df,
                                 category.column.subset,
                                 table.dir.path,
                                 question.column.name.safe){
-
+  
   # Craate a df to hold the response counts
   response.counts.by.category <- category.df.blank
   rownames(response.counts.by.category)[2] <- "response_count"
@@ -302,14 +319,18 @@ num.cat.respondents <- function(df,
 
 # calculate number of respondents who identified within a stratfying category and write to file
 n.respondents.object <- num.cat.respondents(category.raw.scored.df,
-                                      category.df.blank, 
-                                      category.column.subset,
-                                      table.dir.path,
-                                      question.column.name.safe)
+                                            category.df.blank, 
+                                            category.column.subset,
+                                            table.dir.path,
+                                            question.column.name.safe)
 
 n.respondents <- as.numeric(n.respondents.object[1])
 response.counts.by.category <-as.data.frame(n.respondents.object[2])
 
+# fix response.counts.by.category column names and rebuild in correct order
+colnames(response.counts.by.category) <- response.counts.by.category["category_key",]
+response.counts.by.category <- response.counts.by.category%>%
+  select(one_of(col.order))
 
 ##### PLOTTING SUMMMARY STATISTICS FUNCTION ############
 
@@ -320,50 +341,31 @@ plot.summary.statistics <- function(df,
                                     question.column.name.nice,
                                     question.column.name.safe,
                                     category.column.name.safe){
+  
+  
   # reshape the data for plotting and convert value to numeric types
   summary.response.df <- response.counts.by.category["response_count",]
   summary.response.df <- melt(as.matrix(summary.response.df))
   summary.response.df[,"value"] <- as.numeric(as.character(summary.response.df$value))
   
   # ggplot barplot 
-  categories <- nice.category.names 
   
-  #correct nice_names for plotting
-  #SUBSTITUTION
-  
-  #Change 'X' to ',' and 'D' to '-'
-  nice.category.names <- chartr("XD",
-                     ",-", 
-                     nice.category.names)
-  #Change 'K' to ""                   
-  nice.category.names <- gsub("K",
-                     "", 
-                     nice.category.names)
-  #Change '_' to " "                   
-  nice.category.names <- gsub("_",
-                              " ", 
-                              nice.category.names)
-  
-  
-  
-   
-  categories <- nice.category.names 
   summary.response.df%>%
-  ggplot()+
+    ggplot()+
     aes(x=Var2, y=value)+
     geom_bar(stat="identity", 
              position = "dodge")+
     ylab("Individual Responses")+
     xlab(category.column.name.nice)+
-    scale_x_discrete(labels = categories )+
     ggtitle(paste(" Count of respondents\n",
                   question.column.name.nice,
                   "by",
                   category.column.name.nice, 
                   "\n n=",
                   n.respondents))+
-    theme_minimal()
-                             
+    theme_minimal()+
+    scale_x_discrete(labels= nice.lables.list)
+  
   
   summary.response.plotname <- paste("count_of_respondents",
                                      question.column.name.short,
@@ -401,7 +403,7 @@ raw.score.analysis <- function(df,
                                category.levels,
                                file.name.switch = 0, 
                                column.nice.names.f
-                               ){
+){
   #prepare a blank dataframe
   raw.scored.analysis.df <- df
   
@@ -437,25 +439,25 @@ raw.score.analysis <- function(df,
   #write the summary table
   
   ifelse(file.name.switch == 0, 
-
-  raw.score.counts.by.category.filename <- paste(table.dir.path,
-                                                 "tally_raw_of_", 
-                                                 question.column.name.short,
-                                                 "_by_",
-                                                 category.column.name.short,
-                                                 ".csv", 
-                                                 sep = "")
-  ,
-  raw.score.counts.by.category.filename <- paste(table.dir.path,
-                                                 "tally_reduced_of_", 
-                                                 question.column.name.short,
-                                                 "_by_",
-                                                 category.column.name.short,
-                                                 ".csv", 
-                                                 sep = "")
+         
+         raw.score.counts.by.category.filename <- paste(table.dir.path,
+                                                        "tally_raw_of_", 
+                                                        question.column.name.short,
+                                                        "_by_",
+                                                        category.column.name.short,
+                                                        ".csv", 
+                                                        sep = "")
+         ,
+         raw.score.counts.by.category.filename <- paste(table.dir.path,
+                                                        "tally_reduced_of_", 
+                                                        question.column.name.short,
+                                                        "_by_",
+                                                        category.column.name.short,
+                                                        ".csv", 
+                                                        sep = "")
   )
- 
-
+  
+  
   
   
   
@@ -464,21 +466,21 @@ raw.score.analysis <- function(df,
   
   # calculate raw score totals and preserve row names
   raw.scored.analysis.tallied.df <- raw.scored.analysis.df%>%
-   mutate_if(is.character,as.numeric)%>%
+    mutate_if(is.character,as.numeric)%>%
     mutate("Totals_in_all_categories" = Reduce("+",.[1:(length(category.levels))]))
   rownames(raw.scored.analysis.tallied.df) <-column.nice.names.f
   raw.scored.analysis.tallied.df$Barrier <- rownames(raw.scored.analysis.tallied.df)
   
   return(raw.scored.analysis.tallied.df)
-
+  
 }
 
 
 #tally up the number of individuals reponding in a given category of barrier
 raw.scored.analysis.tallied.df <- raw.score.analysis(category.raw.scored.df, 
-                                   category.levels,
-                                   file.name.switch = 0, 
-                                   category.raw.scored.columns.nice.names)
+                                                     category.levels,
+                                                     file.name.switch = 0, 
+                                                     category.raw.scored.columns.nice.names)
 
 
 
@@ -491,7 +493,7 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
                                 question.column.name.nice, 
                                 n.respondents , 
                                 file.name.switch = 0
-                                ){
+){
   
   raw.scored.analysis.tallied.df.plot.title <- paste(" Absolute number of issues scored across all categories\n",
                                                      question.column.name.nice,
@@ -513,19 +515,19 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
   
   ifelse(file.name.switch == 0, 
          
-  raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_categories",
-                                                        question.column.name.short,
-                                                        "by",
-                                                        category.column.name.short,
-                                                        ".png",
-                                                        sep = "_")
-  ,
-  raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_reduced_coded_barriers_all_categories",
-                                                        question.column.name.short,
-                                                        "by",
-                                                        category.column.name.short,
-                                                        ".png",
-                                                        sep = "_")
+         raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_raw_coded_barriers_all_categories",
+                                                               question.column.name.short,
+                                                               "by",
+                                                               category.column.name.short,
+                                                               ".png",
+                                                               sep = "_")
+         ,
+         raw.scored.analysis.tallied.df.plot.filename <- paste("tally_of_reduced_coded_barriers_all_categories",
+                                                               question.column.name.short,
+                                                               "by",
+                                                               category.column.name.short,
+                                                               ".png",
+                                                               sep = "_")
   )
   
   ggsave(paste(plot.dir.path,raw.scored.analysis.tallied.df.plot.filename, sep= ""), 
@@ -547,13 +549,20 @@ proportional.responses <- function(df,
                                    response.counts.by.category, 
                                    table.dir.path,
                                    question.column.name.safe,
-                                   category.column.name.safe
-                                   ){
+                                   category.column.name.safe,
+                                   col.order
+){
   
   #crate new df from raw.scored.analysis.df and change column names to category key names (safe)
   raw.scored.analysis.df <- df[,1:(length(category.levels))]
   raw.scored.analysis.wkey.df <- raw.scored.analysis.df
   colnames(raw.scored.analysis.wkey.df) <- category.levels
+  
+  #remake df according to prefered order
+  raw.scored.analysis.wkey.df.tmp <- raw.scored.analysis.wkey.df%>%
+    select(one_of(col.order))
+  rownames(raw.scored.analysis.wkey.df.tmp) <- rownames(raw.scored.analysis.wkey.df)
+  raw.scored.analysis.wkey.df <- raw.scored.analysis.wkey.df.tmp
   
   #melt and transpose and make "value" column numeric, preserving column name
   raw.scored.analysis.wkey.df <- t(raw.scored.analysis.wkey.df)
@@ -600,7 +609,7 @@ proportional.responses <- function(df,
     
   }
   
-
+  
   proportional.responses.summed.by.barriers.filename <- paste(table.dir.path,
                                                               "tally_of_raw_score_of_", 
                                                               question.column.name.short,
@@ -611,7 +620,7 @@ proportional.responses <- function(df,
                                                               sep = "")
   write.csv(proportional.responses.summed.by.barriers, 
             file = proportional.responses.summed.by.barriers.filename)
-
+  
   return(proportional.responses.summed.by.barriers)
   
 }
@@ -621,7 +630,8 @@ proportional.responses.summed.by.barriers <- proportional.responses(raw.scored.a
                                                                     response.counts.by.category, 
                                                                     table.dir.path,
                                                                     question.column.name.safe,
-                                                                    category.column.name.safe)
+                                                                    category.column.name.safe,
+                                                                    col.order)
 
 ############# Return top5 barriers ##############################################################
 
@@ -651,7 +661,7 @@ plot.of.top5.barriers <- function(df,
                                   category.nice.name.caps,
                                   question.column.name.safe,
                                   category.column.name.safe
-                                  ){
+){
   
   #setup ordering of plot
   proportional.responses.summed.by.barriers.top5.plot <- df
@@ -659,38 +669,36 @@ plot.of.top5.barriers <- function(df,
     factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
              proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))])
   
-  proportional.responses.summed.by.barriers.top5.plot$nice_names <- 
-    factor(proportional.responses.summed.by.barriers.top5.plot$nice_names, levels = 
-             colnames(category.df))
-  
   
   
   #correct nice_names for plotting
   #SUBSTITUTION
   
+  
+  
   #replace underscores with spaces
   proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("_",
-                               " ",
-                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+                                                                         " ",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
   #replace 'X' with ','
   proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("X",
-                               ",",
-                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+                                                                         ",",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
   #replace 'K' with ""
   proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("K",
-                               "",
-                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+                                                                         "",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
   #replace 'D' with '-'
   proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
-                               "-",
-                               proportional.responses.summed.by.barriers.top5.plot$nice_names)
+                                                                         "-",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
   
   
   
   #plot
   proportional.responses.summed.by.barriers.top5.plot%>%
     ggplot()+
-    aes(x=Var2, y=proportion, fill=nice_names)+
+    aes(x=Var2, y=proportion, fill=Var1)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice, 
          y = "percentage of respondents", 
@@ -700,7 +708,7 @@ plot.of.top5.barriers <- function(df,
                           "n=",n.respondents ))+
     theme_minimal()+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps)
+    scale_fill_discrete(name= category.nice.name.caps, labels=nice.lables.list)
   
   proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_cat",
                                                                         question.column.name.short,
@@ -714,6 +722,9 @@ plot.of.top5.barriers <- function(df,
          height = 8.81, 
          units = "in")
 }
+
+
+
 plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
                       question.column.name.nice,
                       category.nice.name.lower,
@@ -759,7 +770,7 @@ proportion_table_non_zero <- proportion_table%>%
 proportion_table_minimal_scoring <- proportion_table_non_zero%>%
   group_by(Var2)%>%
   filter(all(value >= 5))
-  
+
 
 #execute function to test for signifigance
 proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportion_table_minimal_scoring)
@@ -798,10 +809,10 @@ write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
 # Calculate possible effect size given 80% power for a chi.test statistic 
 
 effect.size <- round(pwr.chisq.test(w = NULL, 
-                                 N = n.respondents, 
-                                 df = (length(category.levels) - 1), 
-                                 sig.level = 0.05, 
-                                 power = 0.8)$w, digits = 3)
+                                    N = n.respondents, 
+                                    df = (length(category.levels) - 1), 
+                                    sig.level = 0.05, 
+                                    power = 0.8)$w, digits = 3)
 
 
 effect_statement <- if(effect.size <= .1){
@@ -845,9 +856,7 @@ plot.sig.barriers <- function(df,
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
              proportional.sig.responses.summed.by.barriers.plot$Var2[order(desc(proportional.sig.responses.summed.by.barriers.plot$summed_score))])
   
-  proportional.sig.responses.summed.by.barriers.plot$nice_names <- 
-    factor(proportional.sig.responses.summed.by.barriers.plot$nice_names, levels = 
-             colnames(category.df))
+  
   
   
   #plot
@@ -861,7 +870,7 @@ plot.sig.barriers <- function(df,
   
   #correct nice_names for plotting
   #SUBSTITUTION
-
+  
   #replace underscores with spaces
   legend.labels$legend <- gsub("_",
                                " ",
@@ -893,7 +902,7 @@ plot.sig.barriers <- function(df,
   
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
-    aes(x=Var2, y=proportion, fill=nice_names)+
+    aes(x=Var2, y=proportion, fill=Var1)+
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
          y = "percentage of respondents", 
@@ -906,7 +915,7 @@ plot.sig.barriers <- function(df,
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
     scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)
-    
+  
   
   
   
@@ -953,7 +962,10 @@ reduced.tally.df <- raw.score.analysis(category.reduced.df,
 # Select relavant columns and ensure values are numeric
 reduced.tally.df <- as.matrix(reduced.tally.df[,1:(length(reduced.tally.df)-2)])
 
-
+reduced.tally.df <- reduced.tally.df%>%
+  as.data.frame()%>%
+  select(one_of(col.order2))%>%
+  as.matrix()
 
 #convert reponse numbers to percentages
 
@@ -992,11 +1004,13 @@ colnames(reduced.tally.df.baloon) <- chartr("XD",
                                             ",-", 
                                             colnames(reduced.tally.df.baloon))
 colnames(reduced.tally.df.baloon) <- gsub("_", 
-                                            " ", 
-                                            colnames(reduced.tally.df.baloon))
+                                          " ", 
+                                          colnames(reduced.tally.df.baloon))
 colnames(reduced.tally.df.baloon) <- gsub("K", 
-                                            "", 
-                                            colnames(reduced.tally.df.baloon))
+                                          "", 
+                                          colnames(reduced.tally.df.baloon))
+#reorder baloon df
+
 
 png(filename = paste(plot.dir.path,reduced.baloonplot.filename, sep= ""),
     width = 13.8, 
@@ -1012,7 +1026,7 @@ balloonplot(as.table(reduced.tally.df.baloon),
             xlab = "Barriers", 
             ylab = category.nice.name.caps,
             text.size = 0.7
-            )
+)
 
 dev.off()
 pdf(NULL)
@@ -1037,20 +1051,20 @@ reduced.tally.df.m <- melt(as.matrix(reduced.tally.df.t))
 
 #replace underscores with spaces
 reduced.tally.df.m$Var1 <- gsub("_",
-                             " ",
-                             reduced.tally.df.m$Var1)
+                                " ",
+                                reduced.tally.df.m$Var1)
 #replace 'X' with ','
 reduced.tally.df.m$Var1 <- gsub("X",
-                             ",",
-                             reduced.tally.df.m$Var1)
+                                ",",
+                                reduced.tally.df.m$Var1)
 #replace 'K' with  ""
 reduced.tally.df.m$Var1 <- gsub("K",
-                             "",
-                             reduced.tally.df.m$Var1)
+                                "",
+                                reduced.tally.df.m$Var1)
 #replace 'D' with -
 reduced.tally.df.m$Var1 <- gsub("D",
-                             "-",
-                             reduced.tally.df.m$Var1)
+                                "-",
+                                reduced.tally.df.m$Var1)
 
 
 
@@ -1071,20 +1085,21 @@ reduced.tally.df.m.plot%>%
   aes(x= Var1, y = value, fill = Var2)+
   geom_bar(stat="identity", position = "dodge")+
   labs(x = category.column.name.nice,
-     y = "percentage of respondents", 
-     title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
-     subtitle = paste("Shown as percentage of users within each",
-                      category.nice.name.lower,
-                      "n=",n.respondents ))+
+       y = "percentage of respondents", 
+       title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
+       subtitle = paste("Shown as percentage of users within each",
+                        category.nice.name.lower,
+                        "n=",n.respondents ))+
   theme_minimal()+
-  scale_fill_discrete(name= "Reduced Barrier Categories")
+  scale_fill_discrete(name= "Reduced Barrier Categories")+
+  scale_x_discrete(limits = head(reduced.tally.df.m.plot$Var1, n = length(category.levels)))
 
 reduced.summary.percentage.filename <- paste("reduced_category_barplot",
-                              question.column.name.short,
-                              "by",
-                              category.column.name.short,
-                              ".png",
-                              sep = "_")
+                                             question.column.name.short,
+                                             "by",
+                                             category.column.name.short,
+                                             ".png",
+                                             sep = "_")
 
 
 ggsave(paste(plot.dir.path,reduced.summary.percentage.filename, sep= ""), 
@@ -1098,11 +1113,11 @@ ggsave(paste(plot.dir.path,reduced.summary.percentage.filename, sep= ""),
 
 # Correlation plot
 correlation.plot.filename <- paste("reduced_category_correlation",
-                                             question.column.name.short,
-                                             "by",
-                                             category.column.name.short,
-                                             ".png",
-                                             sep = "_")
+                                   question.column.name.short,
+                                   "by",
+                                   category.column.name.short,
+                                   ".png",
+                                   sep = "_")
 
 png(filename = paste(plot.dir.path,correlation.plot.filename, sep= ""),
     width = 14, 
@@ -1115,7 +1130,6 @@ corrplot(reduced.tally.df.correlated,
          order = "hclust", 
          tl.srt=45)
 dev.off()
-
 
 
 
