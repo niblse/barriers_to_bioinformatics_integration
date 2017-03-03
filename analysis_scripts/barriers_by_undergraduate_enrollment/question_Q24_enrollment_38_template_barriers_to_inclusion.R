@@ -746,10 +746,10 @@ proportion_table <- proportional.responses.summed.by.barriers%>%
   mutate(null_scored_response = responses - value)
 
 
-############ Signifigantly Different Barriers Across Categories  #########################################
+############ significantly Different Barriers Across Categories  #########################################
 
 sig.diff.chi.analysis <- function(df){
-  # calculate chi-values (by proportion test) on each category and return signifigantly different barriers
+  # calculate chi-values (by proportion test) on each category and return significantly different barriers
   proportional.responses.summed.by.barriers.grouped <- group_by(df, Var2)
   proportional.responses.summed.by.barriers.grouped.prop <- proportional.responses.summed.by.barriers.grouped%>%
     do(prop_test_chi_pvalue = prop.test(.$positive_scored_response,.$responses)$p.value)
@@ -829,7 +829,7 @@ effect_statement <- if(effect.size <= .1){
   paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
 }
 
-############ Plot signifigantly different barriers ####################################
+############ Plot significantly different barriers ####################################
 
 
 plot.sig.barriers <- function(df, 
@@ -841,13 +841,13 @@ plot.sig.barriers <- function(df,
                               question.column.name.safe,
                               category.column.name.safe){
   
-  #signifigant barriers
+  #significant barriers
   sig.barriers <- df%>%
     filter(prop_test_chi_pvalue <= 0.05)
   sigs <- as.character(sig.barriers$Var2)
   sigs <- c(sigs)
   
-  #plot signifigant barriers
+  #plot significant barriers
   
   #reformat Var2 names as chr
   df$Var2 <- as.character(df$Var2)
@@ -912,7 +912,7 @@ plot.sig.barriers <- function(df,
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
          y = "percentage of respondents", 
-         title = paste("Barriers Differing Signifigantly by", category.nice.name.caps),
+         title = paste("Barriers Differing significantly by", category.nice.name.caps),
          subtitle = paste("Shown as percentage of users within each ",
                           category.nice.name.lower,
                           " n=",n.respondents, "\n", effect_statement, sep = "" ))+
@@ -941,7 +941,7 @@ plot.sig.barriers <- function(df,
 }
 
 
-# plot signifigantly different responses
+# plot significantly different responses
 plot.sig.barriers(proportion_table_summary, 
                   category.df,
                   category.levels,
