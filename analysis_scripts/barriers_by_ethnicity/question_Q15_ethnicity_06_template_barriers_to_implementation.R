@@ -915,7 +915,7 @@ plot.sig.barriers <- function(df,
   
   
   
-  proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_signifigantly_by_category_proprotional_by_category",
+  proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_significantly_by_category_proprotional_by_category",
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
