@@ -386,7 +386,7 @@ plot.summary.statistics <- function(df,
              position = "dodge")+
     ylab("Individual Responses")+
     xlab(category.column.name.nice)+
-    ggtitle(paste(" Count of respondents\n",
+    ggtitle(paste(" Count of Respondents\n",
                   question.column.name.nice,
                   "by",
                   category.column.name.nice, 
@@ -731,8 +731,8 @@ plot.of.top5.barriers <- function(df,
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice, 
          y = "percentage of respondents", 
-         title = "Top 5 Most Commonly Reported Barriers to Including Bioinformatics in Existing Courses",
-         subtitle = paste("Shown as percentage of users within each",
+         title = "Top 5 Most Commonly Reported Barriers to Including Bioinformatics",
+         subtitle = paste("Shown as percentage of respondents within each",
                           category.nice.name.lower,
                           "n=",n.respondents ))+
     theme_minimal()+
@@ -935,8 +935,8 @@ plot.sig.barriers <- function(df,
     geom_bar(stat = "identity", position = "dodge")+
     labs(x = question.column.name.nice,
          y = "percentage of respondents", 
-         title = paste("Barriers Differing significantly by", category.nice.name.caps),
-         subtitle = paste("Shown as percentage of users within each ",
+         title = paste("Barriers Differing Significantly by", category.nice.name.caps),
+         subtitle = paste("Shown as percentage of respondents within each ",
                           category.nice.name.lower,
                           " n=",n.respondents, "\n", effect_statement, sep = "" ))+
     theme_minimal()+
@@ -1116,7 +1116,7 @@ reduced.tally.df.m.plot%>%
   labs(x = category.column.name.nice,
        y = "percentage of respondents", 
        title = paste("Percentages of Faculty Responding within Reduced Barrier Categories"),
-       subtitle = paste("Shown as percentage of users within each",
+       subtitle = paste("Shown as percentage of respondents within each",
                         category.nice.name.lower,
                         "n=",n.respondents ))+
   theme_minimal()+
@@ -1311,6 +1311,7 @@ q29plot <- response.counts.29.by.category.plot%>%
   scale_fill_discrete(name = "Response")+
   ggtitle(paste("Percentage Reporting\n",
                 question.29.column.name.nice,
+                "\n",
                 "by",
                 category.column.name.nice, 
                 "\n n=",
