@@ -8,6 +8,8 @@ require(factoextra)
 
 #Read in data
 data <- read_csv("../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
+data.ethnicity <- read_csv("../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
+data.training <- read_csv("../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
 
 #remove non-us respondents
 
@@ -20,8 +22,8 @@ remove.non.us.repondants <- function(df){
 }
 
 data <- remove.non.us.repondants(data)
-
-
+data.ethnicity<- remove.non.us.repondants(data.ethnicity)
+data.training<- remove.non.us.repondants(data.training)
 # Select relavant columns for analysis
 
 data.relavant  <- data%>%
@@ -52,11 +54,9 @@ data.relavant  <- data%>%
          q38_State_issues_reduced, 
          q38_Accredited_issues_reduced,
          Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...,
-         Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training., 
          Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur..., 
          Q14_Sex,
          Q15_Race, 
-         Q16_Ethnicity,
          Q17_Highest.earned.degree..If..other...please.explain.,
          Q18_Year.of.highest.earned.degree.,
          Q21_What.is.the.Carnegie.classification.of.your.institution., 
@@ -70,62 +70,13 @@ data.relavant  <- data%>%
          State_State, 
          Region_Region)
 
-########## MODIFY ETHNICTY REPONSES FOR HISPANIC/NON-HISPANIC and UNDERREPRESENTED ETHNICITIES
+data.ethnicity.relavant <- data.ethnicity%>%
+  select(tracked_ethnicities)
 
-# Unite race and ethnicity
-data.relavant <- data.relavant%>%
-  unite(combined_ethnicity, Q15_Race, Q16_Ethnicity, sep = "_", remove = FALSE)
+data.training.relavant <- data.training%>%
+  select(faculty_preperation)
 
-#Fix NA values
-data.relavant$combined_ethnicity[data.relavant$combined_ethnicity == "NA_NA"] <- NA
-
-#generate column for tracked ethnicity values
-#America Indian/Alaskan Native
-#Black not hispanic
-#Hispanic
-#Native Hawaiian or Other Pacific Islander
-#Asian
-#White
-
-data.relavant <- data.relavant%>%
-  mutate(tracked_ethnicities = ifelse( test = combined_ethnicity == "1_American Indian or Alaska Native_2_Not Hispanic or Latino"
-                                       , yes = "American Indian or Alaskan Native", 
-                                       no = ifelse( test = combined_ethnicity == "2_Asian_2_Not Hispanic or Latino" |
-                                                      combined_ethnicity == "2_Asian_3_Rather not say" |
-                                                      combined_ethnicity == "2_Asian_NA"
-                                                    , yes = "Asian", 
-                                                    no = ifelse( test = combined_ethnicity == "3_Black or African American_1_Hispanic or Latino" |
-                                                                   combined_ethnicity == "5_White_1_Hispanic or Latino" |
-                                                                   combined_ethnicity == "6_Rather not say_1_Hispanic or Latino" |
-                                                                   combined_ethnicity == "NA_1_Hispanic or Latino"
-                                                                 , yes = "Hispanic", 
-                                                                 no = ifelse( test = combined_ethnicity == "3_Black or African American_2_Not Hispanic or Latino" |
-                                                                                combined_ethnicity == "3_Black or African American_NA"
-                                                                              , yes = "Black or African American",
-                                                                              no = ifelse( test = combined_ethnicity == "4_Native Hawaiian or Other Pacific Islander_2_Not Hispanic or Latino"
-                                                                                           , yes = "Native Hawaiian or Other Pacific Islander", 
-                                                                                           no = ifelse( test = combined_ethnicity == "5_White_2_Not Hispanic or Latino" |
-                                                                                                          combined_ethnicity == "5_White_3_Rather not say" |
-                                                                                                          combined_ethnicity == "5_White_NA" 
-                                                                                                        , yes =  "White", 
-                                                                                                        no = ifelse( test = combined_ethnicity == "6_Rather not say_NA" |
-                                                                                                                       combined_ethnicity == "NA_2_Not Hispanic or Latino" 
-                                                                                                                     , yes = NA, no = NA))))))))
-
-#generate column for underrepresented vs non-underrepresented
-
-data.relavant <- data.relavant%>%
-  mutate(representation = ifelse (test = tracked_ethnicities == "Asian" |
-                                    tracked_ethnicities == "White", 
-                                  yes = "Non-underrepresented", 
-                                  no = "underrepresented"))
-
-
-
-
-
-
-
+data.relavant <- bind_cols(data.relavant, data.ethnicity.relavant, data.training.relavant)
 
 
 #manually format nice names; "Don't know responses" treated as NAs
@@ -201,30 +152,15 @@ data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.curr
 data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors"] <- "Teaching: Not Integrating Bioinformatics"
 data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[data.relavant$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "4_Graduate supervisors in the life sciences"] <- NA
 
-
-
-
-#Q3
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "1_No training/experience"] <- "Bioinformatics Training: None"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "2_No formal training (self-taught)"] <- "Bioinformatics Training: Self Taught"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "3_Short workshop/bootcamp"] <- "Bioinformatics Training: Short Workshop"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "4_Some undergraduate courses"] <- "Bioinformatics Training: Some Undergraduate Training"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "6_Undergraduate certificate"] <- "Bioinformatics Training: Undergraduate Certificate"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "7_Undergraduate degree"] <- "Bioinformatics Training: Undergraduate Degree"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "8_Post-graduate certificate"] <- "Bioinformatics Training: Post-graduate Certificate"
-data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training.[data.relavant$Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training. == "9_Graduate course	Graduate degree"] <- "Bioinformatics Training: Graduate Course/Degree"
-
 #Q5
 data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "1_Yes" ] <- "Additional Bioinformatics Courses Needed"
 data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "2_No" ] <- "No additional Bioinformatics Courses Needed"
 data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur...[data.relavant$Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur... == "3_Don't know"] <- "Unsure if additional Bioinformatics Courses Needed"
 
-
 #14
 data.relavant$Q14_Sex[data.relavant$Q14_Sex == "1_Female"  ] <- "Female"
 data.relavant$Q14_Sex[data.relavant$Q14_Sex == "2_Male"   ] <- "Male"
 data.relavant$Q14_Sex[data.relavant$Q14_Sex == "3_Rather not say"   ] <- NA
-
 
 #17
 data.relavant$Q17_Highest.earned.degree..If..other...please.explain.[data.relavant$Q17_Highest.earned.degree..If..other...please.explain. == "1_B.S. (or equivalent)" ] <- "B.S. Degree"
@@ -310,14 +246,10 @@ data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)"] <- "Carnegie Classification: Doctoral"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "5_Don't know"] <- NA
 
-
-
 #22
 data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority Serving Institution"
 data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non-minority Serving Institution"
 data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "3_Don't know" ] <- NA
-
-
 
 #23
 data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "1_'< 5,000' student'" ] <- "Total Students: < 5,000"
@@ -325,15 +257,11 @@ data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.gradua
 data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "3_'> 15,000' students"  ] <- "Total Students: > 15,000"
 data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution.[data.relavant$Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution. == "4_Don't know"  ] <- NA
 
-
-
 #24
 data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "1_'< 5,000' students" ] <- "Total Undergraduates < 5,000"
 data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "2_'5,000 - 15,000' students" ] <- "Total Undergraduates: 5-15,000"
 data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "3_'> 15,000' students"  ] <- "Total Undergraduates > 15,000"
 data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution.[data.relavant$Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution. == "4_Don't know" ] <- NA
-
-
 
 #26
 data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "1_'< 10'" ] <- "Full-time faculty < 10"
@@ -344,7 +272,6 @@ data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.no
 data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "6_'> 50'"] <- "Full-time faculty > 50"
 data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju...[data.relavant$Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju... == "7_Don't know"] <- NA
 
-
 #27
 data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "1_'< 50'" ] <- "Department undergrads < 50"
 data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "2_'51 - 100'"] <- "Department undergrads: 51-100"
@@ -352,8 +279,6 @@ data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..a
 data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "4_'501 - 2000'"] <- "Department undergrads: 500-2,000"
 data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "5_'> 2000'" ] <- "Department undergrads > 2,000"
 data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors..[data.relavant$Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.. == "6_Don't know"] <- NA
-
-
 
 #29
 data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g.....[data.relavant$Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g..... == "1_Yes"] <- "Technical barriers reported"
@@ -398,7 +323,7 @@ q38.cols <- c("q38_Faculty_issues_reduced",
          "q38_State_issues_reduced", 
          "q38_Accredited_issues_reduced")
 Q1 <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
-Q3 <- "Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training." 
+Q3 <- "faculty_preperation" 
 Q5 <- "Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur..."
 Q14 <- "Q14_Sex"
 Q17 <- "Q17_Highest.earned.degree..If..other...please.explain."
@@ -454,136 +379,316 @@ calculate_mca_and_plot <-  function(df,
 dir.create("./mca_plots", recursive = TRUE)
 
 
-#Question 6 - Habillage on Q5, opinion on need for additonal classes
+#Question Q1 - Teaching of bioinformatics status
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q6.cols), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14))
+                              qualitative_supplimentary_columns = c(Q1), 
+                              active_columns = c(
+                                                 Q3, #level of bioinformatics training 
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification 
+                                                 Q22, #MSI status                               
+                                                 Q24 #Undergraduate enrollment
+                              ))
 
 MCA.object <- MCA(X = as.matrix(tmp),
-                  quali.sup = 1:6,
+                  quali.sup = 1,
                   graph = FALSE)
 
+n_scored <- nrow(tmp)
+
 fviz_mca_biplot(MCA.object,
-                habillage = 9,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
                 label = "var",
-                pointsize = 1,
+                pointsize = 2,
                 alpha.ind = 0.4,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "respondent's opinion on the need for additional \nbioinformatics classes at their institutions",
-                ellipse.level = 0.95)+
+                legend.title = "Respondent's bioinformatics\nteaching status (elipise = 80%)",
+                ellipse.level = 0.80)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondence Analysis; question 6 barriers, question 5 categories, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training \nTotal number of undergraduates at institution \nSex")
+  ggtitle(paste("Multiple Correspondence Analysis; Q1: Teaching Bioinformatics, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
-ggsave(filename = "./mca_plots/Q5Q6-Q5-additional_courses.png", 
+ggsave(filename = "./mca_plots/Q1_teaching_status.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+#Question Q3 - Faculty preperation
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(Q3), 
+                              active_columns = c(
+                              					         Q1, #bioinformatics teaching status                              					
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification 
+                                                 Q22, #MSI status                               
+                                                 Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's bioinformatics\ntraining (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q3: Bioinformatics Training, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q3_bioinformatics_training.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
 
-#Question 6 by Habillage on carnegie classification
+#Question Q5 - Opinion on the need for further courses
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q6.cols), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14, Q21))
+                              qualitative_supplimentary_columns = c(Q5), 
+                              active_columns = c(
+                                                 Q1, #bioinformatics teaching status 
+                                				         Q3, #bioinformatics training                             					
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification 
+                                                 Q22, #MSI status                               
+                                                 Q24 #Undergraduate enrollment
+                              ))
 
 MCA.object <- MCA(X = as.matrix(tmp),
-                  quali.sup = 1:6,
+                  quali.sup = 1,
                   graph = FALSE)
 
+n_scored <- nrow(tmp)
+
 fviz_mca_biplot(MCA.object,
-                habillage = 12,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
                 label = "var",
-                pointsize = 1,
+                pointsize = 2,
                 alpha.ind = 0.4,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "Carnegie Classification of Institution",
-                ellipse.level = 0.95)+
+                legend.title = "Respondent's opinion on the need\nfor additional bioinformatics courses (elipise = 80%)",
+                ellipse.level = 0.80)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and q21 Carnegie classification groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training  \nTotal number of undergraduates at institution \nSex")
+  ggtitle(paste("Multiple Correspondence Analysis; Q5: Need for additional courses, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
-ggsave(filename = "./mca_plots/Q5Q6-Q21_carnegie_classification.png", 
-       width = 13.8, 
-       height = 8.81, 
-       units = "in")
-
-#Question 6 by Habillage on Q29, reporting of technical barriers
-tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q6.cols), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14, Q29))
-
-MCA.object <- MCA(X = as.matrix(tmp),
-                  quali.sup = 1:6,
-                  graph = FALSE)
-
-fviz_mca_biplot(MCA.object,
-                habillage = 12,
-                label = "var",
-                pointsize = 1,
-                alpha.ind = 0.4,
-                addEllipses = TRUE,
-                repel = TRUE,
-                labelsize = 4,
-                legend.title = "Do you experience technical barriers in \nintegrating bioinformatics",
-                ellipse.level = 0.95)+
-  theme_minimal()+
-  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and q29 groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training \nSex \nTotal number of undergraduates at institution")
-
-ggsave(filename = "./mca_plots/Q5Q6-Q29-technical-barriers.png", 
+ggsave(filename = "./mca_plots/Q5_more_courses.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
 
-#Question 6 by Habillage on region
+#Question Q14- Sex
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(q6.cols), 
-                              active_columns = c(Q1, Q3, Q5, Q24, Q14, region))
+                              qualitative_supplimentary_columns = c(Q14), 
+                              active_columns = c(
+                                                 Q1, #bioinformatics teaching status
+                                				         Q3, #bioinformatics training                             					                                      
+                                                 Q21, #Carnegie classification
+                                                 Q22, #MSI status                               
+                                                 Q24 #Undergraduate enrollment
+                              ))
 
 MCA.object <- MCA(X = as.matrix(tmp),
-                  quali.sup = 1:6,
+                  quali.sup = 1,
                   graph = FALSE)
 
+n_scored <- nrow(tmp)
+
 fviz_mca_biplot(MCA.object,
-                habillage = 12,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
                 label = "var",
-                pointsize = 1,
+                pointsize = 2,
                 alpha.ind = 0.4,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "US Region of Institution",
-                ellipse.level = 0.95)+
+                legend.title = "Respondent's sex (elipise = 80%)",
+                ellipse.level = 0.80)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondence Analysis; q6 barriers, q5 categories, and regional groupings, with selected factors n=", dim(tmp[1]), sep = ""), 
-          subtitle = "Current bioinformatics teaching \nLevel of bioinformatics training  \nTotal number of undergraduates at institution \nSex")
+  ggtitle(paste("Multiple Correspondence Analysis; Q14: Sex, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
-ggsave(filename = "./mca_plots/Q5Q6-region.png", 
+ggsave(filename = "./mca_plots/Q14_sex.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
-#Q1 <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
-#Q3 <- "Q3_Which.of.the.following.best.describes.your.level.of.bioinformatics.training." 
-#Q5 <- "Q5_In.yOur.OpiniOn..are.additiOnal.undergraduate.cOurses.with.biOinfOrmatics.cOntent.needed.at.yOur..."
-#Q14 <- "Q14_Sex"
-#Q17 <- "Q17_Highest.earned.degree..If..other...please.explain."
-#Q18 <- "Q18_Year.of.highest.earned.degree."
-#Q21 <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
-#Q22 <- "Q22_Is.your.institution.classified.as.minority.serving."
-#Q23 <- "Q23_What.is.the.total.number.of.students..undergraduate.and.graduate..at.your.institution."
-#Q24 <- "Q24_What.is.the.total.number.of.undergraduate.students.at.your.institution."
-#Q26 <- "Q26_How.many.full.time.faculty.are.in.your.department.unit...Do.not.include.part.time.faculty.or.adju..."
-#Q27 <- "Q27_How.many.undergraduate.students.are.in.your.department.unit..all.majors.."
-#Q29 <- "Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g....."
-#Q57 <- "Q57_Please.select.the.statement.belOw.that.best.describes.yOu."
-#state <- "State_State"
-#region <- "Region_Region"
-#tracked_ethnicities <- "tracked_ethnicities"
-#representation <- "representation"
+
+#Question Q21- Carnegie Classiication
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(Q21), 
+                              active_columns = c(
+                                                 Q1, #bioinformatics teaching status 
+                                				         Q3, #bioinformatics training                             					
+                                                 Q14, #Sex 
+                                                 Q22, #MSI status                               
+                                                 Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional Carnegie classification (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q14: Carnegie classification, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q21_carnegie_classification.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+#Question Q22- MSI status
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(Q22), 
+                              active_columns = c(
+                                                 Q1, #bioinformatics teaching status
+                                				         Q3, #bioinformatics training                             					
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification                             
+                                                 Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional MSI status (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q22 MSI status, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q22_msi_status.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+#Question Q24- Ugrad enrollment
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(Q24), 
+                              active_columns = c(
+                                                  Q1, #bioinformatics teaching status 
+                                				          Q3, #bioinformatics training                             					
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification
+                                                 Q22 #MSI status
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional undergraduate enrollment (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q24 Undergraduate enrollment, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status")
+
+ggsave(filename = "./mca_plots/Q24_ugrad_enrollment.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+#Question Q17- highest degree
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(Q17), 
+                              active_columns = c(
+                                                  Q1, #bioinformatics teaching status
+                                				          Q3, #bioinformatics training                             					
+                                                 Q14, #Sex 
+                                                 Q21, #Carnegie classification
+                                                 Q22, #MSI status                               
+                                                 Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's highest degree (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q17 Highest degree earned, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q17_degree.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
 
