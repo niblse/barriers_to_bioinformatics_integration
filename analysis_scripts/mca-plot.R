@@ -71,7 +71,7 @@ data.relavant  <- data%>%
          Region_Region)
 
 data.ethnicity.relavant <- data.ethnicity%>%
-  select(tracked_ethnicities)
+  select(tracked_ethnicities, representation)
 
 data.training.relavant <- data.training%>%
   select(faculty_preperation)
@@ -692,3 +692,41 @@ ggsave(filename = "./mca_plots/Q17_degree.png",
        units = "in")
 
 
+#Question Q15 - Ethnicity/stem representation
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(representation), 
+                              active_columns = c(
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's status in STEM (elipise = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q15 STEM representation, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q15_STEM.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
