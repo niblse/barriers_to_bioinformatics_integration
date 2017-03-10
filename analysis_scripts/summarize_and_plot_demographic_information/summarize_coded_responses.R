@@ -47,5 +47,5 @@ data.relavant  <- df %>%
 
 sum.table <- as.data.frame(colSums(data.relavant))
 sum.table <- t(sum.table)
-
+sum.table <- as.data.frame(sum.table)
 write_csv(sum.table, "./output_tables/reduced_questions_sums.csv")
