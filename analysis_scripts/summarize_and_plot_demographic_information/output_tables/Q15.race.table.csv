@@ -1,7 +1,7 @@
-"","Var1","Freq","percentage"
-"1","1_American Indian or Alaska Native",2,0.191204588910134
-"2","2_Asian",65,6.21414913957935
-"3","3_Black or African American",35,3.34608030592734
-"4","4_Native Hawaiian or Other Pacific Islander",3,0.286806883365201
-"5","5_White",847,80.9751434034417
-"6","6_Rather not say",94,8.98661567877629
+"","Var1","Freq","percentage","percentage_of_total_N","question"
+"1","1_American Indian or Alaska Native",2,0.00191204588910134,0.0016246953696182,"Q15 Race"
+"2","2_Asian",65,0.0621414913957935,0.0528025995125914,"Q15 Race"
+"3","3_Black or African American",35,0.0334608030592734,0.0284321689683184,"Q15 Race"
+"4","4_Native Hawaiian or Other Pacific Islander",3,0.00286806883365201,0.00243704305442729,"Q15 Race"
+"5","5_White",847,0.809751434034417,0.688058489033306,"Q15 Race"
+"6","6_Rather not say",94,0.0898661567877629,0.0763606823720552,"Q15 Race"

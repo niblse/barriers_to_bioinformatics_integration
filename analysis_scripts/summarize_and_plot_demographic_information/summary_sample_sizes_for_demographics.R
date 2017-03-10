@@ -2,17 +2,21 @@
 
 require(tidyverse)
 
+
 data <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
-data.ethnicity <- read_csv("../../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
-data.training <- read_csv("../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
+
+# remove any non-US respondents
+countries <- c("United States","Puerto Rico")
+data <- data%>%
+  filter(Country_Country %in% countries )
 
 #Create blank df
 overall_summary.csv <- data.frame( NULL, stringsAsFactors = FALSE)
 
 #Overall number of us Responses
 overall_summary.csv[1,"Question"] <- "All"
-overall_summary.csv[1,"Statistic"] <- "All US Answers"
-overall_summary.csv[1,"Demographic"] <- "All"
+overall_summary.csv[1,"Statistic"] <- "All Answers"
+overall_summary.csv[1,"Demographic"] <- "All US respondents"
 overall_summary.csv[1,"Value"] <- nrow(data)
 overall_summary.csv[1,"Percentage of"] <- "Total N"
 overall_summary.csv[1,"Percentage"] <- (overall_summary.csv[1,"Value"] / overall_summary.csv[1,"Value"]) * 100

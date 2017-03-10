@@ -1,4 +1,3 @@
-"","Var1","Freq","percentage"
-"1","1_Yes",354,34.0057636887608
-"2","2_No",399,38.328530259366
-"3","3_Don't know",288,27.6657060518732
+"","Var1","Freq","percentage","percentage_of_total_N","question"
+"1","Minority Serving Institution",354,0.470119521912351,0.287571080422421,"Q22 MSI Status"
+"2","Non-minority Serving Institution",399,0.529880478087649,0.32412672623883,"Q22 MSI Status"
