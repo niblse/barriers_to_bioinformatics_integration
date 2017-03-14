@@ -208,6 +208,27 @@ overall_summary.csv[21,"Percentage of"] <- "Total N"
 overall_summary.csv[21,"Percentage"] <- ( overall_summary.csv[21,"Value"] /survey.n )
 
 
+#Degree year
+
+
+degree.yr.all.tmp <- read_csv("../barriers_by_degree_year/analysis_of_Q06_barriers_to_implementation_by_Q18_degree_year_/output_tables/count_of_responses_to_Q6_implementation.csv")
+overall_summary.csv[22,"Question"] <- "33, 06, 29-30"
+overall_summary.csv[22,"Statistic"] <- "Maximum number of respondents"
+overall_summary.csv[22,"Demographic"] <- "Binned degree year"
+overall_summary.csv[22,"Value"] <-   sum(as.numeric(degree.yr.all.tmp[2,2:length(degree.yr.all.tmp)]))
+overall_summary.csv[22,"Percentage of"] <- "Total N"
+overall_summary.csv[22,"Percentage"] <- ( overall_summary.csv[22,"Value"] /survey.n )
+
+degree.yr.38.tmp <- read_csv("../barriers_by_degree_year/analysis_of_Q38_barriers_to_inclusion_by_Q18_degree_year_/output_tables/count_of_responses_to_Q38_inclusion.csv")
+overall_summary.csv[23,"Question"] <- "38"
+overall_summary.csv[23,"Statistic"] <- "Maximum number of respondents"
+overall_summary.csv[23,"Demographic"] <- "Binned degree year"
+overall_summary.csv[23,"Value"] <-   sum(as.numeric(degree.yr.38.tmp[2,2:length(degree.yr.38.tmp)]))
+overall_summary.csv[23,"Percentage of"] <- "Total N"
+overall_summary.csv[23,"Percentage"] <- ( overall_summary.csv[23,"Value"] /survey.n )
+
+
+
 #calculate error for sample sizes
 
 N.population <- 100000 # estimated population of full/part-time life science faculty in US

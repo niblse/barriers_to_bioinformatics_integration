@@ -8,7 +8,7 @@ dir.create("./output_tables", recursive = TRUE)
 df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 df.ethnicity <- read_csv("../../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
 df.training <- read_csv("../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
-
+df.degree <- read_csv("../../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
 
 
 # remove any non-US respondents
@@ -19,7 +19,8 @@ df.ethnicity <- df.ethnicity%>%
   filter(Country_Country %in% countries )
 df.training <- df.training%>%
   filter(Country_Country %in% countries )
-
+df.degree <- df.degree%>%
+  filter(Country_Country %in% countries )
 survey.n <- nrow(df)
 
 #Q1
@@ -167,7 +168,30 @@ df$Q57_Please.select.the.statement.belOw.that.best.describes.yOu.[df$Q57_Please.
 
 
 
+#generate single variable summary plots
 
+#question 18 - adjusted degree year
+
+df %>%
+  ggplot()+
+  aes(x= reorder(df.degree$bin_degree_yrs,
+                 df.degree$bin_degree_yrs, 
+                 function(x)-length(x)))+
+  geom_bar()+
+  ggtitle("Q18 - adjusted Year of Degree Survey Responses by Sex")+
+  xlab("sex")+
+  stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
+
+ggsave("./output_plots/q18_survey_responses_by_degree_year_bin.png")
+
+#write as a table
+Q18.degree.bin.table <- as.data.frame(table(as.factor(df.degree$bin_degree_yrs)),stringsAsFactors = FALSE)
+total.responses=sum(Q18.degree.bin.table$Freq)
+Q18.degree.bin.table <- Q18.degree.bin.table%>%
+  mutate(percentage = (Freq/total.responses))%>%
+  mutate(percentage_of_total_N = (Freq/survey.n))%>%
+  mutate(question = "Q18 bin degree")
+write.csv(Q18.degree.bin.table, file = "./output_tables/Q18.bin.degree.table.csv")
 
 #generate single variable summary plots
 
@@ -669,7 +693,33 @@ df.ethnicity <- df.ethnicity%>%
 df.training <- df.training%>%
   filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
 
+df.degree <- df.degree%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
 
+
+
+#question 18 - adjusted degree year
+
+df %>%
+  ggplot()+
+  aes(x= reorder(df.degree$bin_degree_yrs,
+                 df.degree$bin_degree_yrs, 
+                 function(x)-length(x)))+
+  geom_bar()+
+  ggtitle("Q18 - adjusted Year of Degree Survey Responses by Sex - 38 filter")+
+  xlab("sex")+
+  stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
+
+ggsave("./output_plots/q18_survey_responses_by_degree_year_bin_38.png")
+
+#write as a table
+Q18.degree.bin.table <- as.data.frame(table(as.factor(df.degree$bin_degree_yrs)),stringsAsFactors = FALSE)
+total.responses=sum(Q18.degree.bin.table$Freq)
+Q18.degree.bin.table <- Q18.degree.bin.table%>%
+  mutate(percentage = (Freq/total.responses))%>%
+  mutate(percentage_of_total_N = (Freq/survey.n))%>%
+  mutate(question = "Q18 bin degree_38.filter")
+write.csv(Q18.degree.bin.table, file = "./output_tables/Q18.bin.degree.table_38.filter.csv")
 
 
 
