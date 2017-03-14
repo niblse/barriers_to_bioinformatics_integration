@@ -1,22 +1,22 @@
-Question,Statistic,Demographic,Value,Percentage of,Percentage
-All,All Answers,All US respondents,1231.0,Total N,1.0
-Barriers to Implementation(Q06),Number of free text responses,All,364.0,Total N,0.2956945572705118
-Educator Challenges(Q33),Number of free text responses,All,734.0,Total N,0.5962632006498781
-Barriers to Inclusion(Q38),Number of free text responses,All,511.0,Total N,0.4151096669374492
-"Technical Barriers(Q29,30) ",Number of free text responses,All,313.0,Total N,0.25426482534524775
-"33, 06, 29-30",Maximum number of respondents,Carnegie classification,966.0,Total N,0.784727863525589
-38,Maximum number of respondents,Carnegie classification,460.0,Total N,0.3736799350121852
-"33, 06, 29-30",Maximum number of respondents,Current teaching,986.0,Total N,0.8009748172217709
-38,Maximum number of respondents,Current teaching,986.0,Total N,0.8009748172217709
-"33, 06, 29-30",Maximum number of respondents,Ethnicity/STEM Representation,961.0,Total N,0.7806661251015434
-38,Maximum number of respondents,Ethnicity/STEM Representation,467.0,Total N,0.3793663688058489
-"33, 06, 29-30",Maximum number of respondents,Highest degree earned,1046.0,Total N,0.8497156783103168
-38,Maximum number of respondents,Highest degree earned,502.0,Total N,0.40779853777416736
-"33, 06, 29-30",Maximum number of respondents,Level of Bioinformatics Training,1052.0,Total N,0.8545897644191714
-38,Maximum number of respondents,Level of Bioinformatics Training,506.0,Total N,0.4110479285134037
-"33, 06, 29-30",Maximum number of respondents,MSI Institutional Status,753.0,Total N,0.6116978066612511
-38,Maximum number of respondents,MSI Institutional Status,371.0,Total N,0.3013809910641755
-"33, 06, 29-30",Maximum number of respondents,Sex,1013.0,Total N,0.8229082047116165
-38,Maximum number of respondents,Sex,487.0,Total N,0.39561332250203085
-"33, 06, 29-30",Maximum number of respondents,Undergaduate enrollment,999.0,Total N,0.8115353371242892
-38,Maximum number of respondents,Undergaduate enrollment,479.0,Total N,0.3891145410235581
+Question,Statistic,Demographic,Value,Percentage of,Percentage,question_margin_of_error
+All,All Answers,All US respondents,1231.0,Total N,1.0,0.027759366388930444
+Barriers to Implementation(Q06),Number of free text responses,All,364.0,Total N,0.2956945572705118,0.05127264209400381
+Educator Challenges(Q33),Number of free text responses,All,734.0,Total N,0.5962632006498781,0.03603964282624848
+Barriers to Inclusion(Q38),Number of free text responses,All,511.0,Total N,0.4151096669374492,0.04324195593936582
+"Technical Barriers(Q29,30) ",Number of free text responses,All,313.0,Total N,0.25426482534524775,0.05530639379855374
+"33, 06, 29-30",Maximum number of respondents,Carnegie classification,966.0,Total N,0.784727863525589,0.031378475817639244
+38,Maximum number of respondents,Carnegie classification,460.0,Total N,0.3736799350121852,0.04558774911514294
+"33, 06, 29-30",Maximum number of respondents,Current teaching,986.0,Total N,0.8009748172217709,0.03105546901236145
+38,Maximum number of respondents,Current teaching,986.0,Total N,0.8009748172217709,0.03105546901236145
+"33, 06, 29-30",Maximum number of respondents,Ethnicity/STEM Representation,961.0,Total N,0.7806661251015434,0.03146079382627981
+38,Maximum number of respondents,Ethnicity/STEM Representation,467.0,Total N,0.3793663688058489,0.045243204116482756
+"33, 06, 29-30",Maximum number of respondents,Highest degree earned,1046.0,Total N,0.8497156783103168,0.03014248698501301
+38,Maximum number of respondents,Highest degree earned,502.0,Total N,0.40779853777416736,0.04362983435658478
+"33, 06, 29-30",Maximum number of respondents,Level of Bioinformatics Training,1052.0,Total N,0.8545897644191714,0.030055495171131225
+38,Maximum number of respondents,Level of Bioinformatics Training,506.0,Total N,0.4110479285134037,0.04345616871976886
+"33, 06, 29-30",Maximum number of respondents,MSI Institutional Status,753.0,Total N,0.6116978066612511,0.0355786490090386
+38,Maximum number of respondents,MSI Institutional Status,371.0,Total N,0.3013809910641755,0.050784850460480646
+"33, 06, 29-30",Maximum number of respondents,Sex,1013.0,Total N,0.8229082047116165,0.030634627621096776
+38,Maximum number of respondents,Sex,487.0,Total N,0.39561332250203085,0.04429999488562861
+"33, 06, 29-30",Maximum number of respondents,Undergaduate enrollment,999.0,Total N,0.8115353371242892,0.03085071926276844
+38,Maximum number of respondents,Undergaduate enrollment,479.0,Total N,0.3891145410235581,0.04467019579851075

@@ -207,6 +207,18 @@ overall_summary.csv[21,"Value"] <-   sum(as.numeric(uenroll.38.tmp[2,2:length(ue
 overall_summary.csv[21,"Percentage of"] <- "Total N"
 overall_summary.csv[21,"Percentage"] <- ( overall_summary.csv[21,"Value"] /survey.n )
 
+
+#calculate error for sample sizes
+
+N.population <- 100000 # estimated population of full/part-time life science faculty in US
+P.proportion_size <-  .5 
+z.confidence.interval <-  1.96
+
+overall_summary.csv <- overall_summary.csv%>%
+  mutate(question_margin_of_error = (z.confidence.interval * sqrt(P.proportion_size*(1-P.proportion_size)))/
+           sqrt(((N.population - 1)*overall_summary.csv$Value)/(N.population - overall_summary.csv$Value))
+           )
+
 write_csv(overall_summary.csv, "./output_tables/summary_sample_sizes_for_selected_demographics.csv")
 
 
