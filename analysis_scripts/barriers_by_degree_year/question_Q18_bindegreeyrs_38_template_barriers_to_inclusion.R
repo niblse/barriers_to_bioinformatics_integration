@@ -8,28 +8,40 @@ require(corrplot)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
-master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
+master.df <- read_csv("../../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
+
+#filter out degrees before 1970 - too few
+
+master.df <- master.df%>%
+  filter(bin_degree_yrs != "Before 1970")
+  
+#filter the data frame - Q38 was only shown to users who answered 
+#"3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors" to Q1
+# This filter must be removed from a script analyzing Q38 Q1 
+
+master.df <- master.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
+
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- ""
+category.column.name <- "bin_degree_yrs"
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- ""
+category.column.name.nice <- "Year of Degree (Q18)"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- ""
+category.column.name.safe <- "Q18_degree_year"
 
-# set a 'short' for naming filename variables: "Q#_category_category"
-category.column.name.short <- ""
+# set a 'short' for naming filename variables: "Q#_category"
+category.column.name.short <- "Q18_degreeyr"
 
 #set a nice name in upper and lower case that describes the category kinds 
-#(e.g. gender, institution type): ""
+#(e.g. gender, institution type): 
 
-category.nice.name.caps <- ""
-category.nice.name.lower <- ""
+category.nice.name.caps <- "Year of Degree"
+category.nice.name.lower <- "year of degree"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -43,7 +55,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[]
+category.levels <- category.levels[1:5]
 
 #######################################################################################
 
@@ -58,15 +70,16 @@ category.column.subset <-  master.df[[category.column.name]]
 
 #Names
 # variable (Question) that will be analyzed ("COLUMN_NAME)
-question.column.name <- "Q6_Optional..Please.describe.briefly..include.any.barriers.to.development.and.or.implementation."
+question.column.name <- "Q38_What.is.preventing.yOu.frOm.including.biOinfOrmatics.cOntent.in.these.cOurses."
 # subsetting variable for this column (e.g master.df$COLUMN_NAME)
-question.column.name.nice <- "Barriers to Implementation (Q06)"
+question.column.name.nice <- "Barriers to Including Bioinformatics (Q38)"
 # 'nice name' to describe this question
-question.column.name.safe <- "Q06_barriers_to_implementation"
+question.column.name.safe <- "Q38_barriers_to_inclusion"
 # 'short name' to describe this question
-question.column.name.short <- "Q6_implementation"
+question.column.name.short <- "Q38_inclusion"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
+
 
 ########## Cleaning Steps ###################################################
 
@@ -99,30 +112,36 @@ question.column.subset <- relavant.respondents.df[[question.column.name]]
 
 
 ############# column selection #################################################
+#select columns that will be used in this analysis and create sets of nice names for those columns
 
-
-category.raw.scored.columns <- c("Q06_Faculty.Issue...No.Expertise..Training",
-                                 "Q06_Faculty.Issue...Time", 
-                                 "Q06_Faculty.Issue...Not.enough.Faculty.members", 
-                                 "Q06_Faculty.Issues...Interest.in.Topic", 
-                                 "Q06_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content", 
-                                 "Q06_Curric.Isues..Curric.Revision.needed", 
-                                 "Q06_Curric.Isues...Bioinf.approaches.need.to.be.taugh.at.every.level.integrate.current.classes", 
-                                 "Q06_Curic.Issues...Bioinf.Program.Courses.under.develop", 
-                                 "Q06_Curric.Isues...Not.a.req.for.Life.Sci.Majors..Pre.Med", 
-                                 "Q06_Curric.Issue...Class.Size.too.large", 
-                                 "Q06_Curric.Issues...Not.enough.classes.seats.available", 
-                                 "Q06_Student.issue...Lack.of.Student.interest.in.quant.skills.and.related.courses", 
-                                 "Q06_Student.Issues...Student.Background.is.insufficient", 
-                                 "Q06_Inst.Dept.Support...Institutional.Inertia", 
-                                 "Q06_Inst.Dept.Support...Inter.Departmental.Cooperation", 
-                                 "Q06_Inst.Dept.Support...IT.Supprt", 
-                                 "Q06_Inst.Dept.Support...State.Regulation",
-                                 "Q06_Resource.Issue...Funding", 
-                                 "Q06_Resource.Issues...Access.to.Approp.Software..Op.sys", 
-                                 "Q06_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
-                                 "Q06_Facilities...Computer.Labs..Laq.Equip.limited.or.not.available", 
-                                 "Q06_Facilities...Servers", 
+category.raw.scored.columns <- c("Q38_Faculty.Issue...No.Expertise..Training", 
+                                 "Q38_Faculty.Issue...Time", 
+                                 "Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum", 
+                                 "Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution", 
+                                 "Q38_Faculty.Issues...Faculty.is.new.to.current.Dept", 
+                                 "Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content", 
+                                 "Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure", 
+                                 "Q38_Curriculum.Issue...Time.for.Curriculum.Development", 
+                                 "Q38_Curric.Issues...Lack.of.Curric.Control.not.in.curent.Curric.", 
+                                 "Q38_Curric.Issues...Bioinf..Taught.in.other.courses.at.institution", 
+                                 "Q38_Curric.Issue...Class.Size", 
+                                 "Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available.", 
+                                 "Q38_Curric.Issue...Bioinfo.Conent.too.Massive", 
+                                 "Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses",
+                                 "Q38_Resources...Access.to.Quality.Exercises..Content", 
+                                 "Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric",
+                                 "Q38_Resources...Access.to.Approp.Introductory.Content", 
+                                 "Q38_Resources...Unable.to.identify.access.best.current.Bioinf.material", 
+                                 "Q38_Resource.Issues...Funding", 
+                                 "Q38_Resource.Issues...Not.available.in.course.textbook", 
+                                 "Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent", 
+                                 "Q38_Resource.Issues..TA.s.lack.approp.skils",
+                                 "Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge", 
+                                 "Q38_Student.Issues...Lack.of.interest.in.topic",
+                                 "Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment",
+                                 "Q38_Inst.Dept.Issues...Institutional.Inertia",  
+                                 "Q38_State.restrictions", 
+                                 "Q38_Not.accredited", 
                                  category.column.name)
 
 category.raw.scored.df <- relavant.respondents.df%>%
@@ -132,37 +151,44 @@ category.raw.scored.df <- relavant.respondents.df%>%
 
 category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
-                                            "Faculty Issues: Too few faculty",
+                                            "Faculty Issues: Curriculum design/integration",
                                             "Faculty Issues: Lack of interest",
+                                            "Faculty Issues: New Faculty",
                                             "Curriculum Issues: No space",
                                             "Curriculum Issues: Incompatible with current curriculum",
-                                            "Curriculum Issues: Integration needed at every level",
-                                            "Curriculum Issues: Bioinformatics curriculum is under development",
-                                            "Curriculum Issues: Not required for life sci/pre-med majors",
+                                            "Curriculum Issues: Time needed to develop",
+                                            "Curriculum Issues: No control",
+                                            "Curriculum Issues: Covered elsewhere",
                                             "Curriculum Issues: Class size",
-                                            "Curriculum Issues: Too few seats",
-                                            "Student Issues: Lack of interest",
+                                            "Curriculum Issues: Plan for future coverage",
+                                            "Curriculum Issues: Too much content",
+                                            "Curriculum Issues: Content requires several courses",
+                                            "Resource Issues: Access to exercises",
+                                            "Resource Issues: Access to lesson plans",
+                                            "Resource Issues: Access to intro content",
+                                            "Resource Issues: Unable to vet content",
+                                            "Resource Issues: Funding",
+                                            "Resource Issues: No appropriate textbook",
+                                            "Resource Issues: No access to online exercises",
+                                            "Resource Issues: No qualified TAs",
                                             "Student Issues: Background knowledge",
-                                            "Institutional: Institutional inertia", 
-                                            "Institutional: Inter-departmental cooperation", 
-                                            "Institutional: IT support", 
-                                            "Institutional: State regulation", 
-                                            "Resource Issues: Funding", 
-                                            "Resource Issues: Access to software",
-                                            "Resource Issues: Access to bioinformatics lesson plans/curricula",
-                                            "Facilities: Access to computer(s)/labs",
-                                            "Facilities: Servers")
+                                            "Student Issues: Interest in topic",
+                                            "Facilities: Access to equipment",
+                                            "Institutional: Inertia",
+                                            "State Restrictions", 
+                                            "Accreditation")
 
 # Select the reduced columns (columns where coded responses have been summarized into
 # binary values (1 = at least one faculty issue reported , 0 = no faculty issues reported
 
-
-category.reduced.columns <- c("q06_Faculty_issues_reduced",
-         					  "q06_Curriculum_issues_reduced",
-         					  "q06_Student_issues_reduced",
-         					  "q06_Institutional_issues_reduced",
-         					  "q06_Resource_issues_reduced",
-         					  "q06_Facilities_issues_reduced",
+category.reduced.columns <- c("q38_Faculty_issues_reduced", 
+                              "q38_Curriculum_issues_reduced", 
+                              "q38_Resources_issues_reduced", 
+                              "q38_Student_issues_reduced", 
+                              "q38_Facilities_issues_reduced", 
+                              "q38_Institutional_issues_reduced", 
+                              "q38_State_issues_reduced", 
+                              "q38_Accredited_issues_reduced",
                               category.column.name)
 
 category.reduced.df<- relavant.respondents.df%>%
@@ -172,10 +198,12 @@ category.reduced.df<- relavant.respondents.df%>%
 
 category.reduced.columns.nice.names <- c("Faculty Issues",
                                         "Curriculum Issues", 
-                                        "Student Issues", 
-                                        "Institutional Issues",
                                         "Resource Issues", 
-                                        "Facilities Issues")
+                                        "Student Issues",
+                                        "Facilities Issues", 
+                                        "Institutional Issues",
+                                        "State Issues", 
+                                        "Accredidation Issues")
 
 ######### CREATE DIRECTORIES #########################################################
 
@@ -220,17 +248,33 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use D to be replaced by "-"
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("NAME"= category.levels[1],  
+category.df <- data.frame ("K1970D1979"= category.levels[1],
+                           "K1980D1989"= category.levels[2],
+                           "K1990D1999"= category.levels[3],
+                           "K2000D2010"= category.levels[4],
+                           "K2010D2016"= category.levels[5],
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("")
+col.order <- c("1970-1979",
+               "1980-1989",
+               "1990-1999",
+               "2000-2010",
+               "2010-2016")
 
 #With substitutions - must match category.df
-col.order2 <- c("")
+col.order2 <- c("K1970D1979",
+                "K1980D1989",
+                "K1990D1999",
+                "K2000D2010",
+                "K2010D2016")
 
 #Nice Labels for plotting
-nice.lables.list <- c("")
+nice.lables.list <- c("1970-1979",
+                      "1980-1989",
+                      "1990-1999",
+                      "2000-2010",
+                      "2010-2016")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -1106,3 +1150,6 @@ corrplot(reduced.tally.df.correlated,
          order = "hclust", 
          tl.srt=45)
 dev.off()
+
+
+

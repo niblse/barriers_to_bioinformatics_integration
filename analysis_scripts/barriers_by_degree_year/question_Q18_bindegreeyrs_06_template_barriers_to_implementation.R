@@ -8,28 +8,31 @@ require(corrplot)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
-master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
+master.df <- read_csv("../../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
 
+#filter out degrees before 1970 - too few
+
+master.df <- master.df%>%
+  filter(bin_degree_yrs != "Before 1970")
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- ""
+category.column.name <- "bin_degree_yrs"
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- ""
+category.column.name.nice <- "Year of Degree (Q18)"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- ""
+category.column.name.safe <- "Q18_degree_year"
 
-# set a 'short' for naming filename variables: "Q#_category_category"
-category.column.name.short <- ""
+# set a 'short' for naming filename variables: "Q#_category"
+category.column.name.short <- "Q18_degreeyr"
 
 #set a nice name in upper and lower case that describes the category kinds 
-#(e.g. gender, institution type): ""
+#(e.g. gender, institution type): 
 
-category.nice.name.caps <- ""
-category.nice.name.lower <- ""
+category.nice.name.caps <- "Year of Degree"
+category.nice.name.lower <- "year of degree"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -43,7 +46,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[]
+category.levels <- category.levels[1:5]
 
 #######################################################################################
 
@@ -220,17 +223,33 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use D to be replaced by "-"
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("NAME"= category.levels[1],  
+category.df <- data.frame ("K1970D1979"= category.levels[1],
+                           "K1980D1989"= category.levels[2],
+                           "K1990D1999"= category.levels[3],
+                           "K2000D2010"= category.levels[4],
+                           "K2010D2016"= category.levels[5],
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("")
+col.order <- c("1970-1979",
+               "1980-1989",
+               "1990-1999",
+               "2000-2010",
+               "2010-2016")
 
 #With substitutions - must match category.df
-col.order2 <- c("")
+col.order2 <- c("K1970D1979",
+                "K1980D1989",
+                "K1990D1999",
+                "K2000D2010",
+                "K2010D2016")
 
 #Nice Labels for plotting
-nice.lables.list <- c("")
+nice.lables.list <- c("1970-1979",
+                      "1980-1989",
+                      "1990-1999",
+                      "2000-2010",
+                      "2010-2016")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 

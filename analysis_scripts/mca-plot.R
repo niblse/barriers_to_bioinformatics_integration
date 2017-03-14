@@ -10,7 +10,7 @@ require(factoextra)
 data <- read_csv("../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 data.ethnicity <- read_csv("../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
 data.training <- read_csv("../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
-
+data.degree <- read_csv("../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
 #remove non-us respondents
 
 #remove respondents not in US/Puerto Rico
@@ -24,6 +24,7 @@ remove.non.us.repondants <- function(df){
 data <- remove.non.us.repondants(data)
 data.ethnicity<- remove.non.us.repondants(data.ethnicity)
 data.training<- remove.non.us.repondants(data.training)
+data.degree <- remove.non.us.repondants(data.degree)
 # Select relavant columns for analysis
 
 data.relavant  <- data%>%
@@ -76,7 +77,10 @@ data.ethnicity.relavant <- data.ethnicity%>%
 data.training.relavant <- data.training%>%
   select(faculty_preperation)
 
-data.relavant <- bind_cols(data.relavant, data.ethnicity.relavant, data.training.relavant)
+data.degree.relavant <- data.degree%>%
+  select(bin_degree_yrs)
+
+data.relavant <- bind_cols(data.relavant, data.ethnicity.relavant, data.training.relavant,data.degree.relavant )
 
 
 #manually format nice names; "Don't know responses" treated as NAs
@@ -340,6 +344,7 @@ state <- "State_State"
 region <- "Region_Region"
 tracked_ethnicities <- "tracked_ethnicities"
 representation <- "representation"
+degree_year <- "bin_degree_yrs"
 
 
 
@@ -730,3 +735,44 @@ ggsave(filename = "./mca_plots/Q15_STEM.png",
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
+
+#Question Q18 - adjusted degree years
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplimentary_columns = c(degree_year), 
+                              active_columns = c(
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's year of degree (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q18_degree.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
