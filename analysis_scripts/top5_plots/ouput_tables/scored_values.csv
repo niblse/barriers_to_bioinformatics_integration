@@ -1,0 +1,97 @@
+percentage,question,barrier
+0.2412672623883022,q1.Q33,Faculty Issues: Expertise/training
+0.16409423233143786,q1.Q33,Student Issues: Lack of background skills/knowledge
+0.15190901705930138,q3.Q38,Faculty Issues: Expertise/training
+0.13160032493907392,q4.Q29,Facilities Issues: Access to computer labs
+0.11941510966693746,q3.Q38,Faculty Issues: Time
+0.11860276198212835,q2.Q6,Faculty Issues: Expertise/training
+0.10316815597075549,q4.Q29,Institutional Issues: Access to IT support
+0.09098294069861901,q3.Q38,Curriculum Issues: No space
+0.08285946385052803,q1.Q33,Student Issues: Lack of interest
+0.07311129163281885,q1.Q33,Faculty Issues: Time
+0.06904955320877336,q1.Q33,Curriculum Issues: Lack of integration
+0.059301380991064176,q1.Q33,Curriculum Issues: Too much content
+0.05848903330625508,q2.Q6,Faculty Issues: Time
+0.05361494719740049,q4.Q29,Resource Issues: Access to high-performance computing
+0.048740861088545896,q3.Q38,Curriculum Issues: Incompatible with current curriculum
+0.047116165718927704,q3.Q38,Student Issues: Background knowledge
+0.04305442729488221,q4.Q29,Resource Issues: Access to operating systems
+0.04224207961007311,q1.Q33,Curriculum Issues: Quickly changing technologies
+0.04061738424045491,q2.Q6,Curriculum Issues: No space
+0.039805036555645816,q1.Q33,Resource Issues: Access to software
+0.03899268887083672,q1.Q33,Faculities Issues: Access to computer labs
+0.03574329813160033,q2.Q6,Faculty Issues: Too few faculty
+0.03574329813160033,q4.Q29,Resource Issues: Apropriate software
+0.03168155970755483,q3.Q38,Resource Issues: Access to exercises
+0.030869212022745736,q2.Q6,Student Issues: Lack of interest
+0.030056864337936636,q3.Q38,Resource Issues: Access to lesson plans
+0.02924451665312754,q1.Q33,Curriculum Issues: Access to bioinformatics lesson plans/curriculum
+0.02924451665312754,q3.Q38,Faculty Issues: Curriculum design/integration
+0.02924451665312754,q3.Q38,Curriculum Issues: Time needed to develop
+0.026807473598700244,q1.Q33,Student Issues: Intimidated by topic
+0.025995125913891144,q2.Q6,Faculty Issues: Lack of interest
+0.025182778229082048,q2.Q6,Student Issues: Background knowledge
+0.022745735174654752,q4.Q29,Faculty Issues: Expertise/training
+0.022745735174654752,q1.Q33,Resource Issues: Funding
+0.021933387489845652,q2.Q6,Curriculum Issues: Incompatible with current curriculum
+0.021933387489845652,q3.Q38,Curriculum Issues: No control
+0.021121039805036556,q4.Q29,Facilities Issues: Inadaquate computers
+0.020308692120227456,q2.Q6,Institutional: Institutional inertia
+0.020308692120227456,q2.Q6,Resource Issues: Funding
+0.017871649065800164,q2.Q6,Curriculum Issues: Integration needed at every level
+0.017871649065800164,q1.Q33,Student Issues: Varying student backrounds
+0.017059301380991064,q4.Q29,Resource Issues: Funding
+0.015434606011372868,q2.Q6,Facilities: Access to computer(s)/labs
+0.01462225832656377,q2.Q6,Curriculum Issues: Bioinformatics curriculum is under development
+0.01462225832656377,q3.Q38,Facilities: Access to equipment
+0.01462225832656377,q3.Q38,Resource Issues: Access to intro content
+0.01380991064175467,q1.Q33,Faculty Issues: Differences of opinion
+0.01380991064175467,q1.Q33,Student Issues: Lack of basic computing skills
+0.01380991064175467,q3.Q38,Resource Issues: Unable to vet content
+0.012997562956945572,q3.Q38,Curriculum Issues: Covered elsewhere
+0.012185215272136474,q2.Q6,Institutional: Inter-departmental cooperation
+0.012185215272136474,q4.Q29,Facilities Issues: Access to internet
+0.012185215272136474,q1.Q33,Institutional Issues: Lack of inter-departmental cooperation
+0.010560519902518278,q2.Q6,Curriculum Issues: Not required for life sci/pre-med majors
+0.010560519902518278,q1.Q33,Faculty Issues: Content development
+0.010560519902518278,q3.Q38,Student Issues: Interest in topic
+0.00974817221770918,q4.Q29,Student Issues: Access to computers Off-campus
+0.00974817221770918,q1.Q33,Curriculum Issues: Difficulty establishing relevance
+0.00974817221770918,q1.Q33,Institutional Issues: Lack of IT support
+0.008935824532900082,q4.Q29,Facilities Issues: Access to servers
+0.008935824532900082,q1.Q33,Curriculum Issues: Influence from professional schools
+0.008123476848090982,q2.Q6,Resource Issues: Access to software
+0.008123476848090982,q4.Q29,Student Issues: Access to software off-campus
+0.008123476848090982,q3.Q38,Resource Issues: Funding
+0.007311129163281885,q1.Q33,Faculty Issues: Too few faculty
+0.007311129163281885,q3.Q38,Faculty Issues: Lack of interest
+0.007311129163281885,q3.Q38,Curriculum Issues: Plan for future coverage
+0.007311129163281885,q3.Q38,Resource Issues: No appropriate textbook
+0.006498781478472786,q4.Q29,Faculty Issues: Time
+0.006498781478472786,q3.Q38,Curriculum Issues: Class size
+0.005686433793663688,q2.Q6,Institutional: IT support
+0.005686433793663688,q1.Q33,Student Issues: Career prospects
+0.005686433793663688,q1.Q33,Resource Issues: Software/license fees
+0.00487408610885459,q4.Q29,Student Issues: Basic computing knowledge
+0.00487408610885459,q1.Q33,Faculities Issues: Inadaquate computers
+0.00487408610885459,q3.Q38,Curriculum Issues: Too much content
+0.004061738424045491,q3.Q38,Resource Issues: No access to online exercises
+0.003249390739236393,q2.Q6,Curriculum Issues: Class size
+0.003249390739236393,q2.Q6,Curriculum Issues: Too few seats
+0.003249390739236393,q2.Q6,Resource Issues: Access to bioinformatics lesson plans/curricula
+0.003249390739236393,q4.Q29,Curriculum Issues: New program development required
+0.003249390739236393,q4.Q29,Institutional Issues: No support from comp-sci faculty
+0.003249390739236393,q3.Q38,Faculty Issues: New Faculty
+0.002437043054427295,q2.Q6,Facilities: Servers
+0.002437043054427295,q4.Q29,Curriculum Issues: Class size
+0.002437043054427295,q4.Q29,Institutional Issues: Subscriptions/licenses
+0.002437043054427295,q3.Q38,Institutional: Inertia
+0.0016246953696181965,q2.Q6,Institutional: State regulation
+0.0016246953696181965,q4.Q29,Curriculum Issues: Access to bioinformatics lesson plans
+0.0016246953696181965,q3.Q38,State Restrictions
+8.123476848090983e-4,q4.Q29,Faculty Issues: No interest in topic
+8.123476848090983e-4,q4.Q29,Faculty Issues: No comp-sci faculty
+8.123476848090983e-4,q3.Q38,Curriculum Issues: Content requires several courses
+8.123476848090983e-4,q3.Q38,Resource Issues: No qualified TAs
+8.123476848090983e-4,q3.Q38,Accreditation
+0.0,q4.Q29,Student Issues: No interest in bioinformatics

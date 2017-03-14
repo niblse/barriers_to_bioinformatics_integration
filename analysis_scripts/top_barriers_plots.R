@@ -463,6 +463,7 @@ facet_labeller.score <- function(variable,value){
 
 #create directory
 dir.create("./top5_plots", recursive = TRUE)
+dir.create("./top5_plots/ouput_tables", recursive = TRUE)
 
 
 # Order plot by percentages
@@ -495,6 +496,8 @@ ggsave( filename= "./top5_plots/reduced_barriers_Q06_Q29_Q33_Q38.png",
 dev.off()
 pdf(NULL)
 
+write_csv(total.reduced.cols, "./top5_plots/ouput_tables/reduced_values.csv")
+
 # Order plot by percentages
 
 total.scored.cols <- total.scored.cols%>%
@@ -525,3 +528,5 @@ ggsave( filename= "./top5_plots/scored_barriers_Q06_Q29_Q33_Q38.png",
 
 dev.off()
 pdf(NULL)
+
+write_csv(total.scored.cols, "./top5_plots/ouput_tables/scored_values.csv")
