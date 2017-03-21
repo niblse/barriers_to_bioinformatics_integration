@@ -466,7 +466,9 @@ dir.create("./top5_plots", recursive = TRUE)
 dir.create("./top5_plots/ouput_tables", recursive = TRUE)
 
 
-# Order plot by percentages
+# Order plot by percentages and replace with new terminiology
+
+total.reduced.cols$barrier <- gsub(".reduced.", "", total.reduced.cols$barrier)
 
 total.reduced.cols <- total.reduced.cols%>%
   group_by(question)%>%
@@ -478,7 +480,7 @@ total.reduced.cols%>%
   aes(x = barrier, y=percentage, fill = barrier)+
   geom_bar(stat = "identity", position = "dodge")+
   facet_grid(~ question, labeller = facet_labeller.reduce)+
-  ggtitle(paste("Summary of barriers (reduced) as reported by at least 5% respondents for 4 barriers questions\n", 
+  ggtitle(paste("Summary of barriers (summarizing-categories) as reported by at least 5% respondents for 4 barriers questions\n", 
                 "n=", sample.size,
                 sep = "")) +
   xlab("Summarized barrier categories")+
@@ -488,7 +490,7 @@ total.reduced.cols%>%
   theme(axis.text.x = element_blank())
 
 
-ggsave( filename= "./top5_plots/reduced_barriers_Q06_Q29_Q33_Q38.png", 
+ggsave( filename= "./top5_plots/summarized_barriers_Q06_Q29_Q33_Q38.png", 
         width = 13.8, 
         height = 8.81, 
         units = "in")
@@ -516,6 +518,7 @@ total.scored.cols%>%
                 sep = "")) +
   xlab("Scored barrier categories")+
   ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Detailed barrier category")+
   theme_bw()+
   theme(axis.text.x = element_blank())
 
