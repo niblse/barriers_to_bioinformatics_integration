@@ -511,7 +511,7 @@ total.scored.cols%>%
   aes(x = barrier, y=percentage, fill = barrier)+
   geom_bar(stat = "identity", position = "dodge")+
   facet_grid(~ question, labeller = facet_labeller.score)+
-  ggtitle(paste("Scored barriers as reported by at least 5% of respodents\n", 
+  ggtitle(paste("Scored barriers as reported by at least 5% of respondents\n", 
                 "n=", sample.size,
                 sep = "")) +
   xlab("Scored barrier categories")+
@@ -559,7 +559,7 @@ total.scored.cols%>%
   aes(x = barrier, y=percentage, fill = barrier)+
   geom_bar(stat = "identity", position = "dodge")+
   facet_grid(~ question, labeller = facet_labeller.score.33)+
-  ggtitle(paste("Scored barriers as reported by at least 5% of respodents\n", 
+  ggtitle(paste("Scored barriers as reported by at least 5% of respondents\n", 
                 "n=", sample.size,
                 sep = "")) +
   xlab("Scored barrier categories")+
@@ -577,5 +577,6 @@ ggsave( filename= "./top5_plots/scored_barriers_Q33.png",
 
 dev.off()
 pdf(NULL)
+
 
 
