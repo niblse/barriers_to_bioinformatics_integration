@@ -118,18 +118,18 @@ data.relavant$q29_Facilities_issues_reduced[data.relavant$q29_Facilities_issues_
 
 
 #q33
-data.relavant$q33_Facility_issues_reduced[data.relavant$q33_Facility_issues_reduced == "1"] <- "Q33 FACILITIES BARRIERS"
-data.relavant$q33_Faculty_issues_reduced[data.relavant$q33_Faculty_issues_reduced == "1"] <- "Q33 FACULTY BARRIERS"
-data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "1"] <- "Q33 CURRICULUM BARRIERS"
-data.relavant$q33_Institutional_issues_reduced[data.relavant$q33_Institutional_issues_reduced == "1"] <- "Q33 INSTITUTIONAL BARRIERS"
-data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_reduced == "1"] <- "Q33 RESOURCE BARRIERS"
-data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "1"] <- "Q33 STUDENT BARRIERS"
-data.relavant$q33_Facility_issues_reduced[data.relavant$q33_Facility_issues_reduced == "0"] <- "Q33 no reported faclities barriers"
-data.relavant$q33_Faculty_issues_reduced[data.relavant$q33_Faculty_issues_reduced == "0"] <- "Q33 no reported faculty barriers"
-data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "0"] <- "Q33 no reported curriculumn barriers"
-data.relavant$q33_Institutional_issues_reduced[data.relavant$q33_Institutional_issues_reduced == "0"] <- "Q33 no reported institutional barriers"
-data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_reduced == "0"] <- "Q33 no reported resource barriers"
-data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "0"] <- "Q33 no reported student barriers"
+data.relavant$q33_Facility_issues_reduced[data.relavant$q33_Facility_issues_reduced == "1"] <- "FACILITIES(+)"
+data.relavant$q33_Faculty_issues_reduced[data.relavant$q33_Faculty_issues_reduced == "1"] <- "FACULTY(+)"
+data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "1"] <- "CURRICULUM(+)"
+data.relavant$q33_Institutional_issues_reduced[data.relavant$q33_Institutional_issues_reduced == "1"] <- "INSTITUTIONAL(+)"
+data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_reduced == "1"] <- "RESOURCE(+)"
+data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "1"] <- "STUDENT(+)"
+data.relavant$q33_Facility_issues_reduced[data.relavant$q33_Facility_issues_reduced == "0"] <- "faclities(-)"
+data.relavant$q33_Faculty_issues_reduced[data.relavant$q33_Faculty_issues_reduced == "0"] <- "faculty(-)"
+data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "0"] <- "curriculumn(-)"
+data.relavant$q33_Institutional_issues_reduced[data.relavant$q33_Institutional_issues_reduced == "0"] <- "institutional(-)"
+data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_reduced == "0"] <- "resource(-)"
+data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "0"] <- "student(-)"
 
 #q38
 data.relavant$q38_Faculty_issues_reduced[data.relavant$q38_Faculty_issues_reduced=="1"] <- "Q38 FACULTY BARRIERS"
@@ -350,8 +350,8 @@ degree_year <- "bin_degree_yrs"
 
 calculate_mca_and_plot <-  function(df, 
                                     #data frame for analysis
-                                    qualitative_supplimentary_columns, 
-                                    #qualitative_supplimentary_columns - these are variables that will be 'predicted' based on the other rows - a vector in the form c(x,y,...) 
+                                    qualitative_supplementary_columns, 
+                                    #qualitative_supplementary_columns - these are variables that will be 'predicted' based on the other rows - a vector in the form c(x,y,...) 
                                     active_columns, 
                                     #active columns - these are the variables to include in the MCA analsis - a vector in the form c(x,y,...)
                                     active_filters,
@@ -366,10 +366,10 @@ calculate_mca_and_plot <-  function(df,
   
 
 
-    n.supp.cols <- length(qualitative_supplimentary_columns)
+    n.supp.cols <- length(qualitative_supplementary_columns)
     
     df.selected <- df%>%
-      select_(.dots = c(qualitative_supplimentary_columns, active_columns))
+      select_(.dots = c(qualitative_supplementary_columns, active_columns))
     
     df.na.filtered <- df.selected%>%
       drop_na()
@@ -386,7 +386,7 @@ dir.create("./mca_plots", recursive = TRUE)
 
 #Question Q1 - Teaching of bioinformatics status
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q1), 
+                              qualitative_supplementary_columns = c(Q1), 
                               active_columns = c(
                                                  Q3, #level of bioinformatics training 
                                                  Q14, #Sex 
@@ -422,9 +422,52 @@ ggsave(filename = "./mca_plots/Q1_teaching_status.png",
        height = 8.81, 
        units = "in")
 
+
+
+#Question Q1 - Teaching of bioinformatics status using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q1, #Teaching of bioinformatics status
+                                Q3, #level of bioinformatics training 
+                                Q14, #Sex 
+                                Q21, #Carnegie classification 
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's bioinformatics\nteaching status (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q1: Teaching Bioinformatics, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q1_teaching_status.33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
+
 #Question Q3 - Faculty preperation
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q3), 
+                              qualitative_supplementary_columns = c(Q3), 
                               active_columns = c(
                               					         Q1, #bioinformatics teaching status                              					
                                                  Q14, #Sex 
@@ -461,9 +504,50 @@ ggsave(filename = "./mca_plots/Q3_bioinformatics_training.png",
        units = "in")
 
 
+
+
+#Question Q3 - Faculty preperation using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q3, #faculty preperation
+                                Q1, #bioinformatics teaching status                              					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification 
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's bioinformatics\ntraining (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q3: Bioinformatics Training, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q3_bioinformatics_training.33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
 #Question Q5 - Opinion on the need for further courses
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q5), 
+                              qualitative_supplementary_columns = c(Q5), 
                               active_columns = c(
                                                  Q1, #bioinformatics teaching status 
                                 				         Q3, #bioinformatics training                             					
@@ -501,15 +585,58 @@ ggsave(filename = "./mca_plots/Q5_more_courses.png",
        units = "in")
 
 
+
+
+#Question Q5 - Opinion on the need for further courses using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q5, #need for further courses
+                                Q1, #bioinformatics teaching status 
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification 
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's opinion on the need\nfor additional bioinformatics courses (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q5: Need for additional courses, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q5_more_courses.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
 #Question Q14- Sex
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q14), 
+                              qualitative_supplementary_columns = c(Q14), 
                               active_columns = c(
-                                                 Q1, #bioinformatics teaching status
-                                				         Q3, #bioinformatics training                             					                                      
-                                                 Q21, #Carnegie classification
-                                                 Q22, #MSI status                               
-                                                 Q24 #Undergraduate enrollment
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					                                      
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
                               ))
 
 MCA.object <- MCA(X = as.matrix(tmp),
@@ -540,9 +667,48 @@ ggsave(filename = "./mca_plots/Q14_sex.png",
        units = "in")
 
 
+#Question Q14- Sex using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q14, #sex
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					                                      
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's sex (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q14: Sex, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q14_sex.33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
 #Question Q21- Carnegie Classiication
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q21), 
+                              qualitative_supplementary_columns = c(Q21), 
                               active_columns = c(
                                                  Q1, #bioinformatics teaching status 
                                 				         Q3, #bioinformatics training                             					
@@ -570,7 +736,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's Institutional Carnegie classification (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
-  ggtitle(paste("Multiple Correspondence Analysis; Q14: Carnegie classification, with selected factors n=", dim(tmp[1]), sep = ""), 
+  ggtitle(paste("Multiple Correspondence Analysis; Q21: Carnegie classification, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nMSI status\nUndergraduate enrollment")
 
 ggsave(filename = "./mca_plots/Q21_carnegie_classification.png", 
@@ -579,9 +745,49 @@ ggsave(filename = "./mca_plots/Q21_carnegie_classification.png",
        units = "in")
 
 
+#Question Q21- Carnegie Classiication using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q21, #Carnegie classification
+                                Q1, #bioinformatics teaching status 
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q22, #MSI status                               
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional Carnegie classification (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q21: Carnegie classification, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q21_carnegie_classification.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
 #Question Q22- MSI status
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q22), 
+                              qualitative_supplementary_columns = c(Q22), 
                               active_columns = c(
                                                  Q1, #bioinformatics teaching status
                                 				         Q3, #bioinformatics training                             					
@@ -618,9 +824,53 @@ ggsave(filename = "./mca_plots/Q22_msi_status.png",
        units = "in")
 
 
+
+
+
+#Question Q22- MSI status using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q22, #msi status
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification                             
+                                Q24 #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional MSI status (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q22 MSI status, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q22_msi_status.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
+
 #Question Q24- Ugrad enrollment
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q24), 
+                              qualitative_supplementary_columns = c(Q24), 
                               active_columns = c(
                                                   Q1, #bioinformatics teaching status 
                                 				          Q3, #bioinformatics training                             					
@@ -657,9 +907,49 @@ ggsave(filename = "./mca_plots/Q24_ugrad_enrollment.png",
        units = "in")
 
 
+#Question Q24- Ugrad enrollment using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q24, #ugrad enrollment
+                                Q1, #bioinformatics teaching status 
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22 #MSI status
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional undergraduate enrollment (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q24 Undergraduate enrollment, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status")
+
+ggsave(filename = "./mca_plots/Q24_ugrad_enrollment.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
 #Question Q17- highest degree
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(Q17), 
+                              qualitative_supplementary_columns = c(Q17), 
                               active_columns = c(
                                                   Q1, #bioinformatics teaching status
                                 				          Q3, #bioinformatics training                             					
@@ -697,9 +987,50 @@ ggsave(filename = "./mca_plots/Q17_degree.png",
        units = "in")
 
 
+#Question Q17- highest degree using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                Q17, #highest degree
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's highest degree (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q17 Highest degree earned, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q17_degree.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+
+
 #Question Q15 - Ethnicity/stem representation
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(representation), 
+                              qualitative_supplementary_columns = c(representation), 
                               active_columns = c(
                                 Q1, #bioinformatics teaching status
                                 Q3, #bioinformatics training                             					
@@ -736,10 +1067,49 @@ ggsave(filename = "./mca_plots/Q15_STEM.png",
        height = 8.81, 
        units = "in")
 
+#Question Q15 - Ethnicity/stem representation using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                representation, #STEM representation
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's status in STEM (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q15 STEM representation, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q15_STEM.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
 
 #Question Q18 - adjusted degree years
 tmp <- calculate_mca_and_plot(df = data.relavant, 
-                              qualitative_supplimentary_columns = c(degree_year), 
+                              qualitative_supplementary_columns = c(degree_year), 
                               active_columns = c(
                                 Q1, #bioinformatics teaching status
                                 Q3, #bioinformatics training                             					
@@ -771,8 +1141,46 @@ fviz_mca_biplot(MCA.object,
   ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
-ggsave(filename = "./mca_plots/Q18_degree.png", 
+ggsave(filename = "./mca_plots/Q18_degree_yr.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
 
+#Question Q18 - adjusted degree years using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                degree_year, #degree year
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's year of degree (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q18_degree_yr.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
