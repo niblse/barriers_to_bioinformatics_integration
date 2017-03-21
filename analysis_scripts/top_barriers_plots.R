@@ -530,3 +530,42 @@ dev.off()
 pdf(NULL)
 
 write_csv(total.scored.cols, "./top5_plots/ouput_tables/scored_values.csv")
+
+
+#plot q33 scored by itself
+
+label.df.s.33 <- list("q1.Q33" = "Q33: What do you think are the most important challenges currently facing those educating\n undergraduate life scientists in bioinformatics?")
+
+facet_labeller.score.33 <- function(variable,value){
+  return(label.df.s.33[value])
+  
+}
+
+
+total.scored.cols%>%
+  filter(percentage >= 0.05)%>%
+  filter(question == "q1.Q33")%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_grid(~ question, labeller = facet_labeller.score.33)+
+  ggtitle(paste("Scored barriers as reported by at least 5% of respodents\n", 
+                "n=", sample.size,
+                sep = "")) +
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Detailed barrier category")+
+  theme_bw()+
+  theme(axis.text.x = element_blank())
+
+
+ggsave( filename= "./top5_plots/scored_barriers_Q33.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+dev.off()
+pdf(NULL)
+
+
