@@ -454,6 +454,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's bioinformatics\nteaching status (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.2))+
   ggtitle(paste("Multiple Correspondence Analysis; Q1: Teaching Bioinformatics, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -536,6 +537,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's bioinformatics\ntraining (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.9,.2))+
   ggtitle(paste("Multiple Correspondence Analysis; Q3: Bioinformatics Training, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Current bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -618,6 +620,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's opinion on the need\nfor additional bioinformatics courses (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.2))+
   ggtitle(paste("Multiple Correspondence Analysis; Q5: Need for additional courses, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -697,6 +700,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's sex (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.2))+
   ggtitle(paste("Multiple Correspondence Analysis; Q14: Sex, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -772,9 +776,10 @@ fviz_mca_biplot(MCA.object,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "Respondent's Institutional Carnegie classification (ellipse = 80%)",
+                legend.title = "Respondent's institutional \nCarnegie classification (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.15))+
   ggtitle(paste("Multiple Correspondence Analysis; Q21: Carnegie classification, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nMSI status\nUndergraduate enrollment")
 
@@ -854,9 +859,10 @@ fviz_mca_biplot(MCA.object,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "Respondent's Institutional MSI status (ellipse = 80%)",
+                legend.title = "Respondent's Institutional MSI \nstatus (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.15))+
   ggtitle(paste("Multiple Correspondence Analysis; Q22 MSI status, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nUndergraduate enrollment")
 
@@ -934,9 +940,10 @@ fviz_mca_biplot(MCA.object,
                 addEllipses = TRUE,
                 repel = TRUE,
                 labelsize = 4,
-                legend.title = "Respondent's Institutional undergraduate enrollment (ellipse = 80%)",
+                legend.title = "Respondent's Institutional undergraduate \nenrollment (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.15))+
   ggtitle(paste("Multiple Correspondence Analysis; Q24 Undergraduate enrollment, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status")
 
@@ -1018,6 +1025,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's highest degree (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.15))+
   ggtitle(paste("Multiple Correspondence Analysis; Q17 Highest degree earned, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -1098,6 +1106,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's status in STEM (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.15))+
   ggtitle(paste("Multiple Correspondence Analysis; Q15 STEM representation, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
@@ -1177,6 +1186,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's year of degree (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
+  theme(legend.position = c(.85,.8))+
   ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
