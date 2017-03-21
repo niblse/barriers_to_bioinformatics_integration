@@ -542,9 +542,19 @@ facet_labeller.score.33 <- function(variable,value){
 }
 
 
-total.scored.cols%>%
-  filter(percentage >= 0.05)%>%
+
+# filter out Q33 and order for plotting
+total.scored.cols <- total.scored.cols%>%
   filter(question == "q1.Q33")%>%
+  filter(percentage >= 0.05)%>%
+  group_by(question)%>%
+  arrange(.,desc(percentage))
+
+
+total.scored.cols$barrier <- factor(total.scored.cols$barrier, levels = total.scored.cols$barrier[order(desc(total.scored.cols$percentage))])
+
+
+total.scored.cols%>%
   ggplot()+
   aes(x = barrier, y=percentage, fill = barrier)+
   geom_bar(stat = "identity", position = "dodge")+
