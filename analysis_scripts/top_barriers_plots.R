@@ -474,6 +474,9 @@ total.reduced.cols <- total.reduced.cols%>%
   group_by(question)%>%
   arrange(.,desc(percentage))
 
+total.reduced.cols$barrier <- factor(total.reduced.cols$barrier, levels = total.reduced.cols$barrier[order(desc(total.reduced.cols$percentage))])
+
+
 total.reduced.cols%>%
   filter(percentage >= 0.05)%>%
   ggplot()+
