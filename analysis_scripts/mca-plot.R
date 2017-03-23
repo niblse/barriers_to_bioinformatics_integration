@@ -11,6 +11,8 @@ data <- read_csv("../data_cleaning_scripts/04_decode_survey_responses/output/dec
 data.ethnicity <- read_csv("../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
 data.training <- read_csv("../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
 data.degree <- read_csv("../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
+
+
 #remove non-us respondents
 
 #remove respondents not in US/Puerto Rico
@@ -81,6 +83,13 @@ data.degree.relavant <- data.degree%>%
   select(bin_degree_yrs)
 
 data.relavant <- bind_cols(data.relavant, data.ethnicity.relavant, data.training.relavant,data.degree.relavant )
+
+#filter 1970-80 from degree years - small response rates
+
+data.relavant <- data.relavant%>%
+  filter(bin_degree_yrs != "Before 1970")%>%
+  filter(bin_degree_yrs !=  "1970-1979")
+
 
 
 #manually format nice names; "Don't know responses" treated as NAs
@@ -1186,7 +1195,7 @@ fviz_mca_biplot(MCA.object,
                 legend.title = "Respondent's year of degree (ellipse = 80%)",
                 ellipse.level = 0.80)+
   theme_minimal()+
-  theme(legend.position = c(.85,.8))+
+  theme(legend.position = c(.85,.2))+
   ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
           subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
 
