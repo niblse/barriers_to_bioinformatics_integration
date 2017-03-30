@@ -87,7 +87,7 @@ master.df.adj <- master.df %>%
     bin_degree_yrs = ifelse(test = Q18_Year.of.highest.earned.degree. >= 2010,
                             yes = "2010-2016", 
                             no = ifelse(test = Q18_Year.of.highest.earned.degree. <2010 & Q18_Year.of.highest.earned.degree. >=2000,
-                                        yes = "2000-2010", 
+                                        yes = "2000-2009", 
                                         no = ifelse(test = Q18_Year.of.highest.earned.degree. <2000 & Q18_Year.of.highest.earned.degree. >=1990,
                                                     yes = "1990-1999",
                                                     no = ifelse(test = Q18_Year.of.highest.earned.degree. <1990 & Q18_Year.of.highest.earned.degree. >=1980,

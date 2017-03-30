@@ -178,8 +178,8 @@ df %>%
                  df.degree$bin_degree_yrs, 
                  function(x)-length(x)))+
   geom_bar()+
-  ggtitle("Q18 - adjusted Year of Degree Survey Responses by Sex")+
-  xlab("sex")+
+  ggtitle("Q18 - adjusted Year of Degree Survey Respondents")+
+  xlab("Degree years")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
 
 ggsave("./output_plots/q18_survey_responses_by_degree_year_bin.png")
@@ -298,7 +298,6 @@ write.csv(QState.table, file = "./output_tables/QState.table.csv")
 
 #question 21, carnegie classification 
 
-df %>%
   ggplot()+
   aes(x= reorder(df$Q21_What.is.the.Carnegie.classification.of.your.institution.,
                  df$Q21_What.is.the.Carnegie.classification.of.your.institution.,
@@ -706,8 +705,8 @@ df %>%
                  df.degree$bin_degree_yrs, 
                  function(x)-length(x)))+
   geom_bar()+
-  ggtitle("Q18 - adjusted Year of Degree Survey Responses by Sex - 38 filter")+
-  xlab("sex")+
+  ggtitle("Q18 - adjusted Year of Degree Survey Respondents - 38 filter")+
+  xlab("degree years")+
   stat_count(aes(label=..count..), vjust= -0.5, geom="text", position="identity")
 
 ggsave("./output_plots/q18_survey_responses_by_degree_year_bin_38.png")

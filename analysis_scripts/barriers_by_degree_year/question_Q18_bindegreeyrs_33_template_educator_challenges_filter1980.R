@@ -235,26 +235,26 @@ dir.create(plot.dir.path, recursive = TRUE)
 
 category.df <- data.frame ("K1980D1989"= category.levels[1],
                            "K1990D1999"= category.levels[2],
-                           "K2000D2010"= category.levels[3],
+                           "K2000D2009"= category.levels[3],
                            "K2010D2016"= category.levels[4],
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
 col.order <- c("1980-1989",
                "1990-1999",
-               "2000-2010",
+               "2000-2009",
                "2010-2016")
 
 #With substitutions - must match category.df
 col.order2 <- c("K1980D1989",
                 "K1990D1999",
-                "K2000D2010",
+                "K2000D2009",
                 "K2010D2016")
 
 #Nice Labels for plotting
 nice.lables.list <- c("1980-1989",
                       "1990-1999",
-                      "2000-2010",
+                      "2000-2009",
                       "2010-2016")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
