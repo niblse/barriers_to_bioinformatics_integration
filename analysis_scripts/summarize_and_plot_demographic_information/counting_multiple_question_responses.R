@@ -10,7 +10,7 @@ data.df <- read_csv("../../data_cleaning_scripts/07_adjust_degree_year/output/de
 
 data.training <- read_csv("../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
 
-data.training <- rbind(data.training, 
+data.training <- cbind(data.training, 
                        data.df$bin_degree_yrs)
 
 
@@ -208,54 +208,54 @@ percentage.doct.2010 <- (c.count.2010.integrators/c.count.2010)*100
 
 # 1980s
 t.count.1980 <-  data.training%>%
-  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(data.df$bin_degree_yrs == "1980-1989")%>%
   filter(!is.na(faculty_preperation) )%>%
   nrow()
 
-t.count.1980.integrators <- data.training%>%
-  filter(bin_degree_yrs == "1980-1989")%>%
+t.count.1980.formaltrained <- data.training%>%
+  filter(data.df$bin_degree_yrs == "1980-1989")%>%
   filter(faculty_preperation == "Formal Training" )%>%
   nrow()
 
-percentage.ftrained.1980 <- (t.count.1980.integrators/t.count.1980)*100
+percentage.ftrained.1980 <- (t.count.1980.formaltrained/t.count.1980)*100
 
 # 1990s
 t.count.1990 <-  data.training%>%
-  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(data.df$bin_degree_yrs == "1990-1999")%>%
   filter(!is.na(faculty_preperation) )%>%
   nrow()
 
-t.count.1990.integrators <- data.training%>%
-  filter(bin_degree_yrs == "1990-1999")%>%
+t.count.1990.formaltrained <- data.training%>%
+  filter(data.df$bin_degree_yrs == "1990-1999")%>%
   filter(faculty_preperation == "Formal Training" )%>%
   nrow()
 
-percentage.ftrained.1990 <- (t.count.1990.integrators/t.count.1990)*100
+percentage.ftrained.1990 <- (t.count.1990.formaltrained/t.count.1990)*100
 
 # 2000s
 
 t.count.2000 <-  data.training%>%
-  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(data.df$bin_degree_yrs == "2000-2009")%>%
   filter(!is.na(faculty_preperation) )%>%
   nrow()
 
-t.count.2000.integrators <- data.training%>%
-  filter(bin_degree_yrs == "2000-2009")%>%
+t.count.2000.formaltrained <- data.training%>%
+  filter(data.df$bin_degree_yrs == "2000-2009")%>%
   filter(faculty_preperation == "Formal Training" )%>%
   nrow()
 
-percentage.ftrained.2000 <- (t.count.2000.integrators/t.count.2000)*100
+percentage.ftrained.2000 <- (t.count.2000.formaltrained/t.count.2000)*100
 
 # 2010-16
 
 t.count.2010 <-  data.training%>%
-  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(data.df$bin_degree_yrs == "2010-2016")%>%
   filter(!is.na(faculty_preperation) )%>%
   nrow()
 
-t.count.2010.integrators <- data.training%>%
-  filter(bin_degree_yrs == "2010-2016")%>%
+t.count.2010.formaltrained <- data.training%>%
+  filter(data.df$bin_degree_yrs == "2010-2016")%>%
   filter(faculty_preperation == "Formal Training" )%>%
   nrow()
 
-percentage.ftrained.2010 <- (t.count.2010.integrators/t.count.2010)*100
+percentage.ftrained.2010 <- (t.count.2010.formaltrained/t.count.2010)*100
