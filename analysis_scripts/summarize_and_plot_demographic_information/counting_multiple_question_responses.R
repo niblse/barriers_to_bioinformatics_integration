@@ -144,7 +144,117 @@ c.count.2010.integrators <- data.df%>%
 
 percentage.assoc.2010 <- (c.count.2010.integrators/c.count.2010)*100
 
+#What percentage of respondents by degree decade are at masters schools?
 
+# 1980s
+c.count.1980 <-  data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.1980.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+
+percentage.masters.1980 <- (c.count.1980.integrators/c.count.1980)*100
+
+# 1990s
+c.count.1990 <-  data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.1990.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+
+percentage.masters.1990 <- (c.count.1990.integrators/c.count.1990)*100
+
+# 2000s
+
+c.count.2000 <-  data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.2000.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+
+percentage.masters.2000 <- (c.count.2000.integrators/c.count.2000)*100
+
+# 2010-16
+
+c.count.2010 <-  data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.2010.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+
+percentage.masters.2010 <- (c.count.2010.integrators/c.count.2010)*100
+
+#What percentage of respondents by degree decade are at bachelors schools?
+
+# 1980s
+c.count.1980 <-  data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.1980.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+
+percentage.bacca.1980 <- (c.count.1980.integrators/c.count.1980)*100
+
+# 1990s
+c.count.1990 <-  data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.1990.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+
+percentage.bacca.1990 <- (c.count.1990.integrators/c.count.1990)*100
+
+# 2000s
+
+c.count.2000 <-  data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.2000.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+
+percentage.bacca.2000 <- (c.count.2000.integrators/c.count.2000)*100
+
+# 2010-16
+
+c.count.2010 <-  data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.) )%>%
+  nrow()
+
+c.count.2010.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+
+percentage.bacca.2010 <- (c.count.2010.integrators/c.count.2010)*100
 
 #What percentage of respondents by degree decade are at doctorate schools?
 
