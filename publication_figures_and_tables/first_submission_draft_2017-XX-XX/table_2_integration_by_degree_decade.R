@@ -125,22 +125,6 @@ int_summary_data_frame$question_n <- Q1.n
 int_summary_data_frame$chivalue <- prop_test_integrators_by_decade
 
 
-# create html table
-
-int_summary_data_frame%>%
-  select(Decade_of_degree,
-         N_faculty_w_degrees,
-         percentage_of_integrators
-         )%>%
-  stargazer(., type = "html", 
-            summary = FALSE, 
-            rownames = FALSE, 
-            digits = 1,
-            title = "Number of faculty integrating bioinformatics, by degree decade", 
-            out = "./integrator_percentage.html",
-            covariate.labels = c("Decade", "N", "Faculty Integrating (%)"), 
-            column.separate = c(1,2,3))
-
 # write the csv table
 
 write.csv(int_summary_data_frame, file = "./integrators_by_degree_decade.csv")
@@ -413,3 +397,52 @@ t.count.2010.formaltrained <- data.training%>%
   nrow()
 
 percentage.ftrained.2010 <- (t.count.2010.formaltrained/t.count.2010)*100
+
+
+formal_training_by_decade <- data.frame("Decade_of_degree"=c('1980s', 
+                                                             '1990s',
+                                                             '2000s', 
+                                                             '2010s'
+                                                             ), 
+                                        "N_faculty"=c(t.count.1980, 
+                                                      t.count.1990, 
+                                                      t.count.2000, 
+                                                      t.count.2010
+                                                      ), 
+                                        "Formal_training_percentage" = c(round(percentage.ftrained.1980, digits = 1), 
+                                                                         round(percentage.ftrained.1990, digits = 1),  
+                                                                         round(percentage.ftrained.2000, digits = 1), 
+                                                                         round(percentage.ftrained.2010,digits = 1))
+                                        )
+
+
+
+
+# create html table on percentage of integrators and formal training
+
+
+table_frame <- dplyr::full_join(int_summary_data_frame, formal_training_by_decade)%>%
+  select(Decade_of_degree, percentage_of_integrators, Formal_training_percentage)%>%
+  stargazer(., type = "html", 
+            summary = FALSE, 
+            rownames = FALSE, 
+            digits = 1,
+            title = "Formal Bioinformatics Training and Integration of Bioinformatics by Degree Decade", 
+            out = "./integrator_percentage.html",
+            covariate.labels = c("Decade of Degree", "Faculty Integrating Bioinformatics (%)", "Reported Formal Bioinformatics Training (%)"), 
+            column.separate = c(1,2,3))
+
+
+# html table on percentage of new graduates at different carnegie classifications
+
+table2_frame <- recent_graduates%>%
+  select(Carnegie_classifcation, percentage)%>%
+  stargazer(., type = "html", 
+            summary = FALSE, 
+            rownames = FALSE, 
+            digits = 1,
+            title = "Placement of Faculty with Degrees from 2010-16 across Institution types", 
+            out = "./cc_percentage.html",
+            covariate.labels = c("Carnegie Classification", "Percentage"), 
+            column.separate = c(1,2,3))
+
