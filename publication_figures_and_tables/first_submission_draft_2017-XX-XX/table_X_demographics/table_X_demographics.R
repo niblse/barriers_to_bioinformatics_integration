@@ -3,6 +3,7 @@
 require(ggplot2)
 require(stargazer)
 require(tidyverse)
+require(ggthemes)
 
 
 #load unformatted demographics table 
@@ -79,9 +80,16 @@ combined_tables%>%
   ggplot(aes(Demographic_category, Percentage))+
   geom_bar(stat = "Identity")+
   facet_wrap(~Demographic, scales = "free") +
+  theme_tufte() +
+  theme(text = element_text(size = 18))+
   geom_text(aes(label = paste0(Percentage, "%"), y = Percentage),
-            vjust = 1.4, size = 5, color = "white") +
-  theme(axis.text.x = element_text(angle = 90,  hjust = 1))
+            vjust = 1.4, size = 4.5, color = "white") +
+  theme(axis.text.x = element_text(angle = 45,  hjust = 1))+
+  theme(axis.title.x=element_blank(),
+        #axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+
+  ggtitle("Respondant Demographics")
+
                                
                                
                            
