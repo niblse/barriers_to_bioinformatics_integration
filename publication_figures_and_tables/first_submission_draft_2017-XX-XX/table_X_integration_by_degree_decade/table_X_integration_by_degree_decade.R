@@ -5,11 +5,11 @@ require(stargazer)
 
 # How many repondents are integrating bioinformatics by degree year?
 
-data.df <- read_csv("../../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
+data.df <- read_csv("../../../data_cleaning_scripts/07_adjust_degree_year/output/decoded_df_w_bin_degree_years.csv")
 
 #training dataframe with binned years
 
-data.training <- read_csv("../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
+data.training <- read_csv("../../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
 
 data.training <- cbind(data.training, 
                        data.df$bin_degree_yrs)
