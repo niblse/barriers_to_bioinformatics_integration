@@ -15,6 +15,13 @@ reds<- c("#F6001D","#B40015","#68000C","#68000C","#FB697A")
 greens <- c("#2EDB00","#135B00","#219E00","#4AE821","#80EE64")
 yellows <- c("#FFC300", "#BC9000", "#6C5300", "#FFCC24", "#FFDC6B")
 blues <- c("#766FDF","#1A10BA", "#120B83", "#08044C", "#4037D2" )
+greys <- c("#252525", 
+           "#636363", 
+           "#969696", 
+           "#bdbdbd", 
+           "#d9d9d9", 
+           "#f7f7f7")
+           
 
 
 #plot q33 scored by itself
@@ -60,7 +67,7 @@ total.scored.cols%>%
             vjust =-.2, size = 10, color = "black")+
   scale_x_discrete(breaks = NULL)+
   guides(fill=guide_legend(ncol=2))+
-  scale_fill_manual(values = color_values, name= "Barriers")
+  scale_fill_manual(values= greys, name= "Barriers")
   
 
 
