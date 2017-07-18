@@ -11,12 +11,11 @@ total.scored.cols <- read_csv("../../../analysis_scripts/top5_plots/ouput_tables
 sample.size <- 1231
 
 
-faculty_colors <- c("#ff0000","#b30000","#ff4d4d","#800000","#ff9999","#330000")
-#facilities_colors <- c(2)
-#resources_colors <- c(3)
-student_colors <- c("#00ffff", "#00b3b3", "#4dffff", "#006666", "#99ffff", "#003333")
-curriculumn_colors <- c("#cc00cc", "#800080", "#4dffff", "#ff1aff", "#4d004d", "#ff99ff" )
-#Institutional_colors <- c(2)
+reds<- c("#F6001D","#B40015","#68000C","#68000C","#FB697A")
+greens <- c("#2EDB00","#135B00","#219E00","#4AE821","#80EE64")
+yellows <- c("#FFC300", "#BC9000", "#6C5300", "#FFCC24", "#FFDC6B")
+blues <- c("#766FDF","#1A10BA", "#120B83", "#08044C", "#4037D2" )
+
 
 #plot q33 scored by itself
 
@@ -39,7 +38,7 @@ total.scored.cols <- total.scored.cols%>%
 
 total.scored.cols$barrier <- factor(total.scored.cols$barrier, levels = total.scored.cols$barrier[order(desc(total.scored.cols$percentage))])
 
-color_values <- c(faculty_colors[1], student_colors[1:2], faculty_colors[2], curriculumn_colors[1:2])
+color_values <- c(reds[1], greens[1:2], reds[2], blues[1:2])
 
 total.scored.cols%>%
   ggplot()+
@@ -60,7 +59,9 @@ total.scored.cols%>%
   geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
             vjust =-.2, size = 10, color = "black")+
   scale_x_discrete(breaks = NULL)+
-  guides(fill=guide_legend(ncol=2)) 
+  guides(fill=guide_legend(ncol=2))+
+  scale_fill_manual(values = color_values, name= "Barriers")
+  
 
 
 ggsave( filename= "./top_barriers_plot.png", 
