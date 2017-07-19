@@ -185,7 +185,7 @@ df %>%
 ggsave("./output_plots/q18_survey_responses_by_degree_year_bin.png")
 
 #write as a table
-Q18.degree.bin.table <- as.data.frame(table(as.factor(df.degree$bin_degree_yrs)),stringsAsFactors = FALSE)
+Q18.degree.bin.table <- as.data.frame(table(as.factor(df.degree$bin_degree_yrs), useNA = "always"),stringsAsFactors = TRUE)
 total.responses=sum(Q18.degree.bin.table$Freq)
 Q18.degree.bin.table <- Q18.degree.bin.table%>%
   mutate(percentage = (Freq/total.responses))%>%

@@ -67,7 +67,9 @@ total.scored.cols%>%
             vjust =-.2, size = 10, color = "black")+
   scale_x_discrete(breaks = NULL)+
   guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "black"))+
   scale_fill_manual(values= greys, name= "Barriers")
+
   
 
 
@@ -75,4 +77,8 @@ ggsave( filename= "./top_barriers_plot.png",
         width = 18.8, 
         height = 8.81, 
         units = "in")
+
+
+
+
 

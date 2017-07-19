@@ -1,4 +1,5 @@
 "","Var1","Freq","percentage","percentage_of_total_N","question"
-"1","Total Undergraduates < 5,000",382,0.382382382382382,0.310316815597076,"Q24 Undergrad Enrollment"
-"2","Total Undergraduates > 15,000",284,0.284284284284284,0.230706742485784,"Q24 Undergrad Enrollment"
-"3","Total Undergraduates: 5-15,000",333,0.333333333333333,0.27051177904143,"Q24 Undergrad Enrollment"
+"1","Total Undergraduates < 5,000",382,0.310316815597076,0.310316815597076,"Q24 Undergrad Enrollment"
+"2","Total Undergraduates > 15,000",284,0.230706742485784,0.230706742485784,"Q24 Undergrad Enrollment"
+"3","Total Undergraduates: 5-15,000",333,0.27051177904143,0.27051177904143,"Q24 Undergrad Enrollment"
+"4",NA,232,0.188464662875711,0.188464662875711,"Q24 Undergrad Enrollment"

@@ -1,4 +1,5 @@
 "","Var1","Freq","percentage","percentage_of_total_N","question"
-"1","Teaching: Dedicated Bioinformatics Course",132,0.133874239350913,0.107229894394801,"Q1 Bioinformatics teaching"
-"2","Teaching: Integrating Bioinformatics",263,0.266734279918864,0.213647441104793,"Q1 Bioinformatics teaching"
-"3","Teaching: Not Integrating Bioinformatics",591,0.599391480730223,0.480097481722177,"Q1 Bioinformatics teaching"
+"1","Teaching: Dedicated Bioinformatics Course",132,0.107229894394801,0.107229894394801,"Q1 Bioinformatics teaching"
+"2","Teaching: Integrating Bioinformatics",263,0.213647441104793,0.213647441104793,"Q1 Bioinformatics teaching"
+"3","Teaching: Not Integrating Bioinformatics",591,0.480097481722177,0.480097481722177,"Q1 Bioinformatics teaching"
+"4",NA,245,0.199025182778229,0.199025182778229,"Q1 Bioinformatics teaching"

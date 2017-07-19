@@ -2,7 +2,7 @@ question,Var1,Freq,percentage,percentage_of_total_N
 Q1 Bioinformatics teaching,Teaching: Dedicated Bioinformatics Course,132,0.13387423935091278,0.10722989439480098
 Q1 Bioinformatics teaching,Teaching: Integrating Bioinformatics,263,0.2667342799188641,0.21364744110479286
 Q1 Bioinformatics teaching,Teaching: Not Integrating Bioinformatics,591,0.5993914807302231,0.4800974817221771
-Q1 Bioinformatics teaching_38.filter,Teaching: Not Integrating Bioinformatics,591,1.0,0.4800974817221771
+Q1 Bioinformatics teaching_38.filter,Teaching: Not Integrating Bioinformatics,591,1,0.4800974817221771
 Q14 sex,Female,497,0.4906219151036525,0.40373679935012186
 Q14 sex,Male,516,0.5093780848963475,0.4191714053614947
 Q14 sex_38.filter,Female,270,0.5544147843942505,0.21933387489845654

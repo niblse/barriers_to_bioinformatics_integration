@@ -218,18 +218,30 @@ combined_tables$Demographic <- reorder.factor(combined_tables$Demographic, new.o
 
 #Generate plot
 
+greys <- c("#252525", 
+           "#636363", 
+           "#969696", 
+           "#bdbdbd", 
+           "#d9d9d9", 
+           "#f7f7f7")
+
 combined_tables%>%
   ggplot(aes(Demographic_category, Percentage))+
   geom_bar(stat = "Identity")+
-  facet_wrap(~Demographic, scales = "free_x", nrow = 2) +
-  theme_tufte() +
-  theme(text = element_text(size = 20))+
+  coord_flip()+
+  facet_wrap(~Demographic, scales = "free_y", nrow = 2) +
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  theme(strip.text.y = element_blank())+
+  theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
   geom_text(aes(label = paste0(Percentage, "%"), y = Percentage),
-            vjust =-.2, size = 4, color = "black") +
-  theme(axis.text.x = element_text(angle = 45,  hjust = 1))+
+            vjust =0, nudge_y = 10, nudge_x = -.1, size = 6, color = "black") +
   theme(axis.title.x=element_blank(),
         axis.ticks.x=element_blank())+
-  theme(strip.text.x = element_text(size = 20))#+
+  theme(strip.text.x = element_text(size = 20))
   #theme(panel.background = element_rect(fill = NA, color = "black"))
 
 ggsave("demographics_figure.png")                               
