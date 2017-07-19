@@ -109,14 +109,14 @@ table_carnegie <- data.frame("Demographic_category"=c("Associates",
                                               ), 
                              "N"=c(as.numeric(data.df[1,3]), 
                                    as.numeric(data.df[2,3]), 
-                                   as.numeric(data.df[3,3]), 
                                    as.numeric(data.df[4,3]), 
+                                   as.numeric(data.df[3,3]), 
                                    as.numeric(data.df[5,3]) 
                                    ), 
                              "Percentage"=c(as.numeric(data.df[1,5]), 
                                             as.numeric(data.df[2,5]), 
-                                            as.numeric(data.df[3,5]), 
                                             as.numeric(data.df[4,5]), 
+                                            as.numeric(data.df[3,5]), 
                                             as.numeric(data.df[5,5])
                                             ), 
                              stringsAsFactors = FALSE
