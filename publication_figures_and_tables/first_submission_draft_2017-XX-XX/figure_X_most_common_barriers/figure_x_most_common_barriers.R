@@ -68,7 +68,9 @@ total.scored.cols%>%
   scale_x_discrete(breaks = NULL)+
   guides(fill=guide_legend(ncol=2))+
   theme(axis.line = element_line(colour = "black"))+
-  scale_fill_manual(values= greys, name= "Barriers")
+  scale_fill_manual(values= greys, name= "Barriers")+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())
 
   
 
