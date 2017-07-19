@@ -17,7 +17,7 @@ data.df <- read_csv("../../../analysis_scripts/summarize_and_plot_demographic_in
 
 table_sex <- data.frame("Demographic_category"=c("Female", 
                                                  "Male", 
-                                                 "Unknown"),
+                                                 "Unknown Sex"),
                         "Demographic"=c("Sex", 
                                         "Sex",
                                         "Sex"), 
@@ -32,13 +32,13 @@ table_sex <- data.frame("Demographic_category"=c("Female",
                         stringsAsFactors = FALSE
                         )
 
-table_ethnicity <-  data.frame("Demographic_category"=c("American Indian/Alaskan Native",
+table_ethnicity <-  data.frame("Demographic_category"=c("Am. Indian/Alaskan Native",
                                                         "Asian", 
-                                                        "Black/African American", 
+                                                        "Black/African Am.", 
                                                         "Hispanic", 
                                                         "Hawaiian/Pacific Islander", 
                                                         "White", 
-                                                        "Unknown"), 
+                                                        "Unknown Race/Ethnicity"), 
                                "Demographic"=c("Race/Ethnicity",
                                                "Race/Ethnicity",
                                                "Race/Ethnicity",
@@ -70,7 +70,7 @@ table_degree <- data.frame("Demographic_category"=c("Bachelors",
                                                     "Doctoral", 
                                                     "Professional",
                                                     "Other", 
-                                                    "Unknown"
+                                                    "Unknown Degree"
                                                     ), 
                            "Demographic"=c("Terminal Degree", 
                                            "Terminal Degree",
@@ -81,16 +81,16 @@ table_degree <- data.frame("Demographic_category"=c("Bachelors",
                                            ), 
                            "N"=c(as.numeric(data.df[24,3]),
                                  as.numeric(data.df[25,3]),
-                                 as.numeric(data.df[26,3]),
                                  as.numeric(data.df[27,3]),
                                  as.numeric(data.df[28,3]),
+                                 as.numeric(data.df[26,3]),
                                  as.numeric(data.df[29,3])
                                  ), 
                            "Percentage"=c(as.numeric(data.df[24,5]),
                                           as.numeric(data.df[25,5]),
-                                          as.numeric(data.df[26,5]),
                                           as.numeric(data.df[27,5]),
                                           as.numeric(data.df[28,5]),
+                                          as.numeric(data.df[26,5]),
                                           as.numeric(data.df[29,5])
                                           ), 
                            stringsAsFactors = FALSE
@@ -99,7 +99,7 @@ table_carnegie <- data.frame("Demographic_category"=c("Associates",
                                                       "Baccalaureate", 
                                                       "Masters", 
                                                       "Doctoral", 
-                                                      "Unknown"
+                                                      "Unknown Classification"
                                                       ), 
                              "Demographic"= c("Carnegie Classification",
                                               "Carnegie Classification",
@@ -123,7 +123,7 @@ table_carnegie <- data.frame("Demographic_category"=c("Associates",
                              )
 table_msi <- data.frame("Demographic_category"=c("Minority Serving", 
                                                  "Non-minority Serving", 
-                                                 "Unknown"
+                                                 "Unknown MSI Designation"
                                                  ), 
                         "Demographic"= c("MSI Designation", 
                                          "MSI Designation",
@@ -142,7 +142,7 @@ table_msi <- data.frame("Demographic_category"=c("Minority Serving",
 table_enrollment <- data.frame("Demographic_category"=c("< 5,000", 
                                                         "5-15,000", 
                                                         "> 15,000", 
-                                                        "Unknown"
+                                                        "Unknown Enrollment"
                                                         ), 
                         "Demographic"= c("Undergraduate Enrollment", 
                                          "Undergraduate Enrollment", 
@@ -165,7 +165,7 @@ table_training <- data.frame("Demographic_category"=c("Formal Training",
                                                       "No Training", 
                                                       "Self-taught", 
                                                       "Workshops and Bootcamps", 
-                                                      "Unknown"
+                                                      "Unknown Bioinformatics Training"
                                                       ), 
                         "Demographic"= c("Bioinformatics Training",
                                          "Bioinformatics Training",
@@ -187,22 +187,36 @@ table_training <- data.frame("Demographic_category"=c("Formal Training",
                                        ), 
                         stringsAsFactors = FALSE
                         )
-table_decade <- data.frame("Demographic_category"=c("1980s", 
+table_decade <- data.frame("Demographic_category"=c("Before 1970s", 
+                                                    "1970s", 
+                                                    "1980s", 
                                                     "1990s", 
                                                     "2000s", 
-                                                    "2010s"),
+                                                    "2010s", 
+                                                    "Unknown Decade of Degree"),
                            "Demographic"=c("Decade of Degree",
                                            "Decade of Degree",
                                            "Decade of Degree",
+                                           "Decade of Degree", 
+                                           "Decade of Degree",
+                                           "Decade of Degree",
                                            "Decade of Degree"), 
-                           "N"=c(as.numeric(degree.df[2,3]), 
-                                 as.numeric(degree.df[3,3]), 
-                                 as.numeric(degree.df[4,3]), 
-                                 as.numeric(degree.df[5,3])), 
-                           "Percentage"=c(as.numeric(degree.df[2,4]), 
-                                          as.numeric(degree.df[3,4]), 
-                                          as.numeric(degree.df[4,4]), 
-                                          as.numeric(degree.df[5,4])), 
+                           "N"=c(as.numeric(data.df[59,3]), 
+                                 as.numeric(data.df[54,3]), 
+                                 as.numeric(data.df[55,3]), 
+                                 as.numeric(data.df[56,3]),
+                                 as.numeric(data.df[57,3]),
+                                 as.numeric(data.df[58,3]),
+                                 as.numeric(data.df[60,3])
+                                 ), 
+                           "Percentage"=c(as.numeric(data.df[59,5]), 
+                                          as.numeric(data.df[54,5]), 
+                                          as.numeric(data.df[55,5]), 
+                                          as.numeric(data.df[56,5]),
+                                          as.numeric(data.df[57,5]),
+                                          as.numeric(data.df[58,5]),
+                                          as.numeric(data.df[60,5])
+                                          ), 
                            stringsAsFactors = FALSE
                            )
                                                         
@@ -228,21 +242,26 @@ combined_tables <- combined_tables%>%
 # order for plotting
 
 combined_tables$Demographic_category <- factor(combined_tables$Demographic_category, 
-                                               levels = combined_tables$Demographic_category[order(desc(combined_tables$Percentage))])
+                                               levels = combined_tables$Demographic_category[order(combined_tables$Percentage)])
 
 target_order <- c(
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
-                  "Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
+                  "Race/Ethnicity",
                   "Sex", 
+                  "Sex",
                   "Sex", 
                   "Terminal Degree", 
                   "Terminal Degree", 
                   "Terminal Degree", 
                   "Terminal Degree", 
+                  "Terminal Degree", 
+                  "Terminal Degree", 
+                  "Bioinformatics Training",
                   "Bioinformatics Training",
                   "Bioinformatics Training",
                   "Bioinformatics Training",
@@ -251,12 +270,18 @@ target_order <- c(
                   "Decade of Degree", 
                   "Decade of Degree", 
                   "Decade of Degree", 
+                  "Decade of Degree", 
+                  "Decade of Degree", 
+                  "Decade of Degree", 
+                  "MSI Designation", 
                   "MSI Designation", 
                   "MSI Designation", 
                   "Carnegie Classification", 
                   "Carnegie Classification",
                   "Carnegie Classification",
                   "Carnegie Classification",
+                  "Carnegie Classification",
+                  "Undergraduate Enrollment",
                   "Undergraduate Enrollment",
                   "Undergraduate Enrollment",
                   "Undergraduate Enrollment"
@@ -277,21 +302,28 @@ combined_tables%>%
   ggplot(aes(Demographic_category, Percentage))+
   geom_bar(stat = "Identity")+
   coord_flip()+
-  facet_wrap(~Demographic, scales = "free_y", nrow = 2) +
+  facet_wrap(~Demographic, scales = "free_y", ncol = 2) +
   theme_fivethirtyeight(base_size = 20, base_family = "sans")+
   theme(panel.background = element_rect(fill = "white"))+
   theme(plot.background = element_rect(fill = "white"))+
   theme(legend.background = element_rect(fill = "white"))+
   theme(strip.text.y = element_blank())+
-  theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  #theme(strip.background = element_rect,strip.text.x = element_blank())+
   theme(axis.text.x = element_blank())+
   geom_text(aes(label = paste0(Percentage, "%"), y = Percentage),
-            vjust =0, nudge_y = 10, nudge_x = -.1, size = 6, color = "black") +
+            vjust =0, nudge_y = 5, nudge_x = -.1, size = 5, color = "black") +
   theme(axis.title.x=element_blank(),
         axis.ticks.x=element_blank())+
-  theme(strip.text.x = element_text(size = 20))
-  #theme(panel.background = element_rect(fill = NA, color = "black"))
+  theme(strip.text.x = element_text(size = 14, face = "bold", vjust = 10 ))+
+  theme( axis.line = element_line(colour = "black", 
+                                  size = 0.5, linetype = "solid"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())
+  
 
-ggsave("demographics_figure.png")                               
+
+ggsave("demographics_figure.png", 
+       units = "in", 
+       height = 15)                               
                                
                            

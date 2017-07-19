@@ -673,9 +673,24 @@ master.df.p1 <- rbind(Q21.carnegie.classification.table,
                    Q14.gender.table,
                    Q24.undergraduate.enrollment.table)
 
+#combine tables for specially formatted output
+
+master.df.p2 <- rbind(Q21.carnegie.classification.table,
+                      Q1.currently.teaching.table,
+                      Q15.race.table,
+                      Q15.race.table.adj,
+                      Q17.degree.table,
+                      Q3.level.of.training.table,
+                      Q3.training.table.adj,
+                      Q22.msi.table,
+                      Q14.gender.table,
+                      Q24.undergraduate.enrollment.table, 
+                      Q18.degree.bin.table)
+
+
 # write for summary 
 
-write.csv(master.df.p1, file = "./output_tables/summary_demographics_w_NAs.csv")
+write.csv(master.df.p2, file = "./output_tables/summary_demographics_w_NAs.csv")
 
 #reorder columns
 #master.df <- master.df%>%
