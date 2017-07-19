@@ -8,21 +8,27 @@ require(gdata)
 
 #load unformatted demographics table 
 
-data.df <- read_csv("../../../analysis_scripts/summarize_and_plot_demographic_information/output_tables/summary_table.csv")
-degree.df <- read_csv("../../../analysis_scripts/summarize_and_plot_demographic_information/output_tables/Q18.bin.degree.table.csv")
+data.df <- read_csv("../../../analysis_scripts/summarize_and_plot_demographic_information/output_tables/summary_demographics_w_NAs.csv")
+
 # Create dataframe of desired demographics
 
 
 
 
 table_sex <- data.frame("Demographic_category"=c("Female", 
-                                                 "Male"),
+                                                 "Male", 
+                                                 "Unknown"),
                         "Demographic"=c("Sex", 
+                                        "Sex",
                                         "Sex"), 
-                        "N"=c(as.numeric(data.df[5,3]), 
-                              as.numeric(data.df[6,3])), 
-                        "Percentage"=c(as.numeric(data.df[5,4]), 
-                                       as.numeric(data.df[6,4])), 
+                        "N"=c(as.numeric(data.df[47,3]), 
+                              as.numeric(data.df[48,3]), 
+                              as.numeric(data.df[49,3])
+                              ),
+                        "Percentage"=c(as.numeric(data.df[47,5]), 
+                                       as.numeric(data.df[48,5]),
+                                       as.numeric(data.df[49,5])
+                                       ), 
                         stringsAsFactors = FALSE
                         )
 
@@ -31,112 +37,154 @@ table_ethnicity <-  data.frame("Demographic_category"=c("American Indian/Alaskan
                                                         "Black/African American", 
                                                         "Hispanic", 
                                                         "Hawaiian/Pacific Islander", 
-                                                        "White"), 
-                               "Demographic"=c("Ethnicity",
-                                               "Ethnicity",
-                                               "Ethnicity",
-                                               "Ethnicity",
-                                               "Ethnicity",
-                                               "Ethnicity"
+                                                        "White", 
+                                                        "Unknown"), 
+                               "Demographic"=c("Race/Ethnicity",
+                                               "Race/Ethnicity",
+                                               "Race/Ethnicity",
+                                               "Race/Ethnicity",
+                                               "Race/Ethnicity",
+                                               "Race/Ethnicity",
+                                               "Race/Ethnicity"
                                                ), 
-                               "N"=c(as.numeric(data.df[15,3]),
-                                     as.numeric(data.df[16,3]),
-                                     as.numeric(data.df[17,3]),
+                               "N"=c(as.numeric(data.df[17,3]),
                                      as.numeric(data.df[18,3]),
                                      as.numeric(data.df[19,3]),
-                                     as.numeric(data.df[20,3])
+                                     as.numeric(data.df[20,3]),
+                                     as.numeric(data.df[21,3]),
+                                     as.numeric(data.df[22,3]),
+                                     as.numeric(data.df[23,3])
                                      ), 
-                               "Percentage"=c(as.numeric(data.df[15,4]),
-                                              as.numeric(data.df[16,4]),
-                                              as.numeric(data.df[17,4]),
-                                              as.numeric(data.df[18,4]),
-                                              as.numeric(data.df[19,4]),
-                                              as.numeric(data.df[20,4])
+                               "Percentage"=c(as.numeric(data.df[17,5]),
+                                              as.numeric(data.df[18,5]),
+                                              as.numeric(data.df[19,5]),
+                                              as.numeric(data.df[20,5]),
+                                              as.numeric(data.df[21,5]),
+                                              as.numeric(data.df[22,5]),
+                                              as.numeric(data.df[23,5])
                                               ),
                                stringsAsFactors = FALSE
                                      )
 table_degree <- data.frame("Demographic_category"=c("Bachelors", 
                                                     "Masters",
                                                     "Doctoral", 
-                                                    "Professional/Other"), 
+                                                    "Professional",
+                                                    "Other", 
+                                                    "Unknown"
+                                                    ), 
                            "Demographic"=c("Terminal Degree", 
                                            "Terminal Degree",
                                            "Terminal Degree",
+                                           "Terminal Degree", 
+                                           "Terminal Degree",
                                            "Terminal Degree"
                                            ), 
-                           "N"=c(as.numeric(data.df[33,3]),
-                                 as.numeric(data.df[34,3]),
-                                 as.numeric(data.df[36,3]),
-                                 (as.numeric(data.df[35,3])+as.numeric(data.df[37,3]))
+                           "N"=c(as.numeric(data.df[24,3]),
+                                 as.numeric(data.df[25,3]),
+                                 as.numeric(data.df[26,3]),
+                                 as.numeric(data.df[27,3]),
+                                 as.numeric(data.df[28,3]),
+                                 as.numeric(data.df[29,3])
                                  ), 
-                           "Percentage"=c(as.numeric(data.df[33,4]),
-                                          as.numeric(data.df[34,4]),
-                                          as.numeric(data.df[36,4]),
-                                          (as.numeric(data.df[35,4])+as.numeric(data.df[37,4]))
+                           "Percentage"=c(as.numeric(data.df[24,5]),
+                                          as.numeric(data.df[25,5]),
+                                          as.numeric(data.df[26,5]),
+                                          as.numeric(data.df[27,5]),
+                                          as.numeric(data.df[28,5]),
+                                          as.numeric(data.df[29,5])
                                           ), 
                            stringsAsFactors = FALSE
                            )
 table_carnegie <- data.frame("Demographic_category"=c("Associates", 
                                                       "Baccalaureate", 
                                                       "Masters", 
-                                                      "Doctoral"), 
+                                                      "Doctoral", 
+                                                      "Unknown"
+                                                      ), 
                              "Demographic"= c("Carnegie Classification",
                                               "Carnegie Classification",
                                               "Carnegie Classification",
+                                              "Carnegie Classification", 
                                               "Carnegie Classification"
                                               ), 
-                             "N"=c(as.numeric(data.df[43,3]), 
-                                   as.numeric(data.df[44,3]), 
-                                   as.numeric(data.df[46,3]), 
-                                   as.numeric(data.df[45,3]) 
+                             "N"=c(as.numeric(data.df[1,3]), 
+                                   as.numeric(data.df[2,3]), 
+                                   as.numeric(data.df[3,3]), 
+                                   as.numeric(data.df[4,3]), 
+                                   as.numeric(data.df[5,3]) 
                                    ), 
-                             "Percentage"=c(as.numeric(data.df[43,4]), 
-                                            as.numeric(data.df[44,4]), 
-                                            as.numeric(data.df[46,4]), 
-                                            as.numeric(data.df[45,4])
+                             "Percentage"=c(as.numeric(data.df[1,5]), 
+                                            as.numeric(data.df[2,5]), 
+                                            as.numeric(data.df[3,5]), 
+                                            as.numeric(data.df[4,5]), 
+                                            as.numeric(data.df[5,5])
                                             ), 
                              stringsAsFactors = FALSE
                              )
 table_msi <- data.frame("Demographic_category"=c("Minority Serving", 
-                                                 "Non-minority Serving"), 
+                                                 "Non-minority Serving", 
+                                                 "Unknown"
+                                                 ), 
                         "Demographic"= c("MSI Designation", 
-                                         "MSI Designation"), 
-                        "N"=c(as.numeric(data.df[51,3]),
-                              as.numeric(data.df[52,3])),
-                        "Percentage"=c(as.numeric(data.df[51,4]),
-                                       as.numeric(data.df[52,4])), 
+                                         "MSI Designation",
+                                         "MSI Designation"
+                                         ), 
+                        "N"=c(as.numeric(data.df[44,3]),
+                              as.numeric(data.df[45,3]),
+                              as.numeric(data.df[46,3])
+                              ),
+                        "Percentage"=c(as.numeric(data.df[44,5]),
+                                       as.numeric(data.df[45,5]),
+                                       as.numeric(data.df[46,5])
+                                       ), 
                         stringsAsFactors = FALSE
                         )
 table_enrollment <- data.frame("Demographic_category"=c("< 5,000", 
                                                         "5-15,000", 
-                                                        "> 15,000"), 
+                                                        "> 15,000", 
+                                                        "Unknown"
+                                                        ), 
                         "Demographic"= c("Undergraduate Enrollment", 
                                          "Undergraduate Enrollment", 
-                                         "Undergraduate Enrollment"), 
-                        "N"=c(as.numeric(data.df[55,3]), 
-                              as.numeric(data.df[57,3]), 
-                              as.numeric(data.df[56,3])),
-                        "Percentage"=c(as.numeric(data.df[55,4]), 
-                                       as.numeric(data.df[57,4]), 
-                                       as.numeric(data.df[56,4])), 
+                                         "Undergraduate Enrollment",
+                                         "Undergraduate Enrollment"
+                                         ), 
+                        "N"=c(as.numeric(data.df[50,3]), 
+                              as.numeric(data.df[51,3]), 
+                              as.numeric(data.df[52,3]),
+                              as.numeric(data.df[53,3])
+                              ),
+                        "Percentage"=c(as.numeric(data.df[50,5]), 
+                                       as.numeric(data.df[51,5]), 
+                                       as.numeric(data.df[52,5]),
+                                       as.numeric(data.df[53,5])
+                                       ), 
                         stringsAsFactors = FALSE
                         )
 table_training <- data.frame("Demographic_category"=c("Formal Training", 
                                                       "No Training", 
                                                       "Self-taught", 
-                                                      "Workshops and Bootcamps"), 
+                                                      "Workshops and Bootcamps", 
+                                                      "Unknown"
+                                                      ), 
                         "Demographic"= c("Bioinformatics Training",
                                          "Bioinformatics Training",
                                          "Bioinformatics Training",
-                                         "Bioinformatics Training"), 
-                        "N"=c(as.numeric(data.df[61,3]), 
-                              as.numeric(data.df[62,3]), 
-                              as.numeric(data.df[63,3]), 
-                              as.numeric(data.df[64,3])),
-                        "Percentage"=c(as.numeric(data.df[61,4]), 
-                                       as.numeric(data.df[62,4]), 
-                                       as.numeric(data.df[63,4]), 
-                                       as.numeric(data.df[64,4])), 
+                                         "Bioinformatics Training",
+                                         "Bioinformatics Training"
+                                         ), 
+                        "N"=c(as.numeric(data.df[39,3]), 
+                              as.numeric(data.df[40,3]), 
+                              as.numeric(data.df[41,3]), 
+                              as.numeric(data.df[42,3]), 
+                              as.numeric(data.df[43,3])
+                              ),
+                        "Percentage"=c(as.numeric(data.df[39,5]), 
+                                       as.numeric(data.df[40,5]), 
+                                       as.numeric(data.df[41,5]), 
+                                       as.numeric(data.df[42,5]), 
+                                       as.numeric(data.df[43,5])
+                                       ), 
                         stringsAsFactors = FALSE
                         )
 table_decade <- data.frame("Demographic_category"=c("1980s", 
