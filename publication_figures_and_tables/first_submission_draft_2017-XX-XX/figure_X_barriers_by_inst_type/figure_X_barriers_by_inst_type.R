@@ -8,6 +8,8 @@ require(reshape2)
 require(pwr)
 require(gplots)
 require(corrplot)
+require(ggthemes)
+
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
@@ -905,22 +907,39 @@ plot.sig.barriers <- function(df,
     ggplot()+
     aes(x=Var2, y=proportion, fill=Var1)+
     geom_bar(stat = "identity", position = "dodge")+
-    #theme_minimal()+
+    labs(y = "percentage of respondents", x= "")+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
-    theme_fivethirtyeight(base_size = 16, base_family = "sans")+
-    theme(panel.background = element_rect(fill = "white"))+
+    theme_gray(base_size = 20, base_family = "sans")+
+    theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
+    theme(legend.background = element_rect(), legend.position = "bottom", legend.direction = "horizontal", legend.box = "vertical")+
+    theme(panel.grid.major =
+            element_line(colour = "grey"),
+          panel.grid.minor = element_blank(),
+          # unfortunately, can't mimic subtitles
+          plot.title = element_text(hjust = 0, size = rel(1.5), face = "bold"),
+          plot.margin = unit(c(1, 1, 1, 1), "lines"),
+          strip.background = element_rect())+
     theme(plot.background = element_rect(fill = "white"))+
-    theme(legend.background = element_rect(fill = "white"))+
-    theme(strip.background = element_blank())+
-    theme(legend.key.size = unit(1.5, 'lines'))+
+    theme(panel.background = element_rect(fill = "white"))+
     theme(axis.line = element_line(colour = "black"))+
-    guides(fill=guide_legend(ncol=2))+
-    theme(panel.grid.major.y = element_blank())+
+    
+    #theme_fivethirtyeight(base_size = 16, base_family = "sans")+
+    #theme(panel.background = element_rect(fill = "white"))+
+    #theme(plot.background = element_rect(fill = "white"))+
+   # theme(legend.background = element_rect(fill = "white"))+
+    #theme(strip.background = element_blank())+
+   # theme(legend.key.size = unit(1.5, 'lines'))+
+   # theme(axis.line = element_line(colour = "black"))+
+    #guides(fill=guide_legend(ncol=2))+
+   # theme(panel.grid.major.y = element_blank())+
     coord_flip()+
-    #scale_fill_manual(values= greys, name= "Institution Types", labels= c("Associates","Baccalaureate","Masters", "Doctoral"))
+    scale_fill_manual(values= greys, name= "Institution Types", labels= legend.labels$legend)+
+    guides(fill=guide_legend(nrow =2))+
+    theme(
+          panel.grid.minor=element_blank())
     
     
   
