@@ -901,7 +901,7 @@ plot.sig.barriers <- function(df,
   greys <- c("#252525", 
              "#636363", 
              "#969696", 
-             "#d9d9d9")
+             "#DCDCDC")
   
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
@@ -932,12 +932,11 @@ plot.sig.barriers <- function(df,
     theme(panel.grid.major.y = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
-    scale_fill_manual(values= greys, name= "Institution Types", labels= legend.labels$legend)+
+    scale_fill_manual(values = greys, name= "Institution Types", labels= legend.labels$legend)+
     guides(fill=guide_legend(nrow =2))+
     theme(panel.grid.minor=element_blank())
     
-    
-  
+
   
   
   
