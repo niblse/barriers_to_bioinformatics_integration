@@ -909,7 +909,12 @@ plot.sig.barriers <- function(df,
     geom_bar(stat = "identity", position = "dodge")+
     labs(y = "percentage of respondents", x= "")+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
+    scale_x_discrete(
+      labels = c(
+      'Curriculum Issues:\nQuickly changing technologies',
+      'Student Issues:\nLack of interest',
+      'Student Issues:\nLack of background skills/knowledge',
+      'Faculty Issues:\nExpertise/training'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -924,22 +929,12 @@ plot.sig.barriers <- function(df,
           strip.background = element_rect())+
     theme(plot.background = element_rect(fill = "white"))+
     theme(panel.background = element_rect(fill = "white"))+
+    theme(panel.grid.major.y = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
-    
-    #theme_fivethirtyeight(base_size = 16, base_family = "sans")+
-    #theme(panel.background = element_rect(fill = "white"))+
-    #theme(plot.background = element_rect(fill = "white"))+
-   # theme(legend.background = element_rect(fill = "white"))+
-    #theme(strip.background = element_blank())+
-   # theme(legend.key.size = unit(1.5, 'lines'))+
-   # theme(axis.line = element_line(colour = "black"))+
-    #guides(fill=guide_legend(ncol=2))+
-   # theme(panel.grid.major.y = element_blank())+
     coord_flip()+
     scale_fill_manual(values= greys, name= "Institution Types", labels= legend.labels$legend)+
     guides(fill=guide_legend(nrow =2))+
-    theme(
-          panel.grid.minor=element_blank())
+    theme(panel.grid.minor=element_blank())
     
     
   
@@ -950,7 +945,7 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       ".png",
+                                                                       "_bw.png",
                                                                        sep = "_")
   
   ggsave(proportional.sig.responses.summed.by.barriers.plot.filename, 
@@ -970,4 +965,156 @@ plot.sig.barriers(proportion_table_summary,
                   n.respondents,
                   question.column.name.safe,
                   category.column.name.safe)
+
+
+
+
+############ Plot significantly different barriers ####################################
+
+
+plot.sig.barriers <- function(df, 
+                              category.df,
+                              category.levels,
+                              category.nice.name.caps,
+                              category.nice.name.lower,
+                              n.respondents,
+                              question.column.name.safe,
+                              category.column.name.safe){
+  
+  #significant barriers
+  sig.barriers <- df%>%
+    filter(prop_test_chi_pvalue <= 0.05)
+  sigs <- as.character(sig.barriers$Var2)
+  sigs <- c(sigs)
+  
+  #plot significant barriers
+  
+  #reformat Var2 names as chr
+  df$Var2 <- as.character(df$Var2)
+  
+  proportional.sig.responses.summed.by.barriers.plot <-df%>%
+    filter(Var2 %in% sigs)
+  
+  #setup plot ordering
+  
+  proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
+  proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
+    factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
+             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
+  
+  
+  
+  
+  #plot
+  
+  # create legend lables that show the value of n for a stratfying category
+  legend.labels <- df%>%
+    ungroup()%>%
+    select(nice_names, responses)%>%
+    head(., n = length(category.levels))%>%
+    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+  
+  #correct nice_names for plotting
+  #SUBSTITUTION
+  
+  #replace underscores with spaces
+  legend.labels$legend <- gsub("_",
+                               " ",
+                               legend.labels$legend)
+  #replace 'X' with ','
+  legend.labels$legend <- gsub("X",
+                               ",",
+                               legend.labels$legend)
+  #replace 'K' with ""
+  legend.labels$legend <- gsub("K",
+                               "",
+                               legend.labels$legend)
+  #replace 'D' with '-'
+  #legend.labels$legend <- gsub("D",
+  #                             "-",
+  #                             legend.labels$legend)
+  # create labels that show how many positive (coded) responses
+  
+  x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
+    arrange(desc(summed_score))%>%
+    select(Var2, summed_score)%>%
+    distinct(Var2, .keep_all = TRUE)%>%
+    mutate(x.labels = paste(Var2, " \n(", "N(cr+)=", summed_score, ")", sep = ""))
+  
+  # get values of error bars
+  
+  error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
+  error.dodge <- position_dodge(width=0.9)
+  
+  
+ niblse_4_color <- c("#0C774C",
+                     "#124671",
+                     "#AF6D12",
+                     "#AF4112")
+  
+  proportional.sig.responses.summed.by.barriers.plot%>%
+    ggplot()+
+    aes(x=Var2, y=proportion, fill=Var1)+
+    geom_bar(stat = "identity", position = "dodge")+
+    labs(y = "percentage of respondents", x= "")+
+    theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
+    scale_x_discrete(
+      labels = c(
+        'Curriculum Issues:\nQuickly changing technologies',
+        'Student Issues:\nLack of interest',
+        'Student Issues:\nLack of background skills/knowledge',
+        'Faculty Issues:\nExpertise/training'))+
+    #scale_x_discrete(labels = x.labels$x.labels)+
+    geom_errorbar(error.limits, position = error.dodge, width = .2)+
+    theme_gray(base_size = 20, base_family = "sans")+
+    theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
+    theme(legend.background = element_rect(), legend.position = "bottom", legend.direction = "horizontal", legend.box = "vertical")+
+    theme(panel.grid.major =
+            element_line(colour = "grey"),
+          panel.grid.minor = element_blank(),
+          # unfortunately, can't mimic subtitles
+          plot.title = element_text(hjust = 0, size = rel(1.5), face = "bold"),
+          plot.margin = unit(c(1, 1, 1, 1), "lines"),
+          strip.background = element_rect())+
+    theme(plot.background = element_rect(fill = "white"))+
+    theme(panel.background = element_rect(fill = "white"))+
+    theme(panel.grid.major.y = element_blank())+
+    theme(axis.line = element_line(colour = "black"))+
+    coord_flip()+
+    scale_fill_manual(values = niblse_4_color, name= "Institution Types", labels= legend.labels$legend)+
+    guides(fill=guide_legend(nrow =2))+
+    theme(panel.grid.minor=element_blank())
+  
+  
+  
+  
+  
+  
+  proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_significantly_by_category_proprotional_by_category",
+                                                                       question.column.name.short,
+                                                                       "by",
+                                                                       category.column.name.short,
+                                                                       "_niblse_4color.png",
+                                                                       sep = "_")
+  
+  ggsave(proportional.sig.responses.summed.by.barriers.plot.filename, 
+         width = 13.8, 
+         units = "in")
+  
+  
+}
+
+
+# plot significantly different responses
+plot.sig.barriers(proportion_table_summary, 
+                  category.df,
+                  category.levels,
+                  category.nice.name.caps,
+                  category.nice.name.lower,
+                  n.respondents,
+                  question.column.name.safe,
+                  category.column.name.safe)
+
+
+
 
