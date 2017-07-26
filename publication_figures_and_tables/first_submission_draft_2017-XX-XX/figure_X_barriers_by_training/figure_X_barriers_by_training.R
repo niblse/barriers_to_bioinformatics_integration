@@ -8,38 +8,35 @@ require(corrplot)
 require(ggthemes)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
-#read in cleaned dataframe "decoded_df_w_ethnicity.csv"
-master.df <- read_csv("../../../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
+#read in cleaned dataframe "decoded_df.csv"
+master.df <- read_csv("../../../data_cleaning_scripts/06_adjust_bioinformatics_training/output/decoded_df_w_faculty_preperation.csv")
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
 
-
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- "representation"
+category.column.name <- "faculty_preperation"
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- "STEM Representation Status"
+category.column.name.nice <- "Level of Bioinformatics Training (Q3)"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- "STEM_representation_status"
-
+category.column.name.safe <- "altQ3_level_of_bioinformatics_training"
 
 # set a 'short' for naming filename variables: "Q#_category"
-category.column.name.short <- "Q15_STEM_rep"
+category.column.name.short <- "alt_Q3_bioinfo_t"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- "STEM Representation Status"
-category.nice.name.lower <- "STEM representation status"
+category.nice.name.caps <- "Level of Bioinformatics Training"
+category.nice.name.lower <- "level of bioinformatics training"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
 
 #subset the category column
 category.column.subset <-  master.df[[category.column.name]]
-
 #Get the levels (possible answers) within that catagories
 category.levels <- levels(as.factor(category.column.subset))
 
@@ -47,7 +44,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[1:2]
+category.levels <- category.levels[1:4]
 
 #######################################################################################
 
@@ -232,18 +229,20 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use D to be replaced by "-"
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("Not_underrepresented_in_STEM"= category.levels[1],
-                           "Underrepresented_in_STEM" = category.levels[2], 
+category.df <- data.frame ("Formal_Training"= category.levels[1],
+                           "No_Training"= category.levels[2], 
+                           "SelfDTaught"= category.levels[3], 
+                           "Workshops_and_Bootcamps"= category.levels[4],   
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("Non-underrepresented", "underrepresented")
+col.order <- c("No Training", "Self Taught", "Workshops and Bootcamps", "Formal Training")
 
 #With substitutions - must match category.df
-col.order2 <- c("Not_underrepresented_in_STEM", "Underrepresented_in_STEM" )
+col.order2 <- c("No_Training", "SelfDTaught", "Workshops_and_Bootcamps","Formal_Training" )
 
 #Nice Labels for plotting
-nice.lables.list <- c("Not underrepresented", "Underrepresented")
+nice.lables.list <- c("No Training", "Self-taught", "Workshops and Bootcamps", "Formal Training")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -373,10 +372,10 @@ plot.summary.statistics <- function(df,
 #generate the summary statistic plot
 #plot.summary.statistics(response.counts.by.category,
 #                        nice.names.df,
- #                       category.column.name.nice,
-  #                      question.column.name.nice,
-   #                     question.column.name.safe,
-   #                     category.column.name.safe)
+#                        category.column.name.nice,
+#                       question.column.name.nice,
+#                        question.column.name.safe,
+#                        category.column.name.safe)
 
 
 
@@ -529,7 +528,7 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
 #plot.tallied.scored(raw.scored.analysis.tallied.df, 
 #                    question.column.name.nice, 
 #                    file.name.switch = 0,
- #                   n.respondents)
+#                    n.respondents)
 
 ########### Calculate indiviual proportion of users reporting idenifying with a barrier
 
@@ -812,12 +811,6 @@ effect_statement <- if(effect.size <= .1){
   paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
 }
 
-
-
-
-
-
-
 ############ Plot significantly different barriers ####################################
 
 
@@ -895,7 +888,10 @@ plot.sig.barriers <- function(df,
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
   
-  greys <- c("#636363", 
+  
+  greys <- c("#252525", 
+             "#636363", 
+             "#969696", 
              "#DCDCDC")
   
   proportional.sig.responses.summed.by.barriers.plot%>%
@@ -921,12 +917,12 @@ plot.sig.barriers <- function(df,
     theme(panel.background = element_rect(fill = "white"))+
     theme(panel.grid.major.x = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
-    scale_fill_manual(values = greys, name= "STEM Representation", labels= legend.labels$legend)+
+    scale_fill_manual(values = greys, name= "Bioinformatics Training", labels= legend.labels$legend)+
     theme(panel.grid.minor=element_blank())+
+    guides(fill=guide_legend(nrow =2))+
     scale_x_discrete(
       labels = c(
         'Faculty Issues: Expertise/training'))
-  
   
   
   
@@ -934,10 +930,10 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       "_BW.png",
+                                                                       "_BW_.png",
                                                                        sep = "_")
   
-  ggsave(filename = proportional.sig.responses.summed.by.barriers.plot.filename, 
+  ggsave(proportional.sig.responses.summed.by.barriers.plot.filename, 
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -947,16 +943,7 @@ plot.sig.barriers <- function(df,
 
 
 # plot significantly different responses
-
-#filter out low values
-
-
-proportion_table_summary.filterd <- proportion_table_summary%>%
-  filter(Var2 == "Faculty Issues: Expertise/training")
-
-
-
-plot.sig.barriers(proportion_table_summary.filterd, 
+plot.sig.barriers(proportion_table_summary, 
                   category.df,
                   category.levels,
                   category.nice.name.caps,
@@ -964,7 +951,6 @@ plot.sig.barriers(proportion_table_summary.filterd,
                   n.respondents,
                   question.column.name.safe,
                   category.column.name.safe)
-
 
 
 
@@ -1045,7 +1031,9 @@ plot.sig.barriers <- function(df,
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
   
+  
   niblse_4_color <- c("#0C774C",
+                      "#124671",
                       "#AF6D12",
                       "#AF4112")
   
@@ -1072,12 +1060,12 @@ plot.sig.barriers <- function(df,
     theme(panel.background = element_rect(fill = "white"))+
     theme(panel.grid.major.x = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
-    scale_fill_manual(values = niblse_4_color, name= "STEM Representation", labels= legend.labels$legend)+
+    scale_fill_manual(values = niblse_4_color, name= "Bioinformatics Training", labels= legend.labels$legend)+
     theme(panel.grid.minor=element_blank())+
+    guides(fill=guide_legend(nrow =2))+
     scale_x_discrete(
       labels = c(
         'Faculty Issues: Expertise/training'))
-  
   
   
   
@@ -1085,10 +1073,10 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       "_niblseCOLOR.png",
+                                                                       "_COLOR_.png",
                                                                        sep = "_")
   
-  ggsave(filename = proportional.sig.responses.summed.by.barriers.plot.filename, 
+  ggsave(proportional.sig.responses.summed.by.barriers.plot.filename, 
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -1098,16 +1086,7 @@ plot.sig.barriers <- function(df,
 
 
 # plot significantly different responses
-
-#filter out low values
-
-
-proportion_table_summary.filterd <- proportion_table_summary%>%
-  filter(Var2 == "Faculty Issues: Expertise/training")
-
-
-
-plot.sig.barriers(proportion_table_summary.filterd, 
+plot.sig.barriers(proportion_table_summary, 
                   category.df,
                   category.levels,
                   category.nice.name.caps,

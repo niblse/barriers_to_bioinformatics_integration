@@ -8,31 +8,28 @@ require(corrplot)
 require(ggthemes)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
-#read in cleaned dataframe "decoded_df_w_ethnicity.csv"
-master.df <- read_csv("../../../data_cleaning_scripts/05_adjust_ethnicities/output/decoded_df_w_ethnicity.csv")
+#read in cleaned dataframe "decoded_df.csv"
+master.df <- read_csv("../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
 
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
-
-
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- "representation"
+category.column.name <- "Q14_Sex"
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- "STEM Representation Status"
+category.column.name.nice <- "Sex"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- "STEM_representation_status"
-
+category.column.name.safe <- "sex"
 
 # set a 'short' for naming filename variables: "Q#_category"
-category.column.name.short <- "Q15_STEM_rep"
+category.column.name.short <- "Q14_sex"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- "STEM Representation Status"
-category.nice.name.lower <- "STEM representation status"
+category.nice.name.caps <- "Sex"
+category.nice.name.lower <- "sex"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -42,6 +39,7 @@ category.column.subset <-  master.df[[category.column.name]]
 
 #Get the levels (possible answers) within that catagories
 category.levels <- levels(as.factor(category.column.subset))
+
 
 ############# MANUAL!!!! SET 2nd SET OF MANUAL VARIABLES  #############################
 
@@ -56,22 +54,29 @@ category.column.subset <-  master.df[[category.column.name]]
 
 
 
+
 ############ TEMPLATE VARIABLES    ############################
 # These variables should not change and are specific to a template that analyzes a particular question
-# Q38 Variables
+# Q30 Variables
 
 #Names
 # variable (Question) that will be analyzed ("COLUMN_NAME)
-question.column.name <- "Q33_In.your.opinion..what.do.you.think.are.the.most.important.challenges.currently.facing.those.educa..."
+question.column.name <- "Q30_Optional..Please.describe."
 # subsetting variable for this column (e.g master.df$COLUMN_NAME)
-question.column.name.nice <- "Educator Challenges to Including Bioinformatics (Q33)"
+question.column.name.nice <- "Technical Challenges to Including Bioinformatics (Q29,30)"
 # 'nice name' to describe this question
-question.column.name.safe <- "Q33_educator_challenges"
+question.column.name.safe <- "Q29-30_technical_challenges"
 # 'short name' to describe this question
-question.column.name.short <- "Q33_edu_challenges"
+question.column.name.short <- "Q29-30_technical"
 # 'safe name' for naming variables
 question.column.subset <- master.df[[question.column.name]]
 
+#set names for special question (29)
+
+question.29.column.name <- "Q29_At.your.current.institution..do.you.face.any.technical.barriers.in.teaching.bioinformatics..e.g....."
+question.29.column.name.nice <- "(Q29) Do you face technical barriers to teaching bioinformatics?"
+question.29.column.name.safe <- "Q29_technical_barriers"
+question29.column.subset <- master.df[[question.29.column.name]]
 
 ########## Cleaning Steps ###################################################
 
@@ -101,35 +106,34 @@ relavant.respondents.df <- remove.non.relavant.repondants(master.df.us.only)
 #RESET SUBSET VALUES
 category.column.subset <- relavant.respondents.df[[category.column.name]]
 question.column.subset <- relavant.respondents.df[[question.column.name]]
+question29.column.subset <- relavant.respondents.df[[question.29.column.name]]
 
 
 ############# column selection #################################################
 
 
-category.raw.scored.columns <- c("Q33_Faculty...No.Expertise.Training", 
-                                 "Q33_Facutly...Time",
-                                 "Q33_Faculty...Differences.of.opinion", 
-                                 "Q33_Faculty...Content.Development", 
-                                 "Q33_Faculty...Not.enough.Faculty", 
-                                 "Q33_Facilities...Computer.Labs.limited.or.not.available", 
-                                 "Q33_Facilities...Computers.are.too.old..inadequate",
-                                 "Q33_Resources...Acces.to.Approp..Software", 
-                                 "Q33_Resources...Funding..general.",
-                                 "Q33_Resources...Funding..software.License.fees.", 
-                                 "Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills", 
-                                 "Q33_Student.Issues...No.interest.in.Bioinf", 
-                                 "Q33_Student.issues...Intimidated.by.topic", 
-                                 "Q33_Student.Isses...Multitude.of.varying.student.backgrounds", 
-                                 "Q33_Student.Issues...Lack.Basic.Computing.Knowledge", 
-                                 "Q33_Student.Issues...Career.prospects", 
-                                 "Q33_Curric.Issues...Lack.of.integration.of.maerial", 
-                                 "Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric", 
-                                 "Q33_Curric.Issues...How.quickly.the.material.tech.changes",
-                                 "Q33_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
-                                 "Q33_Curric.Issues...Making.Comp.Sci.courses.consistently.relevant", 
-                                 "Q33_Curric.Issues...To.much.curric.influence.from.Professional.schools", 
-                                 "Q33_Inst.Dept.Support...Inter.Departmental.Cooperation", 
-                                 "Q33_Inst.Dept.Support...No.IT.support", 
+category.raw.scored.columns <- c("Q29.30_Faculty...No.Expertise.Training", 
+                                 "Q29.30_Faculty...Time", 
+                                 "Q29.30_Faculty...not.interested.in.topic", 
+                                 "Q29.30_Faculty...no.computer.sci.Faculty", 
+                                 "Q29.30_Facilities...Computer.Labs.limited.or.not.available", 
+                                 "Q29.30_Facilities...Computers.are.too.old..inadequate", 
+                                 "Q29.30_Facilities...Servers", 
+                                 "Q29.30_Facilities...Internet.Access.Limited", 
+                                 "Q29.30_Resources...Operating.System.Availability.Issues", 
+                                 "Q29.30_Resources...Approp..Software", 
+                                 "Q29.30_Resources...no.high.performance.systems.available", 
+                                 "Q29.30_Resources...Funding", 
+                                 "Q29.30_Inst.Dept.Support...No.IT.support", 
+                                 "Q29.30_Inst.Dept.Support...No.Sub.to.Pay.site.Databases", 
+                                 "Q29.30_Inst.Dept.Support...Comp.Sci.Dept.Will.not.support.Bioinf", 
+                                 "Q29.30_Student.Issues...Access.to.Approp.Software.off.campus", 
+                                 "Q29.30_Student.Issues...Basic.Computing.Knowledge", 
+                                 "Q29.30_Student.Issues...No.access.to.computers.at.home", 
+                                 "Q29.30_Student.Issues...No.interest.in.Bioinf", 
+                                 "Q29.30_Curriculum...Need.to.Develop.new.program",
+                                 "Q29.30_Curriculum.Class.Size.too.large",
+                                 "Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric", 
                                  category.column.name)
 
 category.raw.scored.df <- relavant.respondents.df%>%
@@ -139,39 +143,36 @@ category.raw.scored.df <- relavant.respondents.df%>%
 
 category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training", 
                                             "Faculty Issues: Time",
-                                            "Faculty Issues: Differences of opinion",
-                                            "Faculty Issues: Content development",
-                                            "Faculty Issues: Too few faculty",
-                                            "Faculities Issues: Access to computer labs",
-                                            "Faculities Issues: Inadaquate computers",
-                                            "Resource Issues: Access to software",
-                                            "Resource Issues: Funding",
-                                            "Resource Issues: Software/license fees",
-                                            "Student Issues: Lack of background skills/knowledge",
-                                            "Student Issues: Lack of interest",
-                                            "Student Issues: Intimidated by topic",
-                                            "Student Issues: Varying student backrounds",
-                                            "Student Issues: Lack of basic computing skills",
-                                            "Student Issues: Career prospects",
-                                            "Curriculum Issues: Lack of integration", 
-                                            "Curriculum Issues: Too much content", 
-                                            "Curriculum Issues: Quickly changing technologies", 
-                                            "Curriculum Issues: Access to bioinformatics lesson plans/curriculum", 
-                                            "Curriculum Issues: Difficulty establishing relevance", 
-                                            "Curriculum Issues: Influence from professional schools",
-                                            "Institutional Issues: Lack of inter-departmental cooperation",
-                                            "Institutional Issues: Lack of IT support")
+                                            "Faculty Issues: No interest in topic",
+                                            "Faculty Issues: No comp-sci faculty",
+                                            "Facilities Issues: Access to computer labs",
+                                            "Facilities Issues: Inadaquate computers",
+                                            "Facilities Issues: Access to servers",
+                                            "Facilities Issues: Access to internet",
+                                            "Resource Issues: Access to operating systems",
+                                            "Resource Issues: Apropriate software", 
+                                            "Resource Issues: Access to high-performance computing", 
+                                            "Resource Issues: Funding", 
+                                            "Institutional Issues: Access to IT support", 
+                                            "Institutional Issues: Subscriptions/licenses", 
+                                            "Institutional Issues: No support from comp-sci faculty",
+                                            "Student Issues: Access to software off-campus", 
+                                            "Student Issues: Basic computing knowledge", 
+                                            "Student Issues: Access to computers Off-campus", 
+                                            "Student Issues: No interest in bioinformatics",
+                                            "Curriculum Issues: New program development required", 
+                                            "Curriculum Issues: Class size", 
+                                            "Curriculum Issues: Access to bioinformatics lesson plans")
 
 # Select the reduced columns (columns where coded responses have been summarized into
 # binary values (1 = at least one faculty issue reported , 0 = no faculty issues reported
 
-
-category.reduced.columns <- c("q33_Curriculum_issues_reduced",
-                              "q33_Faculty_issues_reduced",
-                              "q33_Facility_issues_reduced",
-                              "q33_Resources_issues_reduced",
-                              "q33_Student_issues_reduced",
-                              "q33_Institutional_issues_reduced",
+category.reduced.columns <- c("q29_Faculty_issues_reduced", 
+                              "q29_Facilities_issues_reduced", 
+                              "q29_Resources_issues_reduced",
+                              "q29_Institutional_issues_reduced", 
+                              "q29_Student_issues_reduced", 
+                              "q29_Curriculum_issues_reduced", 
                               category.column.name)
 
 category.reduced.df<- relavant.respondents.df%>%
@@ -179,14 +180,12 @@ category.reduced.df<- relavant.respondents.df%>%
 
 # create a set of nice names
 
-category.reduced.columns.nice.names <- c("Curriculum Issues",
-                                         "Faculty Issues", 
-                                         "Facility Issues", 
-                                         "Resources Issues",
+category.reduced.columns.nice.names <- c("Faculty Issues",
+                                         "Facilities Issues", 
+                                         "Resource Issues", 
+                                         "Institutional Issues",
                                          "Student Issues", 
-                                         "Institutional Issues")
-
-
+                                         "Curriculum Issues")
 
 
 ######### CREATE DIRECTORIES #########################################################
@@ -230,20 +229,22 @@ dir.create(plot.dir.path, recursive = TRUE)
 # Use X to be replaced in plots by ","
 # Use K for lines starting with numbers to be replaced by ""
 # Use D to be replaced by "-"
-# All lines where these subsitutions are done have a comment "SUBSTITUTION" 
+# All lines where these subsitutions are done have a comment "SUBSTITUTION"
 
-category.df <- data.frame ("Not_underrepresented_in_STEM"= category.levels[1],
-                           "Underrepresented_in_STEM" = category.levels[2], 
+category.df <- data.frame ("Female"= category.levels[1], 
+                           "Male" = category.levels[2] , 
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("Non-underrepresented", "underrepresented")
+col.order <- c("1_Female", "2_Male")
 
 #With substitutions - must match category.df
-col.order2 <- c("Not_underrepresented_in_STEM", "Underrepresented_in_STEM" )
+col.order2 <- c("Female",
+                "Male")
 
 #Nice Labels for plotting
-nice.lables.list <- c("Not underrepresented", "Underrepresented")
+nice.lables.list <- c("Female",
+                      "Male") 
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -373,10 +374,10 @@ plot.summary.statistics <- function(df,
 #generate the summary statistic plot
 #plot.summary.statistics(response.counts.by.category,
 #                        nice.names.df,
- #                       category.column.name.nice,
-  #                      question.column.name.nice,
-   #                     question.column.name.safe,
-   #                     category.column.name.safe)
+#                        category.column.name.nice,
+#                        question.column.name.nice,
+#                        question.column.name.safe,
+#                        category.column.name.safe)
 
 
 
@@ -529,7 +530,7 @@ plot.tallied.scored <- function(raw.scored.analysis.tallied.df,
 #plot.tallied.scored(raw.scored.analysis.tallied.df, 
 #                    question.column.name.nice, 
 #                    file.name.switch = 0,
- #                   n.respondents)
+#                    n.respondents)
 
 ########### Calculate indiviual proportion of users reporting idenifying with a barrier
 
@@ -721,7 +722,7 @@ plot.of.top5.barriers <- function(df,
 #                      category.nice.name.caps,
 #                      question.column.name.safe,
 #                      category.column.name.safe)
-
+#
 ########### Create new columns for proportion tests
 
 proportion_table <- proportional.responses.summed.by.barriers%>%
@@ -812,12 +813,6 @@ effect_statement <- if(effect.size <= .1){
   paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
 }
 
-
-
-
-
-
-
 ############ Plot significantly different barriers ####################################
 
 
@@ -849,7 +844,7 @@ plot.sig.barriers <- function(df,
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
   proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(desc(proportional.sig.responses.summed.by.barriers.plot$summed_score))])
+             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
   
   
   
@@ -895,7 +890,9 @@ plot.sig.barriers <- function(df,
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
   
-  greys <- c("#636363", 
+  greys <- c("#252525", 
+             "#636363", 
+             "#969696", 
              "#DCDCDC")
   
   proportional.sig.responses.summed.by.barriers.plot%>%
@@ -904,8 +901,12 @@ plot.sig.barriers <- function(df,
     geom_bar(stat = "identity", position = "dodge")+
     labs(y = "percentage of respondents", x= "")+
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
-    scale_x_discrete(labels = x.labels$x.labels)+
+    scale_x_discrete(
+      labels = c(
+        'Facilities Issues:\nInadaquate computers',
+        'Institutional Issues:\nAccess to IT support',
+        'Facilities Issues:\nAccess to computer labs'))+
+    #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
     theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
@@ -919,13 +920,12 @@ plot.sig.barriers <- function(df,
           strip.background = element_rect())+
     theme(plot.background = element_rect(fill = "white"))+
     theme(panel.background = element_rect(fill = "white"))+
-    theme(panel.grid.major.x = element_blank())+
+    theme(panel.grid.major.y = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
-    scale_fill_manual(values = greys, name= "STEM Representation", labels= legend.labels$legend)+
-    theme(panel.grid.minor=element_blank())+
-    scale_x_discrete(
-      labels = c(
-        'Faculty Issues: Expertise/training'))
+    coord_flip()+
+    scale_fill_manual(values = greys, name= "Sex", labels= legend.labels$legend)+
+    guides(fill=guide_legend(nrow =2))+
+    theme(panel.grid.minor=element_blank())
   
   
   
@@ -934,10 +934,10 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       "_BW.png",
+                                                                       ".png",
                                                                        sep = "_")
   
-  ggsave(filename = proportional.sig.responses.summed.by.barriers.plot.filename, 
+  ggsave(proportional.sig.responses.summed.by.barriers.plot.filename, 
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -947,16 +947,7 @@ plot.sig.barriers <- function(df,
 
 
 # plot significantly different responses
-
-#filter out low values
-
-
-proportion_table_summary.filterd <- proportion_table_summary%>%
-  filter(Var2 == "Faculty Issues: Expertise/training")
-
-
-
-plot.sig.barriers(proportion_table_summary.filterd, 
+plot.sig.barriers(proportion_table_summary, 
                   category.df,
                   category.levels,
                   category.nice.name.caps,
@@ -965,153 +956,3 @@ plot.sig.barriers(proportion_table_summary.filterd,
                   question.column.name.safe,
                   category.column.name.safe)
 
-
-
-
-############ Plot significantly different barriers ####################################
-
-
-plot.sig.barriers <- function(df, 
-                              category.df,
-                              category.levels,
-                              category.nice.name.caps,
-                              category.nice.name.lower,
-                              n.respondents,
-                              question.column.name.safe,
-                              category.column.name.safe){
-  
-  #significant barriers
-  sig.barriers <- df%>%
-    filter(prop_test_chi_pvalue <= 0.05)
-  sigs <- as.character(sig.barriers$Var2)
-  sigs <- c(sigs)
-  
-  #plot significant barriers
-  
-  #reformat Var2 names as chr
-  df$Var2 <- as.character(df$Var2)
-  
-  proportional.sig.responses.summed.by.barriers.plot <-df%>%
-    filter(Var2 %in% sigs)
-  
-  #setup plot ordering
-  
-  proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
-  proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
-    factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(desc(proportional.sig.responses.summed.by.barriers.plot$summed_score))])
-  
-  
-  
-  
-  #plot
-  
-  # create legend lables that show the value of n for a stratfying category
-  legend.labels <- df%>%
-    ungroup()%>%
-    select(nice_names, responses)%>%
-    head(., n = length(category.levels))%>%
-    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
-  
-  #correct nice_names for plotting
-  #SUBSTITUTION
-  
-  #replace underscores with spaces
-  legend.labels$legend <- gsub("_",
-                               " ",
-                               legend.labels$legend)
-  #replace 'X' with ','
-  legend.labels$legend <- gsub("X",
-                               ",",
-                               legend.labels$legend)
-  #replace 'K' with ""
-  legend.labels$legend <- gsub("K",
-                               "",
-                               legend.labels$legend)
-  #replace 'D' with '-'
-  legend.labels$legend <- gsub("D",
-                               "-",
-                               legend.labels$legend)
-  # create labels that show how many positive (coded) responses
-  
-  x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
-    arrange(desc(summed_score))%>%
-    select(Var2, summed_score)%>%
-    distinct(Var2, .keep_all = TRUE)%>%
-    mutate(x.labels = paste(Var2, " \n(", "N(cr+)=", summed_score, ")", sep = ""))
-  
-  # get values of error bars
-  
-  error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
-  error.dodge <- position_dodge(width=0.9)
-  
-  niblse_4_color <- c("#0C774C",
-                      "#AF6D12",
-                      "#AF4112")
-  
-  proportional.sig.responses.summed.by.barriers.plot%>%
-    ggplot()+
-    aes(x=Var2, y=proportion, fill=Var1)+
-    geom_bar(stat = "identity", position = "dodge")+
-    labs(y = "percentage of respondents", x= "")+
-    theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
-    scale_fill_discrete(name= category.nice.name.caps, labels = legend.labels$legend)+
-    scale_x_discrete(labels = x.labels$x.labels)+
-    geom_errorbar(error.limits, position = error.dodge, width = .2)+
-    theme_gray(base_size = 20, base_family = "sans")+
-    theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
-    theme(legend.background = element_rect(), legend.position = "bottom", legend.direction = "horizontal", legend.box = "vertical")+
-    theme(panel.grid.major =
-            element_line(colour = "grey"),
-          panel.grid.minor = element_blank(),
-          # unfortunately, can't mimic subtitles
-          plot.title = element_text(hjust = 0, size = rel(1.5), face = "bold"),
-          plot.margin = unit(c(1, 1, 1, 1), "lines"),
-          strip.background = element_rect())+
-    theme(plot.background = element_rect(fill = "white"))+
-    theme(panel.background = element_rect(fill = "white"))+
-    theme(panel.grid.major.x = element_blank())+
-    theme(axis.line = element_line(colour = "black"))+
-    scale_fill_manual(values = niblse_4_color, name= "STEM Representation", labels= legend.labels$legend)+
-    theme(panel.grid.minor=element_blank())+
-    scale_x_discrete(
-      labels = c(
-        'Faculty Issues: Expertise/training'))
-  
-  
-  
-  
-  proportional.sig.responses.summed.by.barriers.plot.filename <- paste("barriers_differing_significantly_by_category_proprotional_by_category",
-                                                                       question.column.name.short,
-                                                                       "by",
-                                                                       category.column.name.short,
-                                                                       "_niblseCOLOR.png",
-                                                                       sep = "_")
-  
-  ggsave(filename = proportional.sig.responses.summed.by.barriers.plot.filename, 
-         width = 13.8, 
-         height = 8.81, 
-         units = "in")
-  
-  
-}
-
-
-# plot significantly different responses
-
-#filter out low values
-
-
-proportion_table_summary.filterd <- proportion_table_summary%>%
-  filter(Var2 == "Faculty Issues: Expertise/training")
-
-
-
-plot.sig.barriers(proportion_table_summary.filterd, 
-                  category.df,
-                  category.levels,
-                  category.nice.name.caps,
-                  category.nice.name.lower,
-                  n.respondents,
-                  question.column.name.safe,
-                  category.column.name.safe)
