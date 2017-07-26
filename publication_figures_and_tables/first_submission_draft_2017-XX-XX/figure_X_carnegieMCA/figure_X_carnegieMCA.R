@@ -434,3 +434,47 @@ ggsave(filename = "Q21_carnegie_classification.png",
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
+
+#Question Q18 - adjusted degree years using Q33 with no use qualitative supplementary values
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(q33.cols), 
+                              active_columns = c(
+                                degree_year, #degree year
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                Q14, #Sex 
+                                Q21, #Carnegie classification
+                                Q22, #MSI status                               
+                                Q24  #Undergraduate enrollment
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "black" , 
+                habillage = 7,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.2,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 6,
+                legend.title = "Respondent's year of degree (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  #theme_minimal()+
+  theme_gray(base_size = 16, base_family = "sans")+
+  theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(legend.position = c(.80,.10))+
+  ggtitle("")
+
+ggsave(filename = "Q18_degree_yr.q33.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
