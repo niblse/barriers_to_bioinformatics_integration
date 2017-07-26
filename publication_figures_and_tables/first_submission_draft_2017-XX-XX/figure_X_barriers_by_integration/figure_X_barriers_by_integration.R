@@ -5,6 +5,7 @@ require(reshape2)
 require(pwr)
 require(gplots)
 require(corrplot)
+require(ggthemes)
 
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
