@@ -1,0 +1,686 @@
+# load required libraries
+require(ggplot2)
+require(tidyverse)
+require(reshape2)
+require(ggthemes)
+
+
+#Read in data
+data.df <- read_csv("../../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
+
+#remove non-us respondents
+
+#remove respondents not in US/Puerto Rico
+remove.non.us.repondants <- function(df){
+  countries <- c("United States","Puerto Rico")
+  df <- df%>%
+    filter(Country_Country %in% countries )
+  return(df)
+}
+
+data.df <- remove.non.us.repondants(data.df)
+
+
+# get sample size
+
+sample.size <- nrow(data.df)
+
+# Select relavant columns and add nice names
+
+
+
+#q6
+#Please describe briefly; 
+#include any barriers to development and/or implementation.”
+
+q06.reduced.cols <- data.df%>%
+  select(q06_Faculty_issues_reduced,
+         q06_Student_issues_reduced,
+         q06_Curriculum_issues_reduced,
+         q06_Institutional_issues_reduced,
+         q06_Facilities_issues_reduced,
+         q06_Resource_issues_reduced)
+
+colnames(q06.reduced.cols)<- c("Faculty Issues (reduced)",
+                               "Student Issues (reduced)",
+                               "Curriculum Issues (reduced)",
+                               "Institutional Issues (reduced)",
+                               "Facilities Issues (reduced)",
+                               "Resource Issues (reduced)")
+q06.scored.cols <- data.df%>%
+  select(Q06_Faculty.Issue...No.Expertise..Training,
+         Q06_Faculty.Issue...Time, 
+         Q06_Faculty.Issue...Not.enough.Faculty.members, 
+         Q06_Faculty.Issues...Interest.in.Topic, 
+         Q06_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content, 
+         Q06_Curric.Isues..Curric.Revision.needed, 
+         Q06_Curric.Isues...Bioinf.approaches.need.to.be.taugh.at.every.level.integrate.current.classes, 
+         Q06_Curic.Issues...Bioinf.Program.Courses.under.develop, 
+         Q06_Curric.Isues...Not.a.req.for.Life.Sci.Majors..Pre.Med, 
+         Q06_Curric.Issue...Class.Size.too.large, 
+         Q06_Curric.Issues...Not.enough.classes.seats.available, 
+         Q06_Student.issue...Lack.of.Student.interest.in.quant.skills.and.related.courses, 
+         Q06_Student.Issues...Student.Background.is.insufficient, 
+         Q06_Inst.Dept.Support...Institutional.Inertia, 
+         Q06_Inst.Dept.Support...Inter.Departmental.Cooperation, 
+         Q06_Inst.Dept.Support...IT.Supprt, 
+         Q06_Inst.Dept.Support...State.Regulation,
+         Q06_Resource.Issue...Funding, 
+         Q06_Resource.Issues...Access.to.Approp.Software..Op.sys, 
+         Q06_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric, 
+         Q06_Facilities...Computer.Labs..Laq.Equip.limited.or.not.available, 
+         Q06_Facilities...Servers)
+
+colnames(q06.scored.cols)<- c("Faculty Issues: Expertise/training", 
+                              "Faculty Issues: Time",
+                              "Faculty Issues: Too few faculty",
+                              "Faculty Issues: Lack of interest",
+                              "Curriculum Issues: No space",
+                              "Curriculum Issues: Incompatible with current curriculum",
+                              "Curriculum Issues: Integration needed at every level",
+                              "Curriculum Issues: Bioinformatics curriculum is under development",
+                              "Curriculum Issues: Not required for life sci/pre-med majors",
+                              "Curriculum Issues: Class size",
+                              "Curriculum Issues: Too few seats",
+                              "Student Issues: Lack of interest",
+                              "Student Issues: Background knowledge",
+                              "Institutional: Institutional inertia", 
+                              "Institutional: Inter-departmental cooperation", 
+                              "Institutional: IT support", 
+                              "Institutional: State regulation", 
+                              "Resource Issues: Funding", 
+                              "Resource Issues: Access to software",
+                              "Resource Issues: Access to bioinformatics lesson plans/curricula",
+                              "Facilities: Access to computer(s)/labs",
+                              "Facilities: Servers")
+
+#29
+# At your current institution, do you face any technical barriers 
+# in teaching bioinformatics, e.g., availability of a computer lab, 
+# different operating systems, access to high performance computing 
+# for teaching, IT support?
+
+q29.reduced.cols <- data.df%>%
+  select(q29_Faculty_issues_reduced, 
+         q29_Student_issues_reduced, 
+         q29_Curriculum_issues_reduced,
+         q29_Institutional_issues_reduced, 
+         q29_Facilities_issues_reduced, 
+         q29_Resources_issues_reduced)
+
+colnames(q29.reduced.cols)<- c("Faculty Issues (reduced)",
+                               "Student Issues (reduced)",
+                               "Curriculum Issues (reduced)",
+                               "Institutional Issues (reduced)",
+                               "Facilities Issues (reduced)",
+                               "Resource Issues (reduced)")
+
+q29.scored.cols <- data.df%>%
+  select(Q29.30_Faculty...No.Expertise.Training, 
+         Q29.30_Faculty...Time, 
+         Q29.30_Faculty...not.interested.in.topic, 
+         Q29.30_Faculty...no.computer.sci.Faculty, 
+         Q29.30_Student.Issues...Access.to.Approp.Software.off.campus, 
+         Q29.30_Student.Issues...Basic.Computing.Knowledge, 
+         Q29.30_Student.Issues...No.access.to.computers.at.home, 
+         Q29.30_Student.Issues...No.interest.in.Bioinf, 
+         Q29.30_Curriculum...Need.to.Develop.new.program,
+         Q29.30_Curriculum.Class.Size.too.large,
+         Q29.30_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric,
+         Q29.30_Inst.Dept.Support...No.IT.support, 
+         Q29.30_Inst.Dept.Support...No.Sub.to.Pay.site.Databases, 
+         Q29.30_Inst.Dept.Support...Comp.Sci.Dept.Will.not.support.Bioinf, 
+         Q29.30_Facilities...Computer.Labs.limited.or.not.available, 
+         Q29.30_Facilities...Computers.are.too.old..inadequate, 
+         Q29.30_Facilities...Servers, 
+         Q29.30_Facilities...Internet.Access.Limited, 
+         Q29.30_Resources...Operating.System.Availability.Issues, 
+         Q29.30_Resources...Approp..Software, 
+         Q29.30_Resources...no.high.performance.systems.available, 
+         Q29.30_Resources...Funding)
+
+colnames(q29.scored.cols)<- c("Faculty Issues: Expertise/training", 
+                              "Faculty Issues: Time",
+                              "Faculty Issues: No interest in topic",
+                              "Faculty Issues: No comp-sci faculty",
+                              "Student Issues: Access to software off-campus", 
+                              "Student Issues: Basic computing knowledge", 
+                              "Student Issues: Access to computers Off-campus", 
+                              "Student Issues: No interest in bioinformatics",
+                              "Curriculum Issues: New program development required", 
+                              "Curriculum Issues: Class size", 
+                              "Curriculum Issues: Access to bioinformatics lesson plans",
+                              "Institutional Issues: Access to IT support", 
+                              "Institutional Issues: Subscriptions/licenses", 
+                              "Institutional Issues: No support from comp-sci faculty",
+                              "Facilities Issues: Access to computer labs",
+                              "Facilities Issues: Inadaquate computers",
+                              "Facilities Issues: Access to servers",
+                              "Facilities Issues: Access to internet",
+                              "Resource Issues: Access to operating systems",
+                              "Resource Issues: Apropriate software", 
+                              "Resource Issues: Access to high-performance computing", 
+                              "Resource Issues: Funding")
+
+#q33
+#In your opinion, what do you think are the most
+#important challenges currently facing those educating
+#undergraduate life scientists in bioinformatics?
+
+q33.reduced.cols <- data.df%>%
+  select(q33_Faculty_issues_reduced, 
+         q33_Student_issues_reduced, 
+         q33_Curriculum_issues_reduced, 
+         q33_Institutional_issues_reduced,
+         q33_Facility_issues_reduced, 
+         q33_Resources_issues_reduced)
+
+colnames(q33.reduced.cols) <- c("Faculty Issues (reduced)",
+                                "Student Issues (reduced)",
+                                "Curriculum Issues (reduced)",
+                                "Institutional Issues (reduced)",
+                                "Facilities Issues (reduced)",
+                                "Resource Issues (reduced)")
+
+q33.scored.cols <- data.df%>%
+  select(Q33_Faculty...No.Expertise.Training, 
+         Q33_Facutly...Time,
+         Q33_Faculty...Differences.of.opinion, 
+         Q33_Faculty...Content.Development, 
+         Q33_Faculty...Not.enough.Faculty, 
+         Q33_Student.Issues...Lack.Approp.Background.Knowledge.Skills, 
+         Q33_Student.Issues...No.interest.in.Bioinf, 
+         Q33_Student.issues...Intimidated.by.topic, 
+         Q33_Student.Isses...Multitude.of.varying.student.backgrounds, 
+         Q33_Student.Issues...Lack.Basic.Computing.Knowledge, 
+         Q33_Student.Issues...Career.prospects, 
+         Q33_Curric.Issues...Lack.of.integration.of.maerial, 
+         Q33_Curric.Isues...To.much.conent.in.Life.Sci.curric, 
+         Q33_Curric.Issues...How.quickly.the.material.tech.changes,
+         Q33_Curriculum...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric, 
+         Q33_Curric.Issues...Making.Comp.Sci.courses.consistently.relevant, 
+         Q33_Curric.Issues...To.much.curric.influence.from.Professional.schools, 
+         Q33_Inst.Dept.Support...Inter.Departmental.Cooperation, 
+         Q33_Inst.Dept.Support...No.IT.support,
+         Q33_Facilities...Computer.Labs.limited.or.not.available, 
+         Q33_Facilities...Computers.are.too.old..inadequate,
+         Q33_Resources...Acces.to.Approp..Software, 
+         Q33_Resources...Funding..general.,
+         Q33_Resources...Funding..software.License.fees.)
+
+colnames(q33.scored.cols)<- c("Faculty Issues: Expertise/training", 
+                              "Faculty Issues: Time",
+                              "Faculty Issues: Differences of opinion",
+                              "Faculty Issues: Content development",
+                              "Faculty Issues: Too few faculty",
+                              "Student Issues: Lack of background skills/knowledge",
+                              "Student Issues: Lack of interest",
+                              "Student Issues: Intimidated by topic",
+                              "Student Issues: Varying student backrounds",
+                              "Student Issues: Lack of basic computing skills",
+                              "Student Issues: Career prospects",
+                              "Curriculum Issues: Lack of integration", 
+                              "Curriculum Issues: Too much content", 
+                              "Curriculum Issues: Quickly changing technologies", 
+                              "Curriculum Issues: Access to bioinformatics lesson plans/curriculum", 
+                              "Curriculum Issues: Difficulty establishing relevance", 
+                              "Curriculum Issues: Influence from professional schools",
+                              "Institutional Issues: Lack of inter-departmental cooperation",
+                              "Institutional Issues: Lack of IT support",
+                              "Faculities Issues: Access to computer labs",
+                              "Faculities Issues: Inadaquate computers",
+                              "Resource Issues: Access to software",
+                              "Resource Issues: Funding",
+                              "Resource Issues: Software/license fees")
+#38
+#What is preventing you from including
+#bioinformatics content in these courses?
+
+q38.reduced.cols <- data.df%>%
+  select(q38_Faculty_issues_reduced, 
+         q38_Student_issues_reduced, 
+         q38_Curriculum_issues_reduced, 
+         q38_Institutional_issues_reduced, 
+         q38_Facilities_issues_reduced, 
+         q38_Resources_issues_reduced, 
+         q38_State_issues_reduced, 
+         q38_Accredited_issues_reduced)
+
+colnames(q38.reduced.cols) <- c("Faculty Issues (reduced)",
+                                "Student Issues (reduced)", 
+                                "Curriculum Issues (reduced)", 
+                                "Institutional Issues (reduced)", 
+                                "Facilities Issues (reduced)", 
+                                "Resource Issues (reduced)", 
+                                "State Issues (reduced)", 
+                                "Accredidation Issues (reduced)")
+
+q38.scored.cols <- data.df%>%
+  select(Q38_Faculty.Issue...No.Expertise..Training, 
+         Q38_Faculty.Issue...Time, 
+         Q38_Faculty.Issue...Lack.of.Faculty.interest.at.Institution, 
+         Q38_Faculty.Issue...Does.not.know.how.to.design.curricula.or.incorporate.with.existing.curriculum, 
+         Q38_Faculty.Issues...Faculty.is.new.to.current.Dept, 
+         Q38_Student.Issues...UG.Students.Lack.Approp.Background.Knowledge, 
+         Q38_Student.Issues...Lack.of.interest.in.topic,
+         Q38_Curriculum.Issue...Course.Load.Full..No.time.space.for.Content, 
+         Q38_Curric.Issues...Does.not.Fit.into.current.Current.Course.Structure, 
+         Q38_Curriculum.Issue...Time.for.Curriculum.Development, 
+         Q38_Curric.Issues...Lack.of.Curric.Control.not.in.curent.Curric., 
+         Q38_Curric.Issues...Bioinf..Taught.in.other.courses.at.institution, 
+         Q38_Curric.Issue...Class.Size, 
+         Q38_Curric.Issues...Plans.to.teach.Bioinf..In.the.future..but.not.currently.available., 
+         Q38_Curric.Issue...Bioinfo.Conent.too.Massive, 
+         Q38_Curric.Issues...Content.needs.to.be.introduced.in.multiple.courses,
+         Q38_Inst.Dept.Issues...Institutional.Inertia,  
+         Q38_Facilities.Issue..Access.to.Appropriate.Facilities..Equipment,
+         Q38_Resources...Access.to.Quality.Exercises..Content, 
+         Q38_Resources...Access.to.developed.Bioinf.Lesson.Plans.Bioinf.Curric,
+         Q38_Resources...Access.to.Approp.Introductory.Content, 
+         Q38_Resources...Unable.to.identify.access.best.current.Bioinf.material, 
+         Q38_Resource.Issues...Funding, 
+         Q38_Resource.Issues...Not.available.in.course.textbook, 
+         Q38_Resource.Issues...Access.to.Quality.Online.Exerices.Conent, 
+         Q38_Resource.Issues..TA.s.lack.approp.skils,
+         Q38_State.restrictions, 
+         Q38_Not.accredited)
+
+
+colnames(q38.scored.cols) <- c("Faculty Issues: Expertise/training", 
+                               "Faculty Issues: Time",
+                               "Faculty Issues: Lack of interest",
+                               "Faculty Issues: Curriculum design/integration",
+                               "Faculty Issues: New Faculty",
+                               "Student Issues: Background knowledge",
+                               "Student Issues: Interest in topic",
+                               "Curriculum Issues: No space",
+                               "Curriculum Issues: Incompatible with current curriculum",
+                               "Curriculum Issues: Time needed to develop",
+                               "Curriculum Issues: No control",
+                               "Curriculum Issues: Covered elsewhere",
+                               "Curriculum Issues: Class size",
+                               "Curriculum Issues: Plan for future coverage",
+                               "Curriculum Issues: Too much content",
+                               "Curriculum Issues: Content requires several courses",
+                               "Institutional: Inertia",
+                               "Facilities: Access to equipment",
+                               "Resource Issues: Access to exercises",
+                               "Resource Issues: Access to lesson plans",
+                               "Resource Issues: Access to intro content",
+                               "Resource Issues: Unable to vet content",
+                               "Resource Issues: Funding",
+                               "Resource Issues: No appropriate textbook",
+                               "Resource Issues: No access to online exercises",
+                               "Resource Issues: No qualified TAs",
+                               "State Restrictions", 
+                               "Accreditation")
+
+
+#q06
+q06.reduced.cols <- q06.reduced.cols%>%
+  summarise_each(funs(sum))
+q06.reduced.cols <- q06.reduced.cols/sample.size
+rownames(q06.reduced.cols) <- "percentage"
+
+q06.scored.cols <- q06.scored.cols%>%
+  summarise_each(funs(sum))
+q06.scored.cols <- q06.scored.cols/sample.size
+rownames(q06.scored.cols) <- "percentage"
+
+#q29
+q29.reduced.cols <- q29.reduced.cols%>%
+  summarise_each(funs(sum))
+q29.reduced.cols <- q29.reduced.cols/sample.size
+rownames(q29.reduced.cols) <- "percentage"
+
+q29.scored.cols <- q29.scored.cols%>%
+  summarise_each(funs(sum))
+q29.scored.cols <- q29.scored.cols/sample.size
+rownames(q29.scored.cols) <- "percentage"
+
+#q33
+q33.reduced.cols <- q33.reduced.cols%>%
+  summarise_each(funs(sum))
+q33.reduced.cols <- q33.reduced.cols/sample.size
+rownames(q33.reduced.cols) <- "percentage"
+
+q33.scored.cols <- q33.scored.cols%>%
+  summarise_each(funs(sum))
+q33.scored.cols <- q33.scored.cols/sample.size
+rownames(q33.scored.cols) <- "percentage"
+
+#q38
+q38.reduced.cols <- q38.reduced.cols%>%
+  summarise_each(funs(sum))
+q38.reduced.cols <- q38.reduced.cols/sample.size
+rownames(q38.reduced.cols) <- "percentage"
+
+q38.scored.cols <- q38.scored.cols%>%
+  summarise_each(funs(sum))
+q38.scored.cols <- q38.scored.cols/sample.size
+rownames(q38.scored.cols) <- "percentage"
+
+
+#transpose and combine tallies and add question as variable name
+
+q06.reduced.cols <- data.frame(t(q06.reduced.cols), stringsAsFactors = FALSE)
+q06.reduced.cols$question <- "Q06 Reduced"
+q06.reduced.cols$barrier <- rownames(q06.reduced.cols)
+rownames(q06.reduced.cols) <- NULL
+
+q06.scored.cols <- data.frame(t(q06.scored.cols), stringsAsFactors = FALSE)
+q06.scored.cols$question <- "Q06 scored"
+q06.scored.cols$barrier <- rownames(q06.scored.cols)
+rownames(q06.scored.cols) <- NULL
+
+q29.reduced.cols <- data.frame(t(q29.reduced.cols), stringsAsFactors = FALSE)
+q29.reduced.cols$question <- "Q29 Reduced"
+q29.reduced.cols$barrier <- rownames(q29.reduced.cols)
+rownames(q29.reduced.cols) <- NULL
+
+q29.scored.cols <- data.frame(t(q29.scored.cols), stringsAsFactors = FALSE)
+q29.scored.cols$question <- "Q29 scored"
+q29.scored.cols$barrier <- rownames(q29.scored.cols)
+rownames(q29.scored.cols) <- NULL
+
+q33.reduced.cols <- data.frame(t(q33.reduced.cols), stringsAsFactors = FALSE)
+q33.reduced.cols$question <- "Q33 Reduced"
+q33.reduced.cols$barrier <- rownames(q33.reduced.cols)
+rownames(q33.reduced.cols) <- NULL
+
+q33.scored.cols <- data.frame(t(q33.scored.cols), stringsAsFactors = FALSE)
+q33.scored.cols$question <- "Q33 scored"
+q33.scored.cols$barrier <- rownames(q33.scored.cols)
+rownames(q33.scored.cols) <- NULL
+
+q38.reduced.cols <- data.frame(t(q38.reduced.cols), stringsAsFactors = FALSE)
+q38.reduced.cols$question <- "Q38 Reduced"
+q38.reduced.cols$barrier <- rownames(q38.reduced.cols)
+rownames(q38.reduced.cols) <- NULL
+
+q38.scored.cols <- data.frame(t(q38.scored.cols), stringsAsFactors = FALSE)
+q38.scored.cols$question <- "Q38 scored"
+q38.scored.cols$barrier <- rownames(q38.scored.cols)
+rownames(q38.scored.cols) <- NULL
+
+#combine all columns for plotting and set up ordering by percentage
+
+
+
+
+total.reduced.cols <- rbind(q06.reduced.cols, 
+                            q29.reduced.cols,
+                            q33.reduced.cols,
+                            q38.reduced.cols)
+total.reduced.cols$barrier <- factor(total.reduced.cols$barrier, levels = total.reduced.cols$barrier[order(desc(total.reduced.cols$percentage))])
+
+
+#Rename questions for plotting
+
+total.reduced.cols$question[total.reduced.cols$question == "Q06 Reduced"] <- "q2.Q6"
+total.reduced.cols$question[total.reduced.cols$question == "Q29 Reduced"] <- "q4.Q29"
+total.reduced.cols$question[total.reduced.cols$question == "Q33 Reduced"] <- "q1.Q33"
+total.reduced.cols$question[total.reduced.cols$question == "Q38 Reduced"] <- "q3.Q38"
+
+
+
+#create data frame of facet lables
+
+label.df.r <- list("q2.Q6" = "Question 4",
+                   "q4.Q29" = "Question 2", 
+                   "q1.Q33" = "Question 1", 
+                   "q3.Q38" = "Question 3"
+)
+
+facet_labeller.reduce <- function(variable,value){
+  return(label.df.r[value])
+  
+}
+
+
+total.scored.cols <- rbind(q06.scored.cols,
+                           q29.scored.cols,
+                           q33.scored.cols,
+                           q38.scored.cols)
+total.scored.cols$barrier <- factor(total.scored.cols$barrier, levels = total.scored.cols$barrier[order(desc(total.scored.cols$percentage))])
+
+
+total.scored.cols$question[total.scored.cols$question == "Q06 scored"] <- "q2.Q6"
+total.scored.cols$question[total.scored.cols$question == "Q29 scored"] <- "q4.Q29"
+total.scored.cols$question[total.scored.cols$question == "Q33 scored"] <- "q1.Q33"
+total.scored.cols$question[total.scored.cols$question == "Q38 scored"] <- "q3.Q38"
+
+label.df.s <- list("q2.Q6" = "Question 4",
+                   "q4.Q29" = "Question 2", 
+                   "q1.Q33" = "Question 1", 
+                   "q3.Q38" = "Question 3"
+)
+
+facet_labeller.score <- function(variable,value){
+  return(label.df.s[value])
+  
+}
+
+
+#create directory
+#dir.create("./top5_plots", recursive = TRUE)
+#dir.create("./top5_plots/ouput_tables", recursive = TRUE)
+
+
+# Order plot by percentages and replace with new terminiology
+
+total.reduced.cols$barrier <- gsub(".reduced.", "", total.reduced.cols$barrier)
+
+total.reduced.cols <- total.reduced.cols%>%
+  group_by(question)%>%
+  arrange(.,desc(percentage))
+
+total.reduced.cols$barrier <- factor(total.reduced.cols$barrier, levels = total.reduced.cols$barrier[order(desc(total.reduced.cols$percentage))])
+
+
+greys <- c("#000000", 
+           "#708090", 
+           "#696969", 
+           "#C0C0C0", 
+           "#d9d9d9", 
+           "#ffffff")
+
+
+total.reduced.cols%>%
+  filter(percentage >= 0.05)%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_grid(~ question, labeller = facet_labeller.reduce, space = "free_x" )+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  #theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+            vjust =-.2, size = 6, color = "black")+
+  #scale_x_discrete(breaks = NULL)+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "black"))+
+  scale_fill_manual(values = greys, name= "Barrier Super-categories", labels= c("Faculty Issues",
+                                                                         "Student Issues", 
+                                                                         "Curriculum Issues", 
+                                                                         "Facilities Issues", 
+                                                                         "Resource Issues", 
+                                                                         "Institutional Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =2))
+  
+
+
+
+ggsave( filename= "summarized_barriers_Q06_Q29_Q33_Q38_grey.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+total.reduced.cols%>%
+  filter(percentage >= 0.05)%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_grid(~ question, labeller = facet_labeller.reduce, space = "free_x" )+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  #theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+            vjust =-.2, size = 6, color = "black")+
+  #scale_x_discrete(breaks = NULL)+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "black"))+
+  #scale_fill_manual(values = greys, name= "Barrier Super-categories", labels= c("Faculty Issues",
+  #                                                                              "Student Issues", 
+  #                                                                              "Curriculum Issues", 
+  #                                                                              "Facilities Issues", 
+  #                                                                              "Resource Issues", 
+  #                                                                              "Institutional Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =2))
+
+
+
+
+ggsave( filename= "summarized_barriers_Q06_Q29_Q33_Q38_color.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+#write_csv(total.reduced.cols, "./top5_plots/ouput_tables/reduced_values.csv")
+
+
+
+total.scored.cols <- total.scored.cols%>%
+  group_by(question)%>%
+  arrange(.,desc(percentage))
+
+greys <- c("#000000", 
+           "#2F4F4F", 
+           "#708090", 
+           "#778899", 
+           "#808080",
+           "#696969", 
+           "#A9A9A9", 
+           "#C0C0C0", 
+           "#D3D3D3", 
+           "#DCDCDC", 
+           "#ffffff")
+
+total.scored.cols%>%
+  filter(percentage >= 0.05)%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_grid(~ question, labeller = facet_labeller.score)+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  #theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+            vjust =-.3, size = 5, color = "black", nudge_x = .1)+
+  #scale_x_discrete(breaks = NULL)+
+  #guides(fill=guide_legend(ncol=3))+
+  theme(axis.line = element_line(colour = "black"))+
+  scale_fill_manual(values = greys, name= "Barrier Super-categories", labels= c("Faculty Issues: Expertise/training",
+                                                                                "Student Issues: Lack of background skills/knowledge", 
+                                                                                "Facilities Issues: Access to computer labs", 
+                                                                                "Faculty Issues: Time", 
+                                                                                "Resource Issues", 
+                                                                                "Institutional Issues: Access to IT support",
+                                                                                "Curriculum Issues: No space", 
+                                                                                "Student Issues: Lack of interest", 
+                                                                                "Curriculum Issues: Lack of integration", 
+                                                                                "Curriculum Issues: Too much content", 
+                                                                                "Resource Issues: Access to high-performance computing"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =5))
+
+
+ggsave( filename= "scored_barriers_Q06_Q29_Q33_Q38_BW.png", 
+        width = 14.8, 
+        height = 8.81, 
+        units = "in")
+
+
+
+
+# Order plot by percentages
+
+total.scored.cols <- total.scored.cols%>%
+  group_by(question)%>%
+  arrange(.,desc(percentage))
+
+
+total.scored.cols%>%
+  filter(percentage >= 0.05)%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_grid(~ question, labeller = facet_labeller.score)+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  #theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+            vjust =-.3, size = 5, color = "black", nudge_x = .1)+
+  #scale_x_discrete(breaks = NULL)+
+  #guides(fill=guide_legend(ncol=3))+
+  theme(axis.line = element_line(colour = "black"))+
+#  scale_fill_manual(values = greys, name= "Barrier Super-categories", labels= c("Faculty Issues",
+#                                                                                "Student Issues", 
+#                                                                                "Curriculum Issues", 
+#                                                                                "Facilities Issues", 
+#                                                                                "Resource Issues", 
+#                                                                                "Institutional Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =5))
+
+
+ggsave( filename= "scored_barriers_Q06_Q29_Q33_Q38_color.png", 
+        width = 14.8, 
+        height = 8.81, 
+        units = "in")
+
+
