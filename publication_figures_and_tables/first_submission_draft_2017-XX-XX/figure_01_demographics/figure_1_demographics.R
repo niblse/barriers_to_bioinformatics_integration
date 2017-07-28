@@ -166,7 +166,7 @@ table_training <- data.frame("Demographic_category"=c("Formal Training",
                                                       "No Training", 
                                                       "Self-taught", 
                                                       "Workshops and Bootcamps", 
-                                                      "Unknown Bioinformatics Training"
+                                                      "Unknown Training"
                                                       ), 
                         "Demographic"= c("Bioinformatics Training",
                                          "Bioinformatics Training",
@@ -194,7 +194,7 @@ table_decade <- data.frame("Demographic_category"=c("Before 1970s",
                                                     "1990s", 
                                                     "2000s", 
                                                     "2010s", 
-                                                    "Unknown Decade of Degree"),
+                                                    "Unknown Decade"),
                            "Demographic"=c("Decade of Degree",
                                            "Decade of Degree",
                                            "Decade of Degree",
@@ -320,7 +320,8 @@ combined_tables%>%
                                   size = 0.5, linetype = "solid"))+
   theme(panel.grid.major=element_blank(),
         panel.grid.minor=element_blank())+
-  theme(axis.line.x = element_blank())
+  theme(axis.line.x = element_blank())+
+  theme(axis.text.y = element_text(hjust = 1))
 
   
 
