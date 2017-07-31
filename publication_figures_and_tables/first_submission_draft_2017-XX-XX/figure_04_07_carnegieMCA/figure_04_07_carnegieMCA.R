@@ -478,3 +478,52 @@ ggsave(filename = "figure_04.png",
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
+
+
+#Question Q22- MSI status
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(Q21), 
+                              active_columns = c(
+                                Q1, #bioinformatics teaching status
+                                Q22 # MSI 
+                              ))
+
+
+#fix titles for plotting
+
+tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "Teaching:\nDedicated Course"] <- "Teaching: Dedicated Course"
+tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "Teaching:\nIntegrating"] <- "Teaching: Integrating"
+tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "Teaching:\nNot Integrating"] <- "Teaching: Not Integrating"
+tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...[tmp$Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "4_Graduate supervisors in the life sciences"] <- NA
+
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "black" , 
+                habillage = 2,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.2,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 6,
+                legend.title = "Bioinformatics Integration\n(ellipse = 80%)",
+                ellipse.level = 0.80)+
+  #theme_minimal()+
+  theme_gray(base_size = 16, base_family = "sans")+
+  theme(line = element_line(colour = "black"), rect = element_rect(fill = "white",linetype = 0, colour = NA))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(legend.position = c(.20,.10))+
+  ggtitle("")
+
+ggsave(filename = "figure_XX.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")

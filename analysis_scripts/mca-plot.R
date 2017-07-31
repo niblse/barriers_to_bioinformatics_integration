@@ -1203,3 +1203,84 @@ ggsave(filename = "./mca_plots/Q18_degree_yr.q33.png",
        width = 13.8, 
        height = 8.81, 
        units = "in")
+
+
+
+
+
+#special MCA for MSI/Integration/Carnegie
+
+#Question Q22- MSI status
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(Q21), 
+                              active_columns = c(
+                                Q1, #bioinformatics teaching status
+                                Q22 # MSI 
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 1,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's Institutional MSI status (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q22 MSI status, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Current bioinformatics teaching (Teaching)\n MSI Status")
+
+ggsave(filename = "./mca_plots/Q22_specialm_si_status.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
+
+#special MCA for sex/Carnegie/degreeyear
+
+
+tmp <- calculate_mca_and_plot(df = data.relavant, 
+                              qualitative_supplementary_columns = c(Q14), 
+                              active_columns = c(
+                                degree_year,
+                                Q1, #bioinformatics teaching status
+                                Q3, #bioinformatics training                             					
+                                #Q14, #Sex 
+                                Q21 #Carnegie classification
+                              ))
+
+MCA.object <- MCA(X = as.matrix(tmp),
+                  quali.sup = 1,
+                  graph = FALSE)
+
+n_scored <- nrow(tmp)
+
+fviz_mca_biplot(MCA.object,
+                #invisible = "quali.sup",
+                col.var = "darkblue" , 
+                habillage = 5,
+                label = "var",
+                pointsize = 2,
+                alpha.ind = 0.4,
+                addEllipses = TRUE,
+                repel = TRUE,
+                labelsize = 4,
+                legend.title = "Respondent's year of degree (ellipse = 80%)",
+                ellipse.level = 0.80)+
+  theme_minimal()+
+  ggtitle(paste("Multiple Correspondence Analysis; Q18 Year of Degree, with selected factors n=", dim(tmp[1]), sep = ""), 
+          subtitle = "Level of bioinformatics training\nCurrent bioinformatics teaching (Teaching)\nSex\nCarnegie classification\nMSI status\nUndergraduate enrollment")
+
+ggsave(filename = "./mca_plots/Q18_degree_yr_sex.png", 
+       width = 13.8, 
+       height = 8.81, 
+       units = "in")
