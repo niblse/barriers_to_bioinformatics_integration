@@ -523,7 +523,7 @@ fviz_mca_biplot(MCA.object,
   theme(legend.position = c(.20,.10))+
   ggtitle("")
 
-ggsave(filename = "figure_XX.png", 
+ggsave(filename = "supfig_02.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
