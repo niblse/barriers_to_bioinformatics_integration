@@ -96,11 +96,11 @@ table_degree <- data.frame("Demographic_category"=c("Bachelors",
                                           ), 
                            stringsAsFactors = FALSE
                            )
-table_carnegie <- data.frame("Demographic_category"=c("Associates", 
-                                                      "Baccalaureate", 
-                                                      "Masters", 
-                                                      "Doctoral", 
-                                                      "Unknown Classification"
+table_carnegie <- data.frame("Demographic_category"=c("Associates ", 
+                                                      "Baccalaureate ", 
+                                                      "Masters ", 
+                                                      "Doctoral ", 
+                                                      "Unknown Classification "
                                                       ), 
                              "Demographic"= c("Carnegie Classification",
                                               "Carnegie Classification",
@@ -287,8 +287,54 @@ target_order <- c(
                   "Undergraduate Enrollment",
                   "Undergraduate Enrollment"
                   )
-combined_tables$Demographic <- reorder.factor(combined_tables$Demographic, new.order =  target_order)
+#combined_tables$Demographic <- reorder.factor(combined_tables$Demographic, new.order =  target_order)
 
+# additional reordering of subdemographics
+
+target_order2 <- c("Self-taught",
+                   "Workshops and Bootcamps",
+                   "Formal Training",
+                   "No Training",
+                   "Unknown Training",
+                   "Doctoral ", 
+                   "Masters ", 
+                   "Baccalaureate ", 
+                   "Associates ",
+                   "Unknown Classification ",
+                   "2010s", 
+                   "2000s", 
+                   "1990s", 
+                   "1980s", 
+                   "1970s", 
+                   "Before 1970s", 
+                   "Unknown Decade", 
+                   "Minority Serving",
+                   "Non-minority Serving", 
+                   "Unknown MSI Designation", 
+                   "Am. Indian/Alaskan Native", 
+                   "Asian", 
+                   "Black/African Am.", 
+                   "Hawaiian/Pacific Islander",
+                   "Hispanic",
+                   "White", 
+                   "Unknown Race/Ethnicity", 
+                   "Female", 
+                   "Male", 
+                   "Unknown Sex", 
+                   "Doctoral", 
+                   "Professional", 
+                   "Masters", 
+                   "Bachelors", 
+                   "Other",
+                   "Unknown Degree", 
+                   "> 15,000", 
+                   "5-15,000", 
+                   "< 5,000", 
+                   "Unknown Enrollment"
+                   )
+
+target_order2 <- rev(target_order2)
+combined_tables$Demographic_category <- reorder.factor(combined_tables$Demographic_category, new.order = target_order2)
 
 #Generate plot
 
