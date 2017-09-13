@@ -426,8 +426,8 @@ total.reduced.cols$question[total.reduced.cols$question == "Q38 Reduced"] <- "q3
 
 #create data frame of facet lables
 
-label.df.r <- list("q2.Q6" = "Question 4",
-                   "q4.Q29" = "Question 2", 
+label.df.r <- list("q2.Q6" = "Question 2",
+                   "q4.Q29" = "Question 4", 
                    "q1.Q33" = "Question 1", 
                    "q3.Q38" = "Question 3*"
 )
@@ -450,8 +450,8 @@ total.scored.cols$question[total.scored.cols$question == "Q29 scored"] <- "q4.Q2
 total.scored.cols$question[total.scored.cols$question == "Q33 scored"] <- "q1.Q33"
 total.scored.cols$question[total.scored.cols$question == "Q38 scored"] <- "q3.Q38"
 
-label.df.s <- list("q2.Q6" = "Question 4",
-                   "q4.Q29" = "Question 2", 
+label.df.s <- list("q2.Q6" =  "Question 2",
+                   "q4.Q29" = "Question 4", 
                    "q1.Q33" = "Question 1", 
                    "q3.Q38" = "Question 3*"
 )
