@@ -233,9 +233,9 @@ dir.create(plot.dir.path, recursive = TRUE)
 # 
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("Associates"= category.levels[1], 
+category.df <- data.frame ("AssociateQs"= category.levels[1], 
                            "Baccalaureate" = category.levels[2] , 
-                           "Masters" = category.levels[3] , 
+                           "MasterQs" = category.levels[3] , 
                            "Doctoral" = category.levels[4], 
                            stringsAsFactors = FALSE)
 
@@ -243,10 +243,10 @@ category.df <- data.frame ("Associates"= category.levels[1],
 col.order <- c("1_Associate's College", "2_Baccalaureate College" , "3_Master's (Small, Medium, Large)" , "4_Doctoral University (High, Higher, Highest Research Activity)" )
 
 #With substitutions - must match category.df
-col.order2 <- c("Associates", "Baccalaureate", "Masters","Doctoral" )
+col.order2 <- c("AssociateQs", "Baccalaureate", "MasterQs","Doctoral" )
 
 #Nice Labels for plotting
-nice.lables.list <- c("Associates", "Baccalaureate", "Masters","Doctoral")
+nice.lables.list <- c("AssociateQs", "Baccalaureate", "MasterQs","Doctoral")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -880,10 +880,10 @@ plot.sig.barriers <- function(df,
   legend.labels$legend <- gsub("K",
                                "",
                                legend.labels$legend)
-  #replace 'D' with '-'
-  #legend.labels$legend <- gsub("D",
-  #                             "-",
-  #                             legend.labels$legend)
+  #replace 'Q' with ''
+  legend.labels$legend <- gsub("Q",
+                               "'",
+                               legend.labels$legend)
   # create labels that show how many positive (coded) responses
   
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
@@ -1032,10 +1032,10 @@ plot.sig.barriers <- function(df,
   legend.labels$legend <- gsub("K",
                                "",
                                legend.labels$legend)
-  #replace 'D' with '-'
-  #legend.labels$legend <- gsub("D",
-  #                             "-",
-  #                             legend.labels$legend)
+  #replace 'Q' with ''
+  legend.labels$legend <- gsub("Q",
+                               "'",
+                               legend.labels$legend)
   # create labels that show how many positive (coded) responses
   
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%

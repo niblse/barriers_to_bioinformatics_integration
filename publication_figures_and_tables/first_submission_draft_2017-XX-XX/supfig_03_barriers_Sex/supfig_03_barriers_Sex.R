@@ -146,7 +146,7 @@ category.raw.scored.columns.nice.names <- c("Faculty Issues: Expertise/training"
                                             "Faculty Issues: No interest in topic",
                                             "Faculty Issues: No comp-sci faculty",
                                             "Facilities Issues: Access to computer labs",
-                                            "Facilities Issues: Inadaquate computers",
+                                            "Facilities Issues: Inadequate computers",
                                             "Facilities Issues: Access to servers",
                                             "Facilities Issues: Access to internet",
                                             "Resource Issues: Access to operating systems",
@@ -904,7 +904,7 @@ plot.sig.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_x_discrete(
       labels = c(
-        'Facilities Issues:\nInadaquate computers',
+        'Facilities Issues:\nInadequate computers',
         'Institutional Issues:\nAccess to IT support',
         'Facilities Issues:\nAccess to computer labs'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
@@ -1050,7 +1050,7 @@ plot.sig.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_x_discrete(
       labels = c(
-        'Facilities Issues:\nInadaquate computers',
+        'Facilities Issues:\nInadequate computers',
         'Institutional Issues:\nAccess to IT support',
         'Facilities Issues:\nAccess to computer labs'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
