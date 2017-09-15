@@ -261,8 +261,8 @@ data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "5_Don't know"] <- NA
 
 #22
-data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority Serving\nInstitution"
-data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non–minority Serving\nInstitution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority-Serving\nInstitution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non–minority-Serving\nInstitution"
 data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "3_Don't know" ] <- NA
 
 #23
