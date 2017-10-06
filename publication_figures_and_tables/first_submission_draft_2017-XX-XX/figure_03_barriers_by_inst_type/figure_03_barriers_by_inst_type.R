@@ -918,7 +918,7 @@ plot.sig.barriers <- function(df,
       'Curriculum Issues:\nQuickly changing technologies',
       'Student Issues:\nLack of interest',
       'Student Issues:\nLack of background skills/knowledge',
-      'Faculty Issues:\nExpertise/training'))+
+      'Faculty Issues:\nLack of expertise/training'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -937,7 +937,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = greys, name= "Institution Types", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2))+
+    guides(fill=guide_legend(nrow =2, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
     
 
@@ -955,7 +955,7 @@ plot.sig.barriers <- function(df,
          width = 13.8, 
          units = "in")
   
-  
+
 }
 
 
@@ -1069,7 +1069,7 @@ plot.sig.barriers <- function(df,
         'Curriculum Issues:\nQuickly changing technologies',
         'Student Issues:\nLack of interest',
         'Student Issues:\nLack of background skills/knowledge',
-        'Faculty Issues:\nExpertise/training'))+
+        'Faculty Issues:\nLack of expertise/training'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -1088,7 +1088,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = niblse_4_color, name= "Institution Types", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2))+
+    guides(fill=guide_legend(nrow =2, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
   
   

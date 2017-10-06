@@ -935,7 +935,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = greys, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =3))+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
@@ -1260,7 +1260,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = niblse_4_color, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =3))+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
