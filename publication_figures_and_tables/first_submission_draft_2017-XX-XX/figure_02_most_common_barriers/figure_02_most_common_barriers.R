@@ -42,6 +42,10 @@ total.scored.cols <- total.scored.cols%>%
   group_by(question)%>%
   arrange(.,desc(percentage))
 
+#adjust labels for clarity
+
+total.scored.cols$barrier[total.scored.cols$barrier == "Faculty Issues: Expertise/training"] <- "Faculty Issues:  Lack of expertise/training"
+total.scored.cols$barrier[total.scored.cols$barrier == "Faculty Issues: Time"] <- "Faculty Issues: Lack of time"
 
 total.scored.cols$barrier <- factor(total.scored.cols$barrier, levels = total.scored.cols$barrier[order(desc(total.scored.cols$percentage))])
 
@@ -55,7 +59,7 @@ total.scored.cols%>%
   xlab("Scored barrier categories")+
   ylab("Percentage of respondents reporting barrier")+
   scale_fill_discrete(name="Barrier categories")+
-  theme_fivethirtyeight(base_size = 25, base_family = "sans")+
+  theme_fivethirtyeight(base_size = 30, base_family = "sans")+
   theme(panel.background = element_rect(fill = "white"))+
   theme(plot.background = element_rect(fill = "white"))+
   theme(legend.background = element_rect(fill = "white"))+
@@ -79,7 +83,7 @@ total.scored.cols%>%
 
 ggsave( filename= "figure_02.png", 
         width = 18.8, 
-        height = 8.81, 
+        height = 10, 
         units = "in")
 
 
