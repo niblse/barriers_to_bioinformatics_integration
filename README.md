@@ -15,6 +15,7 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 |02_Bioinformatics_Survey_Summary_may_08_2016.pdf|This is a Qualtrics-generated report of the survey. **Note:** In our analysis, survey questions numbers do not necessarily correspond with question numbers presented in this report |
 |analysis_scripts/|This directory contains the R scripts and outputs from our analysis|
 |data_cleaning_scripts/|This directory contains the R scripts and outputs used in the conversion of the survey data from .xlsx format into CSV format, as well as various data cleaning steps|
+|publication_figures_and_tables/|These are the scripts used to generate figures we include in the publication|
 
 
 
