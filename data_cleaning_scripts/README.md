@@ -17,29 +17,32 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 |04_decode_survey_responses/|Contains `decoded_responses.R`as well as survey mapping header files (`Header_mapping.tab`, `Header_mapping.txt` ); <br>used in conjunction with `Header_mapping.txt` to transform numeric survey codings into readable options; <br>*output:* `decoded_df.csv` <br>**Note:** This output is used in the majority analyses, except those analyzing survey responses by ethnicity.|
 |05_adjust_ethnicities/|Contains `adjust_ethnicities.R`; <br>used to adjust survey ethnicity information into categories that match with standard race/ethnicity demographic categories and also separately categorizes respondents identified as races/ethnicities underrepresented in science; <br>*output:* `decoded_df_w_ethnicity.csv`|
 |06_adjust_bioinformatics_training|Contains `adjust_bioinformatics_training.R`; <br>used to adjust survey bioinformatics training information into categories that condense into formal and informal training for better analysis; <br>*output:* `decoded_df_w_faculty_preperation.csv`
+|07_adjust_degree_year/|Contains `adjust_degree_year.R`;<br> This script creates a column 'bin_degree_yrs' that categorizes respondents into a decade of their degree (Before 1970, 1970-1979, 1980-1989, 1990-1999, 2000-2009, 2010-2016)<br> *output*: ` 	decoded_df_w_bin_degree_years.csv`|
 
 ## Additional notes
 
 ### Script details
 
-*01_combine_excel_outputs_to_csv/combine_coded_csvs.R*
+*01: combine_excel_outputs_to_csv/combine_coded_csvs.R*
 
 - From `data.xlxs`, 6 files representing coded free-text responses   
 (`01_preventing_you.csv`, `02_barriers_dev_imp.csv`, `03_technical_barriers.csv`, `04_important_challenges.csv`, `05_student_deficiencies.csv`) and other survey responses (`master.csv`) were exported from Excel (Microsoft Excel for Mac version 15.25.1 (160826)) as CSV files ( MS-DOS Comma Separated (.csv)). 
 
-*02_transform_coding_to_binary/binary_scoring.R*
+*02: transform_coding_to_binary/binary_scoring.R*
 - Free-text responses from the survey were categorized (presence = '1') into several categories. NA values in these scoring columns were assigned a value of 0; NA values in other survey responses were not altered. 
 
-*03_sum_and_reduce_barrier_coding/summed_reduced_factors.R*
+*03: sum_and_reduce_barrier_coding/summed_reduced_factors.R*
 
 - For coded rows, new variables were created to summarize coded data in one of two ways
     - Summed: For every individual (row) and for all related coded responses (e.g Faculty Time, Faculty Preparation, ...) a super-category (e.g. Faculty) is created, and multiple issues reported by a single individual are summed numerically: (e.g. Faculty Time (1), Faculty Preparation (1) -> 'Faculty'(2));row header: 'qXX_ISSUE_reduced'
     - Reduced: For every individual (row) and for all related coded responses (e.g Faculty Time, Faculty Preparation, ...) a super-category (e.g. Faculty) is created, and multiple issues reported by a single individual are assigned '1' if at least one issue is scored in the related categories: (e.g. Faculty Time (1), Faculty Preparation (1) -> 'Faculty'(1)); row header: 'qXX_ISSUE_reduced'
 
-*04_decode_survey_responses/decoded_responses.R*
+**Note:** In manuscript we only consider 'Summed' columns which we refer to as "Super-categories."
+
+*04: decode_survey_responses/decoded_responses.R*
 - multiple-option questions from the Qualtrics survey are reported as numerical values. These values are modified to include intelligible entries on the survey by extracting their decoded values from the `Header_mapping.txt` file (converted from .tab to .txt). During the conversion, the original Qualtrics numerical output is retained (e.g. '2' -> '2_Male'). 
 
-*05_adjust_ethnicities/adjust_ethnicities.R*
+*05: adjust_ethnicities/adjust_ethnicities.R*
 - Adjusts Qualtrics scoring which collected information on hispanic ethnicity in a separate column. Respondents categorized into the following categories:
     - America Indian/Alaskan Native
     - Black not hispanic
@@ -50,7 +53,7 @@ NIBLSE homepage on QUBES hub: [https://qubeshub.org/groups/niblse](https://qubes
 
 a separate category 'underrepresented' was created for non-white, non-asian respondents who are not considered underrepresented in life science.  
 
-*decoded_df_w_faculty_preperation.csv*
+*06: adjust_bioinformatics_training.R*
 - Bins faculty bioinformatics training experience into the following categories:
     - No Training
     - Self-taught
@@ -58,4 +61,7 @@ a separate category 'underrepresented' was created for non-white, non-asian resp
     - Formal Training (from some undergraduate training, to bioinformatics graduate degree)
 
 
+*07: adjust_degree_year.R*
+
+- Bins faculty into decades by year of terminal degree. "Before 1970" and "2010-2016" are not 10 year periods. 
 
