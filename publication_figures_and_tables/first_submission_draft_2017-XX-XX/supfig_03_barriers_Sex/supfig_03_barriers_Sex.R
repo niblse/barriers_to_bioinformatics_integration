@@ -925,7 +925,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = greys, name= "Sex", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2))+
+    guides(fill=guide_legend(nrow =2, reverse= TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
@@ -1071,7 +1071,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = niblse_4_color, name= "Sex", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2))+
+    guides(fill=guide_legend(nrow =2, reverse= TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
