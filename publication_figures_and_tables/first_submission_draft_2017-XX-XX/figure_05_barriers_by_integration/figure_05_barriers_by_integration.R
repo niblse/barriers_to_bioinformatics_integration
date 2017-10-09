@@ -935,7 +935,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = greys, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =3))+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
@@ -948,7 +948,7 @@ plot.sig.barriers <- function(df,
                                                                        "_BW_.png",
                                                                        sep = "_")
   
-  ggsave("figure_06_bw.png",
+  ggsave("figure_05_bw.png",
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -1260,7 +1260,7 @@ plot.sig.barriers <- function(df,
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
     scale_fill_manual(values = niblse_4_color, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =3))+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
   
   
@@ -1273,7 +1273,7 @@ plot.sig.barriers <- function(df,
                                                                        "_Color_.png",
                                                                        sep = "_")
   
-  ggsave("figure_06_color.png", 
+  ggsave("figure_05_color.png", 
          width = 13.8, 
          height = 8.81, 
          units = "in")

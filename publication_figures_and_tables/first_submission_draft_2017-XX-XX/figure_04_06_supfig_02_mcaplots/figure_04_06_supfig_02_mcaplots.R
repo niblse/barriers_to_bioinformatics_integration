@@ -136,7 +136,7 @@ data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_re
 data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "1"] <- "STUDENT(+)"
 data.relavant$q33_Facility_issues_reduced[data.relavant$q33_Facility_issues_reduced == "0"] <- "faclities(-)"
 data.relavant$q33_Faculty_issues_reduced[data.relavant$q33_Faculty_issues_reduced == "0"] <- "faculty(-)"
-data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "0"] <- "curriculumn(-)"
+data.relavant$q33_Curriculum_issues_reduced[data.relavant$q33_Curriculum_issues_reduced == "0"] <- "curriculum(-)"
 data.relavant$q33_Institutional_issues_reduced[data.relavant$q33_Institutional_issues_reduced == "0"] <- "institutional(-)"
 data.relavant$q33_Resources_issues_reduced[data.relavant$q33_Resources_issues_reduced == "0"] <- "resource(-)"
 data.relavant$q33_Student_issues_reduced[data.relavant$q33_Student_issues_reduced == "0"] <- "student(-)"
@@ -254,15 +254,15 @@ data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highe
 data.relavant$Q18_Year.of.highest.earned.degree.[data.relavant$Q18_Year.of.highest.earned.degree. == "68_Rather Not Say"] <- NA
 
 #21
-data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College"] <- "Associates Institution"
+data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College"] <- "Associate's Institution"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College"] <- "Baccalaureate Institution"
-data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)"] <- "Masters Institution"
+data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)"] <- "Master's Institution"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)"] <- "Doctoral Institution"
 data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution.[data.relavant$Q21_What.is.the.Carnegie.classification.of.your.institution. == "5_Don't know"] <- NA
 
 #22
-data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority Serving\nInstitution"
-data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non-minority Serving\nInstitution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes" ] <- "Minority-Serving\nInstitution"
+data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "2_No" ] <- "Non–minority-Serving\nInstitution"
 data.relavant$Q22_Is.your.institution.classified.as.minority.serving.[data.relavant$Q22_Is.your.institution.classified.as.minority.serving. == "3_Don't know" ] <- NA
 
 #23
@@ -430,7 +430,7 @@ fviz_mca_biplot(MCA.object,
   ggtitle("")
          
 
-ggsave(filename = "figure_07.png", 
+ggsave(filename = "figure_06.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")

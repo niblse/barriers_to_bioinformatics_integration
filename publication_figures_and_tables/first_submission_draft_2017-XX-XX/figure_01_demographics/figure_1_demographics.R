@@ -66,8 +66,8 @@ table_ethnicity <-  data.frame("Demographic_category"=c("Am. Indian/Alaskan Nati
                                               ),
                                stringsAsFactors = FALSE
                                      )
-table_degree <- data.frame("Demographic_category"=c("Bachelors", 
-                                                    "Masters",
+table_degree <- data.frame("Demographic_category"=c("Bachelor's", 
+                                                    "Master's",
                                                     "Doctoral", 
                                                     "Professional",
                                                     "Other", 
@@ -96,11 +96,11 @@ table_degree <- data.frame("Demographic_category"=c("Bachelors",
                                           ), 
                            stringsAsFactors = FALSE
                            )
-table_carnegie <- data.frame("Demographic_category"=c("Associates", 
-                                                      "Baccalaureate", 
-                                                      "Masters", 
-                                                      "Doctoral", 
-                                                      "Unknown Classification"
+table_carnegie <- data.frame("Demographic_category"=c("Associate's ", 
+                                                      "Baccalaureate ", 
+                                                      "Master's ", 
+                                                      "Doctoral ", 
+                                                      "Unknown Classification "
                                                       ), 
                              "Demographic"= c("Carnegie Classification",
                                               "Carnegie Classification",
@@ -122,8 +122,8 @@ table_carnegie <- data.frame("Demographic_category"=c("Associates",
                                             ), 
                              stringsAsFactors = FALSE
                              )
-table_msi <- data.frame("Demographic_category"=c("Minority Serving", 
-                                                 "Non-minority Serving", 
+table_msi <- data.frame("Demographic_category"=c("Minority-Serving", 
+                                                 "Non—minority-Serving", 
                                                  "Unknown MSI Designation"
                                                  ), 
                         "Demographic"= c("MSI Designation", 
@@ -287,8 +287,54 @@ target_order <- c(
                   "Undergraduate Enrollment",
                   "Undergraduate Enrollment"
                   )
-combined_tables$Demographic <- reorder.factor(combined_tables$Demographic, new.order =  target_order)
+#combined_tables$Demographic <- reorder.factor(combined_tables$Demographic, new.order =  target_order)
 
+# additional reordering of subdemographics
+
+target_order2 <- c("No Training",
+                   "Self-taught",
+                   "Workshops and Bootcamps",
+                   "Formal Training",
+                   "Unknown Training",
+                   "Doctoral ", 
+                   "Master's ", 
+                   "Baccalaureate ", 
+                   "Associate's ",
+                   "Unknown Classification ",
+                   "2010s", 
+                   "2000s", 
+                   "1990s", 
+                   "1980s", 
+                   "1970s", 
+                   "Before 1970s", 
+                   "Unknown Decade", 
+                   "Minority-Serving",
+                   "Non—minority-Serving", 
+                   "Unknown MSI Designation", 
+                   "Am. Indian/Alaskan Native", 
+                   "Asian", 
+                   "Black/African Am.", 
+                   "Hawaiian/Pacific Islander",
+                   "Hispanic",
+                   "White", 
+                   "Unknown Race/Ethnicity", 
+                   "Female", 
+                   "Male", 
+                   "Unknown Sex", 
+                   "Doctoral", 
+                   "Professional", 
+                   "Master's", 
+                   "Bachelor's", 
+                   "Other",
+                   "Unknown Degree", 
+                   "> 15,000", 
+                   "5-15,000", 
+                   "< 5,000", 
+                   "Unknown Enrollment"
+                   )
+
+target_order2 <- rev(target_order2)
+combined_tables$Demographic_category <- reorder.factor(combined_tables$Demographic_category, new.order = target_order2)
 
 #Generate plot
 
