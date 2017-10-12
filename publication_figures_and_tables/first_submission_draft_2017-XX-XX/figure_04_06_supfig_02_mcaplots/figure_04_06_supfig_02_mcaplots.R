@@ -389,6 +389,9 @@ calculate_mca_and_plot <-  function(df,
 }
 
 
+#Update Bootcamp label to two words
+data.relavant$faculty_preperation[data.relavant$faculty_preperation == "Workshops and Bootcamps"] <- "Workshops and Boot Camps"
+
 # Draw selected correspondance plots
 
 
