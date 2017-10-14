@@ -856,7 +856,7 @@ plot.sig.barriers <- function(df,
     ungroup()%>%
     select(nice_names, responses)%>%
     head(., n = length(category.levels))%>%
-    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+    mutate(legend = paste(nice_names, " (", "n = ", responses,")", sep = ""))
   
   #correct nice_names for plotting
   #SUBSTITUTION
@@ -905,8 +905,8 @@ plot.sig.barriers <- function(df,
     scale_x_discrete(
       labels = c(
         'Facilities Issues:\nInadequate computers',
-        'Institutional Issues:\nAccess to IT support',
-        'Facilities Issues:\nAccess to computer labs'))+
+        'Institutional Issues:\nLack of access to IT support',
+        'Facilities Issues:\nLack of access to computer labs'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -1001,7 +1001,7 @@ plot.sig.barriers <- function(df,
     ungroup()%>%
     select(nice_names, responses)%>%
     head(., n = length(category.levels))%>%
-    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+    mutate(legend = paste(nice_names, " (", "n = ", responses,")", sep = ""))
   
   #correct nice_names for plotting
   #SUBSTITUTION
@@ -1051,8 +1051,8 @@ plot.sig.barriers <- function(df,
     scale_x_discrete(
       labels = c(
         'Facilities Issues:\nInadequate computers',
-        'Institutional Issues:\nAccess to IT support',
-        'Facilities Issues:\nAccess to computer labs'))+
+        'Institutional Issues:\nLack of access to IT support',
+        'Facilities Issues:\nLack of access to computer labs'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+

@@ -863,7 +863,7 @@ plot.sig.barriers <- function(df,
     ungroup()%>%
     select(nice_names, responses)%>%
     head(., n = length(category.levels))%>%
-    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+    mutate(legend = paste(nice_names, " (", "n = ", responses,")", sep = ""))
   
   #correct nice_names for plotting
   #SUBSTITUTION
@@ -1015,7 +1015,7 @@ plot.sig.barriers <- function(df,
     ungroup()%>%
     select(nice_names, responses)%>%
     head(., n = length(category.levels))%>%
-    mutate(legend = paste(nice_names, " (","n=", responses,")", sep = ""))
+    mutate(legend = paste(nice_names, " (", "n = ", responses,")", sep = ""))
   
   #correct nice_names for plotting
   #SUBSTITUTION
