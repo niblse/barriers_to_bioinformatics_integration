@@ -42,12 +42,14 @@ These analyses involve 7 scripts:
 
 Analyses are conducted on the following question, numbered as named
 
-|Survey Question #|Question Text |Notes/Question aims|Template Script|
-|-----------------|--------------|-------------------|---------------|
-|Q06|“Optional: Please describe briefly; include any barriers to development and/or implementation.”|Barriers to implementation|`templates/question_06_template_barriers_to_implementation.R`|
-|Q29-30|29: "At your current institution, do you face any technical barriers in teaching bioinformatics, e.g., availability of a computer lab, different operating systems, access to high performance computing for teaching, IT support?"<br> <br>30:"Optional: Please describe."|Technical barriers to implementation|`templates/question_29-30_template_technical_challenges.R`|
-|Q33|"In your opinion, what do you think are the most important challenges currently facing those educating undergraduate life scientists in bioinformatics?"|Educator challenges|`templates/question_33_template_educator_challenges.R`|
-|Q38|"What is preventing you from including bioinformatics content in these courses?"|Barriers to inclusion|`templates/question_38_template_barriers_to_inclusion.R`|
+|Manuscript Question|Survey Question #|Question Text |Notes/Question aims|Template Script|
+|-------------------|-----------------|--------------|-------------------|---------------|
+|1|Q33|"In your opinion, what do you think are the most important challenges currently facing those educating undergraduate life scientists in bioinformatics?"|Educator challenges|`templates/question_33_template_educator_challenges.R`|
+|2|Q06|“Optional: Please describe briefly; include any barriers to development and/or implementation.”|Barriers to implementation|`templates/question_06_template_barriers_to_implementation.R`|
+|3|Q38|"What is preventing you from including bioinformatics content in these courses?"|Barriers to inclusion|`templates/question_38_template_barriers_to_inclusion.R`|
+|4|Q29-30|29: "At your current institution, do you face any technical barriers in teaching bioinformatics, e.g., availability of a computer lab, different operating systems, access to high performance computing for teaching, IT support?"<br> <br>30:"Optional: Please describe."|Technical barriers to implementation|`templates/question_29-30_template_technical_challenges.R`|
+
+
 
 *Running analysis template scripts*
 
@@ -117,11 +119,12 @@ Naming - Output names start with an identification of the survey question the te
 |reduced_category_correlation_%%%_by_~~~.png|Correlation plot showing correlation between super-categories (reduced) barrier bins|
 |reduced_barriers_Q33_Q38.png|Faceted plot of responses to Q33, Q38 showing percentage of respondents across all demographics who had an issue scored in a one of the super-categories (reduced) barrier bins |
 |scored_barriers_Q33_Q38.png|Faceted plot of responses to Q33, Q38 showing percentage of respondents across all demographics who had an issue scored in a one of the coded free-text barrier bins|
-|barriers_differing_signifigantly_by_category_proprotional_by_category_%%%_by_~~~.png|Bar chart shows significantly different (between demographic categories) percentages of people reporting barriers. Significance is shown by proportion test (chi-squared values), error bars are Interval estimate of population proportion margin of error at 95% confidence interval. Each barrier shows the number of 'positive' responses - responses where any barrier was reported. No significance tests were run when any barrier had less than 5 responses|
+|barriers_differing_signifigantly_by_category_proprotional_by_category_%%%_by_~~~.png *|Bar chart shows significantly different (between demographic categories) percentages of people reporting barriers. Significance is shown by proportion test (chi-squared values), error bars are Interval estimate of population proportion margin of error at 95% confidence interval. Each barrier shows the number of 'positive' responses - responses where any barrier was reported. No significance tests were run when any barrier had less than 5 responses|
 |tally_of_raw_coded_barriers_all_categories_%%%_by_~~~.png|Count of all responses to barriers in coded free-text responses across an entire demographic category|
 |Q29_yes.no_responses_by_~~~.png|Plots of proportional responses to Q29 across a demographic. Significance is shown for each demographic, proportion test (chi-squared values). Error bars are Interval estimate of population proportion margin of error at 95% confidence interval|
 |top_5_reported_barriers_proprotional_by_cat_%%%_by_~~~.png|Bar plot showing top 5 reported barriers as percentage of respondents across a demographic|
 
+*Note - These plots were the basis for manuscript figures
 
 ### R Session Info
 
