@@ -46,7 +46,8 @@ total.scored.cols <- total.scored.cols%>%
 
 total.scored.cols$barrier[total.scored.cols$barrier == "Faculty Issues: Expertise/training"] <- "Faculty Issues:  Lack of expertise/training"
 total.scored.cols$barrier[total.scored.cols$barrier == "Faculty Issues: Time"] <- "Faculty Issues: Lack of time"
-
+total.scored.cols$barrier[total.scored.cols$barrier == "Curriculum Issues: Lack of integration"] <- "Curriculum Issues: Communication difficulties"
+  
 total.scored.cols$barrier <- factor(total.scored.cols$barrier, levels = total.scored.cols$barrier[order(desc(total.scored.cols$percentage))])
 
 color_values <- c(reds[1], greens[1:2], reds[2], blues[1:2])
