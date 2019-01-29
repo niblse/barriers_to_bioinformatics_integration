@@ -121,8 +121,69 @@ msi_by_carnegie.proptest <- prop.test(msi_testing_table$n_msi_faculty,
 
 msicalculation.n <-  denom.carnegie
 
-
+# Calculate MSI percentages at institution degree types out of 100% of MSI respondents
   
+#Denominator (e.g. answered both the MSI and one of the category questions)
+
+N.asso <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. !=  "3_Don't know")%>%
+  nrow()
+
+N.bacc <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. !=  "3_Don't know")%>%
+  nrow()
+
+N.mast <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. !=  "3_Don't know")%>%
+  nrow()
+
+N.doct <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. !=  "3_Don't know")%>%
+  nrow()
+
+
+
+# Get number of  affirmative MSI at each insitution type
+
+N.asso.msi <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. ==  "1_Yes")%>%
+  nrow()
+
+N.bacc.msi <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. ==  "1_Yes")%>%
+  nrow()
+
+N.mast.msi <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. ==  "1_Yes")%>%
+  nrow()
+
+N.doct.msi <- data.df%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. ==  "1_Yes")%>%
+  nrow()
+
+
+onehundredpercent.msi.denominator <- N.asso.msi + N.bacc.msi + N.mast.msi + N.doct.msi
+
+
+# calculate percentages (of faculty at MSI's what percent per institution type)
+
+hundred.msi.asso.percentage <- N.asso.msi/onehundredpercent.msi.denominator
+hundred.msi.bacc.percentage <- N.bacc.msi/onehundredpercent.msi.denominator
+hundred.msi.mast.percentage <- N.mast.msi/onehundredpercent.msi.denominator
+hundred.msi.doct.percentage <- N.doct.msi/onehundredpercent.msi.denominator
+
+
+
+
+
 # level of integration at MSIs
 
 
