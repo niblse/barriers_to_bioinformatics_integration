@@ -369,3 +369,35 @@ t.count.2010.formaltrained <- data.training%>%
   nrow()
 
 percentage.ftrained.2010 <- (t.count.2010.formaltrained/t.count.2010)*100
+
+
+# How many integrators by sex
+
+# male
+count.male <-  data.df%>%
+  filter(Q14_Sex == "2_Male")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.male.integrators <- data.df%>%
+  filter(Q14_Sex == "2_Male")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.male <- (count.male.integrators/count.male)*100
+
+
+# female
+count.female <-  data.df%>%
+  filter(Q14_Sex == "1_Female")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.female.integrators <- data.df%>%
+  filter(Q14_Sex == "1_Female")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.female <- (count.female.integrators/count.female)*100

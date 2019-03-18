@@ -475,35 +475,72 @@ total.reduced.cols <- total.reduced.cols%>%
   group_by(question)%>%
   arrange(.,desc(percentage))
 
-total.reduced.cols$barrier <- factor(total.reduced.cols$barrier, levels = total.reduced.cols$barrier[order(desc(total.reduced.cols$percentage))])
+#manually add zeros for plotting df
+
+total.reduced.cols_facet <- total.reduced.cols%>%
+  ungroup()%>%
+  add_row(percentage=0.0, question="q1.Q33", barrier="State Issues ")%>%
+  add_row(percentage=0.0, question="q1.Q33", barrier="Accreditation Issues")%>%
+  add_row(percentage=0.0, question="q2.Q6", barrier="State Issues ")%>%
+  add_row(percentage=0.0, question="q2.Q6", barrier="Accreditation Issues")%>%
+  add_row(percentage=0.0, question="q4.Q29", barrier="State Issues ")%>%
+  add_row(percentage=0.0, question="q4.Q29", barrier="Accreditation Issues")%>%
+  group_by(question)
+
+
+#total.reduced.cols$barrier <- factor(total.reduced.cols$barrier, levels = total.reduced.cols$barrier[order(desc(total.reduced.cols$percentage))])
+total.reduced.cols_facet$barrier <- factor(total.reduced.cols_facet$barrier, levels = c("Faculty Issues ", 
+                                                                            "Student Issues ", 
+                                                                            "Curriculum Issues ", 
+                                                                            "Facilities Issues " , 
+                                                                            "Resource Issues ", 
+                                                                            "Institutional Issues ", 
+                                                                            "State Issues ",
+                                                                            "Accreditation Issues "))
 
 
 
 # add a column for no barrier reported/recorded. 
 
-no.responses.cols <- total.reduced.cols%>%
-  group_by(question)%>%
-  summarise(1-sum(percentage))
+#no.responses.cols <- total.reduced.cols%>%
+#  group_by(question)%>%
+#  summarise(1-sum(percentage))
 
 # add the no responses values to total.reduced.cols
+# Decided to undo this for final figure
 
-total.reduced.cols <- total.reduced.cols%>%
-  ungroup()%>%
-  add_row(percentage=no.responses.cols[[1,2]], question=no.responses.cols[[1,1]], barrier="No response")%>%
-  add_row(percentage=no.responses.cols[[2,2]], question=no.responses.cols[[2,1]], barrier="No response")%>%
-  add_row(percentage=no.responses.cols[[3,2]], question=no.responses.cols[[3,1]], barrier="No response")%>%
-  add_row(percentage=no.responses.cols[[4,2]], question=no.responses.cols[[4,1]], barrier="No response")%>%
-  group_by(question)
+#total.reduced.cols <- total.reduced.cols%>%
+#  ungroup()%>%
+#  add_row(percentage=no.responses.cols[[1,2]], question=no.responses.cols[[1,1]], barrier="No response")%>%
+#  add_row(percentage=no.responses.cols[[2,2]], question=no.responses.cols[[2,1]], barrier="No response")%>%
+#  add_row(percentage=no.responses.cols[[3,2]], question=no.responses.cols[[3,1]], barrier="No response")%>%
+#  add_row(percentage=no.responses.cols[[4,2]], question=no.responses.cols[[4,1]], barrier="No response")%>%
+#  group_by(question)
 
-greys <- c("#000000", 
-           "#708090", 
-           "#696969", 
-           "#C0C0C0", 
+
+
+
+greys <- c("#252525", 
+           "#636363", 
+           "#969696", 
+           "#bdbdbd", 
            "#d9d9d9", 
+           "#f7f7f7")
+
+greys2 <- c("#000000", 
+           "#2F4F4F", 
+           "#708090", 
+           "#778899", 
+           "#808080",
+           "#696969", 
+           "#A9A9A9", 
+           "#C0C0C0", 
+           "#D3D3D3", 
+           "#DCDCDC", 
            "#ffffff")
 
 
-total.reduced.cols%>%
+total.reduced.cols_facet%>%
   #filter(percentage >= 0.05)%>%
   ggplot()+
   aes(x = barrier, y=percentage, fill = barrier)+
@@ -526,14 +563,15 @@ total.reduced.cols%>%
   #scale_x_discrete(breaks = NULL)+
   guides(fill=guide_legend(ncol=2))+
   theme(axis.line = element_line(colour = "black"))+
-  scale_fill_manual(values = greys, name= "Barrier Super-categories", labels= c("Faculty Issues",
+  #scale_fill_manual(values = greys2, name= "Barrier Super-categories")+
+  scale_fill_manual(values = greys2, name= "Barrier super-categories", labels= c("Faculty Issues",
                                                                          "Student Issues", 
                                                                          "Curriculum Issues", 
                                                                          "Facilities Issues", 
                                                                          "Resource Issues", 
                                                                          "Institutional Issues",
                                                                          "State Issues",
-                                                                         "Accrediation Issues"))+
+                                                                         "Accreditation Issues"))+
   theme(panel.grid.major=element_blank(),
         panel.grid.minor=element_blank())+
   guides(fill=guide_legend(nrow =2))
@@ -551,9 +589,20 @@ plotting_df <- total.reduced.cols%>%
   filter(question  == 'q1.Q33')%>%
   arrange(desc(percentage))
 
+#manually add zeros for plotting df
+
+plotting_df <- plotting_df%>%
+  ungroup()%>%
+  add_row(percentage=0.0, question="q1.33", barrier="State Issues")%>%
+  add_row(percentage=0.0, question="q1.33", barrier="Accreditation Issues")%>%
+  group_by(question)
+
+
+
 plotting_df$barrier <- factor(plotting_df$barrier, levels = plotting_df$barrier )
-  
-  
+
+# remove no response from plotting_df
+
 plotting_df%>%
   ggplot()+
   aes(x = barrier, y=percentage, fill = barrier)+
@@ -563,7 +612,7 @@ plotting_df%>%
   ylab("Percentage of respondents reporting barrier")+
   scale_fill_discrete(name="Barrier categories")+
   theme_fivethirtyeight(base_size = 20, base_family = "sans")+
-  #theme(panel.background = element_rect(fill = "white"))+
+  theme(panel.background = element_rect(fill = "white"))+
   theme(plot.background = element_rect(fill = "white"))+
   theme(legend.background = element_rect(fill = "white"))+
   #theme(strip.text.y = element_blank())+
@@ -572,7 +621,7 @@ plotting_df%>%
   theme(axis.text.y = element_blank())+
   theme(legend.key.size = unit(1.5, 'lines'))+
   geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
-            vjust =-.2, size = 4, color = "black")+
+             vjust =-.2, size = 4, color = "black")+
   #scale_x_discrete(breaks = NULL)+
   guides(fill=guide_legend(ncol=2))+
   theme(axis.line = element_line(colour = "black"))+
@@ -590,6 +639,147 @@ plotting_df%>%
 
 
 ggsave( filename= "supfig_01_color.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+
+plotting_df%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  #facet_grid(~ question, labeller = facet_labeller.reduce, space = "free_x" )+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  #geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+  #           vjust =-.2, size = 4, color = "black")+
+  #scale_x_discrete(breaks = NULL)+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "white"))+
+  scale_fill_manual(values = greys2, name= "Barrier super-categories", labels= c("Faculty Issues",
+                                                                                "Student Issues", 
+                                                                                "Curriculum Issues", 
+                                                                               "Facilities Issues", 
+                                                                                "Resource Issues", 
+                                                                               "Institutional Issues", 
+                                                                               "State Issues", 
+                                                                               "Accreditation Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =2))
+
+
+
+
+ggsave( filename= "fig2_greyscale.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+# same plot with percentages 
+
+#manually add a row of count data
+plotting_df[,4] <- c(358, 295, 227, 77, 53, 27, 0, 0)
+colnames(plotting_df)[4] <- "counts"
+
+plotting_df%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  #facet_grid(~ question, labeller = facet_labeller.reduce, space = "free_x" )+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(round(percentage *100), "%"), y = percentage),
+             vjust =-.2, size = 4, color = "black")+
+  #scale_x_discrete(breaks = NULL)+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "white"))+
+  scale_fill_manual(values = greys2, name= "Barrier super-categories", labels= c("Faculty Issues",
+                                                                                 "Student Issues", 
+                                                                                 "Curriculum Issues", 
+                                                                                 "Facilities Issues", 
+                                                                                 "Resource Issues", 
+                                                                                 "Institutional Issues", 
+                                                                                 "State Issues", 
+                                                                                 "Accreditation Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =2))
+
+
+
+
+ggsave( filename= "fig2_greyscale_percentageshown.png", 
+        width = 13.8, 
+        height = 8.81, 
+        units = "in")
+
+
+# Plot with counts
+
+
+
+
+plotting_df%>%
+  ggplot()+
+  aes(x = barrier, y=percentage, fill = barrier)+
+  geom_bar(stat = "identity", position = "dodge")+
+  #facet_grid(~ question, labeller = facet_labeller.reduce, space = "free_x" )+
+  xlab("Scored barrier categories")+
+  ylab("Percentage of respondents reporting barrier")+
+  scale_fill_discrete(name="Barrier categories")+
+  theme_fivethirtyeight(base_size = 20, base_family = "sans")+
+  theme(panel.background = element_rect(fill = "white"))+
+  theme(plot.background = element_rect(fill = "white"))+
+  theme(legend.background = element_rect(fill = "white"))+
+  #theme(strip.text.y = element_blank())+
+  #theme(strip.background = element_blank(),strip.text.x = element_blank())+
+  theme(axis.text.x = element_blank())+
+  theme(axis.text.y = element_blank())+
+  theme(legend.key.size = unit(1.5, 'lines'))+
+  geom_text(aes(label = paste0(counts," (", round(percentage *100),"%", ")"), y = percentage),
+            vjust =-.2, size = 4, color = "black")+
+  #scale_x_discrete(breaks = NULL)+
+  guides(fill=guide_legend(ncol=2))+
+  theme(axis.line = element_line(colour = "white"))+
+  scale_fill_manual(values = greys2, name= "Barrier super-categories", labels= c("Faculty Issues",
+                                                                                 "Student Issues", 
+                                                                                 "Curriculum Issues", 
+                                                                                 "Facilities Issues", 
+                                                                                 "Resource Issues", 
+                                                                                 "Institutional Issues", 
+                                                                                 "State Issues", 
+                                                                                 "Accreditation Issues"))+
+  theme(panel.grid.major=element_blank(),
+        panel.grid.minor=element_blank())+
+  guides(fill=guide_legend(nrow =2))
+
+
+
+
+ggsave( filename= "fig2_greyscale_percentage_and_counts_shown.png", 
         width = 13.8, 
         height = 8.81, 
         units = "in")
