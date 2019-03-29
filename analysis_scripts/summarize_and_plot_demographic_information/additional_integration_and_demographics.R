@@ -227,6 +227,96 @@ count.nonmsi.inetgrators <- data.df%>%
 percent.msi.integrating <-  count.msi.integrators/denom.integration
 percent.nonmsi.integrators <- count.nonmsi.inetgrators/denom.integration
 
+#alternative/repeat calculation on integration at MSI
+
+
+# How many faculty indicated yes or no to MSI question 
+
+count.answered.yesno.msi <- data.df%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes"| 
+           Q22_Is.your.institution.classified.as.minority.serving. == "2_No")%>%
+  nrow()
+# answer 753
+
+#How many faculty answered that they were not integrating or doing undergraduate integration
+
+count.answered.integrating <- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+# answer 986 
+
+# How many answered both - this is the largest n (denominator) for this dual question
+
+count.answered.both.msi.and.integrating<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes"| 
+           Q22_Is.your.institution.classified.as.minority.serving. == "2_No")%>%
+  nrow()
+# answer - 638 (which is what I got before denom.itegration)
+
+# What is the percentage of MSI/non MSI in each of the 3 categories - should add to 100% of 638
+
+new.count.msi.substantial<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes")%>%
+  nrow()
+new.count.msi.dedicated<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes")%>%
+  nrow()
+
+new.count.msi.notintegrating<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "1_Yes")%>%
+  nrow()
+
+new.count.nonmsi.substantial<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "2_No")%>%
+  nrow()
+
+new.count.nonmsi.dedicated<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "2_No")%>%
+  nrow()
+
+new.count.nonmsi.notintegrating<- data.df%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")%>%
+  filter(Q22_Is.your.institution.classified.as.minority.serving. == "2_No")%>%
+  nrow()
+
+
+
+#should add to 638
+confirm.counts <- sum(new.count.msi.substantial,
+                      new.count.msi.dedicated,
+                      new.count.msi.notintegrating,
+                      new.count.nonmsi.substantial,
+                      new.count.nonmsi.dedicated,
+                      new.count.nonmsi.notintegrating)
+#answer 638 - good
+
+
+
+#calculate percentages
+
+new.percent.integrating.msi <- sum(new.count.msi.substantial,new.count.msi.dedicated)/count.answered.both.msi.and.integrating
+new.percent.nonitegrating.msi <- new.count.msi.notintegrating/count.answered.both.msi.and.integrating
+new.percent.integrating.nonmsi <- sum(new.count.nonmsi.substantial,new.count.nonmsi.dedicated)/count.answered.both.msi.and.integrating
+new.percent.nonitegrating.nonmsi <- new.count.nonmsi.notintegrating/count.answered.both.msi.and.integrating
+
+# should add to 100
+
+confirm.percentage.sums <- sum(new.percent.integrating.msi, 
+                               new.percent.nonitegrating.msi, 
+                               new.percent.integrating.nonmsi, 
+                               new.percent.nonitegrating.nonmsi)
+
+
 
 
 
@@ -450,7 +540,7 @@ percent.female.bacc <- female.bacc/carnegie.denom
 percent.male.mast <- male.mast/carnegie.denom
 percent.female.mast <- female.mast/carnegie.denom
 percent.male.doct <- male.doct/carnegie.denom
-percent.female.doct <- female.doc/carnegie.denom
+percent.female.doct <- female.doct/carnegie.denom
 
 
 
@@ -553,3 +643,91 @@ percentage.male.work<- percent.male.workshop/training.denom
 percentage.female.work<- percent.female.workshop/training.denom
 percentage.male.formal<- percent.male.formal/training.denom
 percentage.female.formal<- percent.female.formal/training.denom
+
+
+
+# check signifigance - integration of bioinformatics by degree decade with prop test
+
+
+# Integrators in..
+
+# 1980s
+count.1980 <-  data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.1980.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1980-1989")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.1980 <- (count.1980.integrators/count.1980)*100
+
+# 1990s
+count.1990 <-  data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.1990.integrators <- data.df%>%
+  filter(bin_degree_yrs == "1990-1999")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.1990 <- (count.1990.integrators/count.1990)*100
+
+# 2000s
+
+count.2000 <-  data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.2000.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2000-2009")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.2000 <- (count.2000.integrators/count.2000)*100
+
+# 2010-16
+
+count.2010 <-  data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(!is.na(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn...) )%>%
+  nrow()
+
+count.2010.integrators <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "1_Dedicated course for life-science majors" |
+           Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn... == "2_Include 'substantial' bioinformatics in courses for life-science majors")%>%
+  nrow()
+
+percentage.integrators.2010 <- (count.2010.integrators/count.2010)*100
+
+# Create data frame for prop test
+
+
+decade_testing_table <- data.frame("decade" = c("1980", 
+                                                "1990", 
+                                                "2000",
+                                                "2010"), 
+                                "N_decade"= c(count.1980, 
+                                              count.1990,
+                                              count.2000, 
+                                              count.2010), 
+                                "n_integrators" = c(count.1980.integrators, 
+                                                    count.1990.integrators, 
+                                                    count.2000.integrators, 
+                                                    count.2010.integrators), 
+                                stringsAsFactors = FALSE
+)
+
+integration_by_decade.proptest <- prop.test(decade_testing_table$n_integrators, 
+                                            decade_testing_table$N_decade)$p.value
+
+

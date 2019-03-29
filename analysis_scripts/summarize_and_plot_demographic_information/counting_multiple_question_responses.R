@@ -313,6 +313,80 @@ c.count.2010.integrators <- data.df%>%
 percentage.doct.2010 <- (c.count.2010.integrators/c.count.2010)*100
 
 
+# regardless of integration status where are 2010-16 faculty by institution type?
+
+count.all.faculty.assoc <- data.df%>%
+  filter(!is.na(bin_degree_yrs))%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.))%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  nrow()
+count.2010.faculty.assoc <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "1_Associate's College")%>%
+  nrow()
+
+count.all.faculty.bacca <- data.df%>%
+  filter(!is.na(bin_degree_yrs))%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.))%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+count.2010.faculty.bacca <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "2_Baccalaureate College" )%>%
+  nrow()
+count.all.faculty.masters <- data.df%>%
+  filter(!is.na(bin_degree_yrs))%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.))%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+count.2010.faculty.masters <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "3_Master's (Small, Medium, Large)" )%>%
+  nrow()
+count.all.faculty.doct <- data.df%>%
+  filter(!is.na(bin_degree_yrs))%>%
+  filter(!is.na(Q21_What.is.the.Carnegie.classification.of.your.institution.))%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)" )%>%
+  nrow()
+count.2010.faculty.doct <- data.df%>%
+  filter(bin_degree_yrs == "2010-2016")%>%
+  filter(Q21_What.is.the.Carnegie.classification.of.your.institution. == "4_Doctoral University (High, Higher, Highest Research Activity)" )%>%
+  nrow()
+
+# total number of respondents who answered the inst type and degree question
+
+n_instType_degree <- sum(count.all.faculty.assoc, 
+                         count.all.faculty.bacca, 
+                         count.all.faculty.masters, 
+                         count.all.faculty.doct)
+
+per.2010.assoc <- count.2010.faculty.assoc/count.all.faculty.assoc
+per.2010.bacca <- count.2010.faculty.bacca/count.all.faculty.bacca
+per.2010.masters<- count.2010.faculty.masters/count.all.faculty.masters
+per.2010.doct<- count.2010.faculty.doct/count.all.faculty.doct
+
+
+# proportion test for faculty distribution at each institution type
+
+dis_2010_testing_table <- data.frame("type" = c("assoc", 
+                                                "bacca", 
+                                                "master",
+                                                "doct"), 
+                                   "N_type"= c(count.all.faculty.assoc, 
+                                               count.all.faculty.bacca,
+                                               count.all.faculty.masters, 
+                                               count.all.faculty.doct), 
+                                   "n_2010_faculty" = c(count.2010.faculty.assoc, 
+                                                        count.2010.faculty.bacca, 
+                                                        count.2010.faculty.masters, 
+                                                        count.2010.faculty.doct), 
+                                   stringsAsFactors = FALSE
+)
+
+dis_2010_testing_table.proptest <- prop.test(dis_2010_testing_table$n_2010_faculty, 
+                                             dis_2010_testing_table$N_type)$p.value
+
+
 
 # How formally trained are the newer faculty?
 
@@ -369,6 +443,11 @@ t.count.2010.formaltrained <- data.training%>%
   nrow()
 
 percentage.ftrained.2010 <- (t.count.2010.formaltrained/t.count.2010)*100
+
+
+#calculate n of formal training question 
+
+n.formal.trainig <- sum(t.count.1980, t.count.1990, t.count.2000, t.count.2010)
 
 
 # How many integrators by sex
