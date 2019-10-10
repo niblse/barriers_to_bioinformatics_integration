@@ -579,7 +579,7 @@ total.reduced.cols_facet%>%
 
 
 
-ggsave( filename= "supfig_01_bw.png", 
+ggsave( filename= "figure_03_plos.png", 
         width = 13.8, 
         height = 8.81, 
         units = "in")
@@ -638,10 +638,10 @@ plotting_df%>%
 
 
 
-ggsave( filename= "supfig_01_color.png", 
-        width = 13.8, 
-        height = 8.81, 
-        units = "in")
+#ggsave( filename= "supfig_01_color.png", 
+#        width = 13.8, 
+#        height = 8.81, 
+#        units = "in")
 
 
 
@@ -682,10 +682,10 @@ plotting_df%>%
 
 
 
-ggsave( filename= "fig2_greyscale.png", 
-        width = 13.8, 
-        height = 8.81, 
-        units = "in")
+#ggsave( filename= "fig2_greyscale.png", 
+#        width = 13.8, 
+#        height = 8.81, 
+#        units = "in")
 
 
 # same plot with percentages 
@@ -731,10 +731,10 @@ plotting_df%>%
 
 
 
-ggsave( filename= "fig2_greyscale_percentageshown.png", 
-        width = 13.8, 
-        height = 8.81, 
-        units = "in")
+#ggsave( filename= "fig2_greyscale_percentageshown.png", 
+#        width = 13.8, 
+#        height = 8.81, 
+#        units = "in")
 
 
 # Plot with counts
@@ -779,7 +779,7 @@ plotting_df%>%
 
 
 
-ggsave( filename= "fig2_greyscale_percentage_and_counts_shown.png", 
+ggsave( filename= "figure_02_plos.png", 
         width = 13.8, 
         height = 8.81, 
         units = "in")

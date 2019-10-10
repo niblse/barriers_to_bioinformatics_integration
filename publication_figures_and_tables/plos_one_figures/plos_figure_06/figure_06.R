@@ -1,6 +1,6 @@
 # load required libraries
 require(ggplot2)
-require(tidyverse)
+require(tidyverse) 
 require(reshape2)
 require(pwr)
 require(gplots)
@@ -657,7 +657,7 @@ plot.of.top5.barriers <- function(df,
   proportional.responses.summed.by.barriers.top5.plot <- df
   proportional.responses.summed.by.barriers.top5.plot$Var2 <- 
     factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
-             proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))])
+             unique(proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))]))
   
   
   
@@ -844,7 +844,7 @@ plot.sig.barriers <- function(df,
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
   proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
+             unique(proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)]))
   
   
   
@@ -938,7 +938,7 @@ plot.sig.barriers <- function(df,
                                                                        ".png",
                                                                        sep = "_")
   
-  ggsave("supfig_03_bw.png", 
+  ggsave("figure_06_plos.png", 
          width = 13.8, 
          height = 8.81, 
          units = "in")
@@ -989,7 +989,7 @@ plot.sig.barriers <- function(df,
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
   proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
+             unique(proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)]))
   
   
   
@@ -1094,12 +1094,12 @@ plot.sig.barriers <- function(df,
 
 
 # plot significantly different responses
-plot.sig.barriers(proportion_table_summary, 
-                  category.df,
-                  category.levels,
-                  category.nice.name.caps,
-                  category.nice.name.lower,
-                  n.respondents,
-                  question.column.name.safe,
-                  category.column.name.safe)
+#plot.sig.barriers(proportion_table_summary, 
+#                  category.df,
+#                  category.levels,
+#                  category.nice.name.caps,
+#                  category.nice.name.lower,
+#                  n.respondents,
+#                  question.column.name.safe,
+#                  category.column.name.safe)
 

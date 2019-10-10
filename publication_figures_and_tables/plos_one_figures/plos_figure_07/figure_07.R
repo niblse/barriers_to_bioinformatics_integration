@@ -1,6 +1,3 @@
-#Lines 4 - 820 are run to generate needed variables, etc. Real plotting after line 820
-
-
 # load required libraries
 require(ggplot2)
 require(tidyverse)
@@ -10,7 +7,6 @@ require(gplots)
 require(corrplot)
 require(ggthemes)
 
-
 ############ LOAD THE PREPARED SURVEY DATA ###########################################
 #read in cleaned dataframe "decoded_df.csv"
 master.df <- read_csv("../../../data_cleaning_scripts/04_decode_survey_responses/output/decoded_df.csv")
@@ -18,23 +14,22 @@ master.df <- read_csv("../../../data_cleaning_scripts/04_decode_survey_responses
 ############# MANUAL!!!! SET 1st SET OF MANUAL VARIABLES  #############################
 
 # set the variable (Question) that will be analyzed: "COLUMN_NAME"
-category.column.name <- "Q21_What.is.the.Carnegie.classification.of.your.institution."
+category.column.name <- "Q1_Please.select.the.statement.belOw.that.best.describes.yOur.current.teaching.Of.biOinfOrmatics.cOn..."
 
 # set a 'nice' (e.g. human readable) name to describe this category: "Category (Q#)"
-category.column.name.nice <- "Carnegie Classification (Q21)"
+category.column.name.nice <- "Q1 Bioinformatics Integration"
 
 # set a 'safe name' for naming variables: "Q#_category_category"
-category.column.name.safe <- "Q21_carnegie_classification"
+category.column.name.safe <- "Q1_bioinformatics_integration"
 
-# set a 'short' for naming filename variables: "Q#_category_category"
-category.column.name.short <- "Q21_carnegie"
+# set a 'short' for naming filename variables: "Q#_category"
+category.column.name.short <- "integration"
 
 #set a nice name in upper and lower case that describes the category kinds 
 #(e.g. gender, institution type): ""
 
-category.nice.name.caps <- "Institution Type"
-category.nice.name.lower <- "institution type"
-
+category.nice.name.caps <- "Bioinformatics Integration"
+category.nice.name.lower <- "bioinformatics integration"
 
 ############# GET CATEGORIES TO ANALYZE  ##############################################
 #All questions are analyzed by a stratafying category (e.g. gender)
@@ -48,7 +43,7 @@ category.levels <- levels(as.factor(category.column.subset))
 
 #Set levels to retain ( excluding for example responses such as 'Don't Know or 'NA')
 # select the range of values within catagory.levels to use (e.g. category.levels[1:4])
-category.levels <- category.levels[1:4]
+category.levels <- category.levels[1:3]
 
 #######################################################################################
 
@@ -233,20 +228,25 @@ dir.create(plot.dir.path, recursive = TRUE)
 # 
 # All lines where these subsitutions are done have a comment "SUBSTITUTION" 
 
-category.df <- data.frame ("AssociateQs"= category.levels[1], 
-                           "Baccalaureate" = category.levels[2] , 
-                           "MasterQs" = category.levels[3] , 
-                           "Doctoral" = category.levels[4], 
+category.df <- data.frame ("Dedicated_Course"= category.levels[1],
+                           "Integrating_Bioinformatics"= category.levels[2],
+                           "Not_Integrating_Bioinformatics"= category.levels[3],
                            stringsAsFactors = FALSE)
 
 #Set an ordering for plotting - must match category.levels names
-col.order <- c("1_Associate's College", "2_Baccalaureate College" , "3_Master's (Small, Medium, Large)" , "4_Doctoral University (High, Higher, Highest Research Activity)" )
+col.order <- c("1_Dedicated course for life-science majors",
+               "2_Include 'substantial' bioinformatics in courses for life-science majors",
+               "3_Do NOT currently, but would like to include 'substantial' bioinformatics in courses for life-science majors")
 
 #With substitutions - must match category.df
-col.order2 <- c("AssociateQs", "Baccalaureate", "MasterQs","Doctoral" )
+col.order2 <- c("Dedicated_Course",
+                "Integrating_Bioinformatics",
+                "Not_Integrating_Bioinformatics")
 
 #Nice Labels for plotting
-nice.lables.list <- c("AssociateQs", "Baccalaureate", "MasterQs","Doctoral")
+nice.lables.list <- c("Dedicated Course",
+                      "Integrating Bioinformatics",
+                      "Not Integrating Bioinformatics")
 
 ######### DATA FRAME FORMATTING AND CLEANING STEPS  ###################################
 
@@ -659,7 +659,7 @@ plot.of.top5.barriers <- function(df,
   proportional.responses.summed.by.barriers.top5.plot <- df
   proportional.responses.summed.by.barriers.top5.plot$Var2 <- 
     factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
-             proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))])
+             unique(proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))]))
   
   
   
@@ -819,7 +819,6 @@ effect_statement <- if(effect.size <= .1){
 
 
 
-
 ############ Plot significantly different barriers ####################################
 
 
@@ -851,7 +850,7 @@ plot.sig.barriers <- function(df,
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
   proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
+             unique(proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)]))
   
   
   
@@ -880,10 +879,10 @@ plot.sig.barriers <- function(df,
   legend.labels$legend <- gsub("K",
                                "",
                                legend.labels$legend)
-  #replace 'Q' with ''
-  legend.labels$legend <- gsub("Q",
-                               "'",
-                               legend.labels$legend)
+  #replace 'D' with '-'
+  #legend.labels$legend <- gsub("D",
+  #                             "-",
+  #                             legend.labels$legend)
   # create labels that show how many positive (coded) responses
   
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
@@ -896,7 +895,6 @@ plot.sig.barriers <- function(df,
   
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
-  
   
   greys <- c("#595959", 
              "#778899", 
@@ -905,7 +903,6 @@ plot.sig.barriers <- function(df,
   
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot%>%
     mutate(proportion = proportion * 100)
-
   
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
@@ -915,10 +912,11 @@ plot.sig.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_x_discrete(
       labels = c(
-      'Curriculum Issues:\nQuickly changing technologies',
-      'Student Issues:\nLack of interest',
-      'Student Issues:\nLack of background skills/knowledge',
-      'Faculty Issues:\nLack of expertise/training'))+
+        'Institutional Issues:\nLack of inter-departmental cooperation',
+        'Student Issues:\nIntimidated by topic',
+        'Resource Issues:\nAccess to software',
+        'Student Issues:\nLack of interest',
+        'Student Issues:\nLack of background skills/knowledge'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -936,11 +934,10 @@ plot.sig.barriers <- function(df,
     theme(panel.grid.major.y = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
-    scale_fill_manual(values = greys, name= "Institution Types", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2, reverse = TRUE))+
+    scale_fill_manual(values = greys, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
-    
-
+  
   
   
   
@@ -948,14 +945,15 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       "_bw.png",
+                                                                       "_BW_.png",
                                                                        sep = "_")
   
-  ggsave("figure_03_bw.png", 
+  ggsave("figure_07_plos.png",
          width = 13.8, 
+         height = 8.81, 
          units = "in")
   
-
+  
 }
 
 
@@ -968,6 +966,180 @@ plot.sig.barriers(proportion_table_summary,
                   n.respondents,
                   question.column.name.safe,
                   category.column.name.safe)
+
+
+
+############# Plot top5 barriers ##############################################################
+
+plot.of.top5.barriers <- function(df,
+                                  question.column.name.nice,
+                                  category.nice.name.lower,
+                                  n.respondents,
+                                  category.nice.name.caps,
+                                  question.column.name.safe,
+                                  category.column.name.safe
+){
+  
+  #setup ordering of plot
+  proportional.responses.summed.by.barriers.top5.plot <- df
+  proportional.responses.summed.by.barriers.top5.plot$Var2 <- 
+    factor(proportional.responses.summed.by.barriers.top5.plot$Var2, levels = 
+             unique(proportional.responses.summed.by.barriers.top5.plot$Var2[order(desc(proportional.responses.summed.by.barriers.top5.plot$summed_score))]))
+  
+  
+  
+  #correct nice_names for plotting
+  #SUBSTITUTION
+  
+  
+  
+  #replace underscores with spaces
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("_",
+                                                                         " ",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'X' with ','
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("X",
+                                                                         ",",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'K' with ""
+  proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("K",
+                                                                         "",
+                                                                         proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  #replace 'D' with '-'
+  #proportional.responses.summed.by.barriers.top5.plot$nice_names <- gsub("D",
+  #                                                                      "-",
+  #                                                                      proportional.responses.summed.by.barriers.top5.plot$nice_names)
+  
+  
+  
+  #plot
+  proportional.responses.summed.by.barriers.top5.plot%>%
+    ggplot()+
+    aes(x=Var2, y=proportion, fill=Var1)+
+    geom_bar(stat = "identity", position = "dodge")+
+    labs(x = question.column.name.nice, 
+         y = "percentage of respondents", 
+         title = "Top 5 Most Commonly Reported Barriers to Including Bioinformatics",
+         subtitle = paste("Shown as percentage of respondents within each",
+                          category.nice.name.lower,
+                          "n=",n.respondents ))+
+    theme_minimal()+
+    theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
+    scale_fill_discrete(name= category.nice.name.caps, labels=nice.lables.list)
+  
+  proportional.responses.summed.by.barriers.top5.plot.filename <- paste("top_5_reported_barriers_proprotional_by_cat",
+                                                                        question.column.name.short,
+                                                                        "by",
+                                                                        category.column.name.short,
+                                                                        ".png",
+                                                                        sep = "_")
+  
+  ggsave(paste(plot.dir.path,proportional.responses.summed.by.barriers.top5.plot.filename, sep= ""), 
+         width = 13.8, 
+         height = 8.81, 
+         units = "in")
+}
+
+
+
+#plot.of.top5.barriers(proportional.responses.summed.by.barriers.top5,
+#                      question.column.name.nice,
+#                      category.nice.name.lower,
+#                      n.respondents,
+#                      category.nice.name.caps,
+#                      question.column.name.safe,
+#                      category.column.name.safe)
+
+########### Create new columns for proportion tests
+
+proportion_table <- proportional.responses.summed.by.barriers%>%
+  mutate(positive_scored_response = value)%>%
+  mutate(null_scored_response = responses - value)
+
+
+############ significantly Different Barriers Across Categories  #########################################
+
+sig.diff.chi.analysis <- function(df){
+  # calculate chi-values (by proportion test) on each category and return significantly different barriers
+  proportional.responses.summed.by.barriers.grouped <- group_by(df, Var2)
+  proportional.responses.summed.by.barriers.grouped.prop <- proportional.responses.summed.by.barriers.grouped%>%
+    do(prop_test_chi_pvalue = prop.test(.$positive_scored_response,.$responses)$p.value)
+  
+  proportional.sig.responses.summed.by.barriers.filename <- paste(table.dir.path,
+                                                                  "sig_diff_", 
+                                                                  question.column.name.short,
+                                                                  "_barriers_by_",
+                                                                  category.column.name.short,
+                                                                  "_prop_test",
+                                                                  ".csv", 
+                                                                  sep = "")
+  write.csv(as.matrix(proportional.responses.summed.by.barriers.grouped.prop), file = proportional.sig.responses.summed.by.barriers.filename)
+  
+  return(proportional.responses.summed.by.barriers.grouped.prop)
+}
+
+#calculate chi values
+# remove NaN Values
+proportion_table_non_zero <- proportion_table%>%
+  filter(summed_score != 0)
+
+# for valid chi tests, remove scored categories where any scored category has less than 5 respondents
+proportion_table_minimal_scoring <- proportion_table_non_zero%>%
+  group_by(Var2)%>%
+  filter(all(value >= 5))
+
+
+#execute function to test for signifigance
+proportional.sig.responses.summed.by.barriers <- sig.diff.chi.analysis(proportion_table_minimal_scoring)
+
+
+# Add signifigance to proportion table
+
+proportion_table_summary <- proportion_table_minimal_scoring%>%
+  group_by(Var2)%>%
+  left_join(., proportional.sig.responses.summed.by.barriers)
+
+#coerce proportion test values into numeric forms
+proportion_table_summary$prop_test_chi_pvalue <- as.numeric(proportion_table_summary$prop_test_chi_pvalue)
+
+
+
+######Caclualte Margins of Error ####################################################################
+# Interval estimate of population proportion at 95% confidence interval
+
+proportion_table_summary <- proportion_table_summary%>%
+  mutate(proportion_error = as.numeric(sqrt((proportion * (1 - proportion)/responses))*qnorm(.975)))%>%
+  mutate(ymax = (proportion + (proportion * proportion_error))*100)%>%
+  mutate(ymin = (proportion - (proportion * proportion_error))*100)
+
+#CREATE FRAME FOR SAVING
+proportion_table_summary.filename <- paste(table.dir.path,
+                                           "sum_table_",
+                                           question.column.name.short,
+                                           "_by_",
+                                           category.column.name.short,
+                                           ".csv",
+                                           sep = "")
+write_csv(proportion_table_summary,path =  proportion_table_summary.filename)
+
+######### POWER ANALYSIS #############################################################################
+# Calculate possible effect size given 80% power for a chi.test statistic 
+
+effect.size <- round(pwr.chisq.test(w = NULL, 
+                                    N = n.respondents, 
+                                    df = (length(category.levels) - 1), 
+                                    sig.level = 0.05, 
+                                    power = 0.8)$w, digits = 3)
+
+
+effect_statement <- if(effect.size <= .1){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting small effects [.1]", sep= "")
+}else if (effect.size > .1 | effect.size <= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting medium effects [.3]", sep= "")
+}else if (effect.size >= .5){
+  paste("Question effect size at 80% power is ",effect.size, ", sufficent for detecting large effects [.5]", sep="" )
+}
+
 
 
 
@@ -1003,7 +1175,7 @@ plot.sig.barriers <- function(df,
   proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot
   proportional.sig.responses.summed.by.barriers.plot$Var2 <- 
     factor(proportional.sig.responses.summed.by.barriers.plot$Var2, levels = 
-             proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)])
+             unique(proportional.sig.responses.summed.by.barriers.plot$Var2[order(proportional.sig.responses.summed.by.barriers.plot$summed_score)]))
   
   
   
@@ -1032,10 +1204,10 @@ plot.sig.barriers <- function(df,
   legend.labels$legend <- gsub("K",
                                "",
                                legend.labels$legend)
-  #replace 'Q' with ''
-  legend.labels$legend <- gsub("Q",
-                               "'",
-                               legend.labels$legend)
+  #replace 'D' with '-'
+  #legend.labels$legend <- gsub("D",
+  #                             "-",
+  #                             legend.labels$legend)
   # create labels that show how many positive (coded) responses
   
   x.labels <- proportional.sig.responses.summed.by.barriers.plot%>%
@@ -1049,14 +1221,13 @@ plot.sig.barriers <- function(df,
   error.limits <- aes(ymax = proportional.sig.responses.summed.by.barriers.plot$ymax, ymin = proportional.sig.responses.summed.by.barriers.plot$ymin)
   error.dodge <- position_dodge(width=0.9)
   
+  niblse_4_color <- c("#0C774C",
+                      "#124671",
+                      "#AF6D12",
+                      "#AF4112")
   
- niblse_4_color <- c("#0C774C",
-                     "#124671",
-                     "#AF6D12",
-                     "#AF4112")
- 
- proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot%>%
-   mutate(proportion = proportion * 100)
+  proportional.sig.responses.summed.by.barriers.plot <- proportional.sig.responses.summed.by.barriers.plot%>%
+    mutate(proportion = proportion * 100)
   
   proportional.sig.responses.summed.by.barriers.plot%>%
     ggplot()+
@@ -1066,10 +1237,11 @@ plot.sig.barriers <- function(df,
     theme(axis.text.x=element_text(angle=-20, hjust = 0, vjust = 1))+
     scale_x_discrete(
       labels = c(
-        'Curriculum Issues:\nQuickly changing technologies',
+        'Institutional Issues:\nLack of inter-departmental cooperation',
+        'Student Issues:\nIntimidated by topic',
+        'Resource Issues:\nAccess to software',
         'Student Issues:\nLack of interest',
-        'Student Issues:\nLack of background skills/knowledge',
-        'Faculty Issues:\nLack of expertise/training'))+
+        'Student Issues:\nLack of background skills/knowledge'))+
     #scale_x_discrete(labels = x.labels$x.labels)+
     geom_errorbar(error.limits, position = error.dodge, width = .2)+
     theme_gray(base_size = 20, base_family = "sans")+
@@ -1087,11 +1259,9 @@ plot.sig.barriers <- function(df,
     theme(panel.grid.major.y = element_blank())+
     theme(axis.line = element_line(colour = "black"))+
     coord_flip()+
-    scale_fill_manual(values = niblse_4_color, name= "Institution Types", labels= legend.labels$legend)+
-    guides(fill=guide_legend(nrow =2, reverse = TRUE))+
+    scale_fill_manual(values = niblse_4_color, name= "Bioinformatics Integration\nIn Teaching", labels= legend.labels$legend)+
+    guides(fill=guide_legend(nrow =3, reverse = TRUE))+
     theme(panel.grid.minor=element_blank())
-  
-  
   
   
   
@@ -1100,11 +1270,12 @@ plot.sig.barriers <- function(df,
                                                                        question.column.name.short,
                                                                        "by",
                                                                        category.column.name.short,
-                                                                       "_niblse_4color.png",
+                                                                       "_Color_.png",
                                                                        sep = "_")
   
-  ggsave("figure_03_color.png", 
+  ggsave("figure_05_color.png", 
          width = 13.8, 
+         height = 8.81, 
          units = "in")
   
   
@@ -1112,15 +1283,11 @@ plot.sig.barriers <- function(df,
 
 
 # plot significantly different responses
-plot.sig.barriers(proportion_table_summary, 
-                  category.df,
-                  category.levels,
-                  category.nice.name.caps,
-                  category.nice.name.lower,
-                  n.respondents,
-                  question.column.name.safe,
-                  category.column.name.safe)
-
-
-
-
+#plot.sig.barriers(proportion_table_summary, 
+#                  category.df,
+#                  category.levels,
+#                  category.nice.name.caps,
+#                  category.nice.name.lower,
+#                  n.respondents,
+#                  question.column.name.safe,
+#                  category.column.name.safe)

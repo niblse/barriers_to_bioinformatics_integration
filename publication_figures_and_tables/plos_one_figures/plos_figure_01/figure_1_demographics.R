@@ -5,7 +5,7 @@ require(stargazer)
 require(tidyverse)
 require(ggthemes)
 require(gdata)
-require(stargazer)
+
 
 #load unformatted demographics table 
 
@@ -372,17 +372,9 @@ combined_tables%>%
   
 
 
-ggsave("figure_01.png", 
+ggsave("figure_01_plos.png", 
        units = "in", 
        height = 15, 
        width = 18)                               
                                
-combined_tables%>%
-  select(Demographic, Demographic_category, N, Percentage)%>%
-  stargazer(., type = "html", 
-          summary = FALSE, 
-          rownames = FALSE, 
-          digits = 1,
-          title = "Summary Demographics", 
-          out = "./summary_gemographics.html",
-          covariate.labels = c("Demographic", "Demographic Category", "n respondents", "Percentage of survey N"))                    
+            

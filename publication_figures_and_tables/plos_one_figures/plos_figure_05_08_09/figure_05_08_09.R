@@ -433,7 +433,7 @@ fviz_mca_biplot(MCA.object,
   ggtitle("")
          
 
-ggsave(filename = "figure_06.png", 
+ggsave(filename = "figure_08_plos.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
@@ -477,7 +477,7 @@ fviz_mca_biplot(MCA.object,
   theme(legend.position = c(.80,.10))+
   ggtitle("")
 
-ggsave(filename = "figure_04.png", 
+ggsave(filename = "figure_05_plos.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
@@ -526,7 +526,7 @@ fviz_mca_biplot(MCA.object,
   theme(legend.position = c(.20,.10))+
   ggtitle("")
 
-ggsave(filename = "supfig_02.png", 
+ggsave(filename = "figure_09_plos.png", 
        width = 13.8, 
        height = 8.81, 
        units = "in")
